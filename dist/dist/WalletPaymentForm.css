@@ -1,0 +1,97 @@
+/* src/WalletPaymentForm.css */
+.wallet-payment-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  
+  .success .icon {
+    color: #28a745; /* Green for success */
+  }
+  
+  .error .icon {
+    color: #dc3545; /* Red for error */
+  }
+  
+  .transaction-details {
+    margin: 10px 0;
+    text-align: left;
+  }
+  
+  .transaction-details p {
+    margin: 5px 0;
+  }
+  
+  .transaction-details strong {
+    font-size: 1.1em;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  button[type="button"] {
+    background-color: #6c757d;
+  }
+  
+  /* Ensure multiple buttons in a popup don't stack awkwardly */
+  .popup-content button {
+    margin: 5px 0; /* Reduced margin for multiple buttons */
+  }
