@@ -35,25 +35,27 @@
   
   .popup-header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row; /* Align logo and text horizontally */
+    align-items: center; /* Vertically center the items */
+    justify-content: flex-start; /* Align content to the left */
     margin-bottom: 15px;
   }
   
   .logo {
     width: 40px;
     height: 40px;
-    background-color: orange; /* Green background as placeholder */
+    background-color: orange; /* Placeholder color, replace with actual logo */
     border-radius: 50%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 5px;
+    align-items: center; /* Vertically center the icon */
+    justify-content: flex-start; /* Align icon to the left within the logo */
+    margin-right: 10px; /* Add spacing between logo and text */
   }
   
   .header-icon {
     color: white;
     font-size: 20px;
+    margin-left: 5px; /* Optional: Add some padding from the left edge */
   }
   
   .popup-header h2 {
