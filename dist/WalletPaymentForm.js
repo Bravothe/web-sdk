@@ -72,6 +72,13 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M461.2 128H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h384c8.84 0 16-7.16 16-16 0-26.51-21.49-48-48-48H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h397.2c28.02 0 50.8-21.53 50.8-48V176c0-26.47-22.78-48-50.8-48zM416 336c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"},"child":[]}]})(props);
   }
 
+  // THIS FILE IS AUTO GENERATED
+  function IoEyeOff (props) {
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M432 448a15.92 15.92 0 0 1-11.31-4.69l-352-352a16 16 0 0 1 22.62-22.62l352 352A16 16 0 0 1 432 448zM248 315.85l-51.79-51.79a2 2 0 0 0-3.39 1.69 64.11 64.11 0 0 0 53.49 53.49 2 2 0 0 0 1.69-3.39zm16-119.7L315.87 248a2 2 0 0 0 3.4-1.69 64.13 64.13 0 0 0-53.55-53.55 2 2 0 0 0-1.72 3.39z"},"child":[]},{"tag":"path","attr":{"d":"M491 273.36a32.2 32.2 0 0 0-.1-34.76c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.68 96a226.54 226.54 0 0 0-71.82 11.79 4 4 0 0 0-1.56 6.63l47.24 47.24a4 4 0 0 0 3.82 1.05 96 96 0 0 1 116 116 4 4 0 0 0 1.05 3.81l67.95 68a4 4 0 0 0 5.4.24 343.81 343.81 0 0 0 67.24-77.4zM256 352a96 96 0 0 1-93.3-118.63 4 4 0 0 0-1.05-3.81l-66.84-66.87a4 4 0 0 0-5.41-.23c-24.39 20.81-47 46.13-67.67 75.72a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.39 76.14 98.28 100.65C162.06 402 207.92 416 255.68 416a238.22 238.22 0 0 0 72.64-11.55 4 4 0 0 0 1.61-6.64l-47.47-47.46a4 4 0 0 0-3.81-1.05A96 96 0 0 1 256 352z"},"child":[]}]})(props);
+  }function IoEye (props) {
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"circle","attr":{"cx":"256","cy":"256","r":"64"},"child":[]},{"tag":"path","attr":{"d":"M490.84 238.6c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.66 96c-42.52 0-84.33 12.15-124.27 36.11-40.73 24.43-77.63 60.12-109.68 106.07a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.4 76.14 98.28 100.65C162 402 207.9 416 255.66 416c46.71 0 93.81-14.43 136.2-41.72 38.46-24.77 72.72-59.66 99.08-100.92a32.2 32.2 0 0 0-.1-34.76zM256 352a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"},"child":[]}]})(props);
+  }
+
   // Fake customer data for testing
   const SAMPLE_CUSTOMERS = {
     "customer123": {
@@ -109,16 +116,6 @@
     const customer = SAMPLE_CUSTOMERS[customerId];
     return Promise.resolve(customer && customer.balance >= amount);
   };
-
-  // Validate passcode and process payment
-  const validatePasscode = (customerId, passcode, amount) => {
-    const customer = SAMPLE_CUSTOMERS[customerId];
-    if (customer && customer.passcode === passcode && customer.balance >= amount) {
-      SAMPLE_CUSTOMERS[customerId].balance -= amount;
-      return Promise.resolve(true);
-    }
-    return Promise.resolve(false);
-  };
   const WalletPaymentForm = ({
     customerId,
     amount,
@@ -131,6 +128,7 @@
     const [hasFunds, setHasFunds] = React.useState(null);
     const [paymentStatus, setPaymentStatus] = React.useState('idle');
     const transactionDetails = generateTransactionDetails(amount);
+    const [showPasscode, setShowPasscode] = React.useState(false);
     React.useEffect(() => {
       const checkConditions = async () => {
         if (!customerId) {
@@ -149,20 +147,6 @@
       if (hasAccount && hasFunds) {
         setPopup('enterPasscode');
       }
-    };
-    const handleSubmit = async e => {
-      e.preventDefault();
-      setPaymentStatus('pending');
-      const success = await validatePasscode(customerId, passcode, amount);
-      setPaymentStatus(success ? 'success' : 'failed');
-      setPopup(success ? 'paymentSuccess' : 'paymentFailed');
-      if (success && onSuccess) onSuccess();
-      setTimeout(() => {
-        setPopup('transactionSummary');
-        setPasscode('');
-        setPaymentStatus('idle');
-        onClose();
-      }, 5000);
     };
     const renderHeader = () => /*#__PURE__*/React.createElement("div", {
       className: "popup-header"
@@ -220,26 +204,39 @@
           }, /*#__PURE__*/React.createElement("div", {
             className: "merchant-info"
           }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
-            className: "amount"
-          }, "Amount"), /*#__PURE__*/React.createElement("div", {
+            className: "transaction-details"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "detail"
+          }, /*#__PURE__*/React.createElement("span", null, "Transaction Type:"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.type)), /*#__PURE__*/React.createElement("div", {
+            className: "detail"
+          }, /*#__PURE__*/React.createElement("span", null, "Transaction ID:"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.id)), /*#__PURE__*/React.createElement("div", {
+            className: "detail"
+          }, /*#__PURE__*/React.createElement("span", null, "Particulars:"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.particulars)), /*#__PURE__*/React.createElement("div", {
+            className: "detail"
+          }, /*#__PURE__*/React.createElement("span", null, "Billed Currency:"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency)), /*#__PURE__*/React.createElement("div", {
+            className: "detail"
+          }, /*#__PURE__*/React.createElement("span", null, "Billed Amount:"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.billedAmount.toFixed(2))), /*#__PURE__*/React.createElement("div", {
             className: "total-billing"
-          }, "UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("div", {
+          }, /*#__PURE__*/React.createElement("span", null, "Total Billing:"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
             className: "passcode-section"
-          }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
-            type: "password",
+          }, /*#__PURE__*/React.createElement("label", {
+            htmlFor: "passcode"
+          }, "Enter Passcode"), /*#__PURE__*/React.createElement("div", {
+            className: "passcode-input"
+          }, /*#__PURE__*/React.createElement("input", {
+            type: showPasscode ? "text" : "password",
+            id: "passcode",
             value: passcode,
             onChange: e => setPasscode(e.target.value),
-            required: true,
-            autoFocus: true,
-            placeholder: "Enter Passcode",
-            className: "passcode-input"
-          })), /*#__PURE__*/React.createElement("p", {
-            className: "info-text"
-          }, "You are making a payment to Airbnb", /*#__PURE__*/React.createElement("br", null), "UGX ", transactionDetails.totalBilling.toFixed(2), " will be deducted off your wallet")), /*#__PURE__*/React.createElement("button", {
-            onClick: handleSubmit,
-            disabled: paymentStatus === 'pending' || !passcode,
-            className: "confirm-button"
-          }, paymentStatus === 'pending' ? 'Processing...' : 'Confirm')));
+            placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022"
+          }), /*#__PURE__*/React.createElement("span", {
+            className: "toggle-visibility",
+            onClick: () => setShowPasscode(!showPasscode)
+          }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("button", {
+            onClick: handleConfirm,
+            className: "confirm-button",
+            disabled: !passcode
+          }, "Confirm Payment")));
         case 'paymentSuccess':
           return /*#__PURE__*/React.createElement("div", {
             className: "popup-content"

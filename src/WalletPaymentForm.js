@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './WalletPaymentForm.css';
-import { FaCheckCircle, FaExclamationCircle, FaLock, FaWallet, FaTimesCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaWallet, FaTimesCircle } from 'react-icons/fa';
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 
 // Fake customer data for testing
 const SAMPLE_CUSTOMERS = {
@@ -45,6 +46,7 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const [hasFunds, setHasFunds] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState('idle');
   const transactionDetails = generateTransactionDetails(amount);
+  const [showPasscode, setShowPasscode] = useState(false);
 
   useEffect(() => {
     const checkConditions = async () => {
@@ -141,38 +143,61 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
         );
       case 'enterPasscode':
         return (
-          <div className="popup-content">
-            {renderHeader()}
-            <div className="transaction-summary">
-              <div className="merchant-info">Airbnb</div>
-              <div className="amount">Amount</div>
-              <div className="total-billing">UGX {transactionDetails.totalBilling.toFixed(2)}</div>
-              <div className="passcode-section">
-                <label>
-                  <input
-                    type="password"
-                    value={passcode}
-                    onChange={(e) => setPasscode(e.target.value)}
-                    required
-                    autoFocus
-                    placeholder="Enter Passcode"
-                    className="passcode-input"
-                  />
-                </label>
-                <p className="info-text">
-                  You are making a payment to Airbnb<br />
-                  UGX {transactionDetails.totalBilling.toFixed(2)} will be deducted off your wallet
-                </p>
+            <div className="popup-content">
+              {renderHeader()}
+              <div className="transaction-summary">
+                <div className="merchant-info">Airbnb</div>
+
+                <div className="passcode-section">
+                  <label htmlFor="passcode">Enter Passcode</label>
+                  <div className="passcode-input">
+                    <input 
+                      type={showPasscode ? "text" : "password"} 
+                      id="passcode" 
+                      value={passcode} 
+                      onChange={(e) => setPasscode(e.target.value)}
+                      placeholder="••••••"
+                    />
+                   <span className="toggle-visibility" onClick={() => setShowPasscode(!showPasscode)}>
+                     {showPasscode ? <IoEye /> : <IoEyeOff />}
+                    </span>
+
+                  </div>
+                </div>
+
+                <div className="transaction-details">
+                  <div className="detail">
+                    <span>Transaction Type:</span>
+                    <strong>{transactionDetails.type}</strong>
+                  </div>
+                  <div className="detail">
+                    <span>Transaction ID:</span>
+                    <strong>{transactionDetails.id}</strong>
+                  </div>
+                  <div className="detail">
+                    <span>Particulars:</span>
+                    <strong>{transactionDetails.particulars}</strong>
+                  </div>
+                  <div className="detail">
+                    <span>Billed Currency:</span>
+                    <strong>{transactionDetails.billedCurrency}</strong>
+                  </div>
+                  <div className="detail">
+                    <span>Billed Amount:</span>
+                    <strong>UGX {transactionDetails.billedAmount.toFixed(2)}</strong>
+                  </div>
+                  <div className="total-billing">
+                    <span>Total Billing:</span>
+                    <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
+                  </div>
+                </div>
+
+                {/* Passcode Input Section */}
+                <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
+                  Confirm Payment
+                </button>
               </div>
-              <button
-                onClick={handleSubmit}
-                disabled={paymentStatus === 'pending' || !passcode}
-                className="confirm-button"
-              >
-                {paymentStatus === 'pending' ? 'Processing...' : 'Confirm'}
-              </button>
             </div>
-          </div>
         );
       case 'paymentSuccess':
         return (
