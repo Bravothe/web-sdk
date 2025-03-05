@@ -1,4 +1,3 @@
-/* src/WalletPaymentForm.css */
 .wallet-payment-form {
     position: fixed;
     top: 0;
@@ -24,11 +23,44 @@
     position: relative;
     background: white;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 90%;
     text-align: center;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+  }
+  
+  .popup-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .logo {
+    width: 40px;
+    height: 40px;
+    background-color: orange; /* Green background as placeholder */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+  
+  .header-icon {
+    color: white;
+    font-size: 20px;
+  }
+  
+  .popup-header h2 {
+    font-size: 1.2em;
+    color: #080808;
+    margin: 0;
+    font-weight: bold;
   }
   
   .popup-content {
@@ -37,61 +69,132 @@
     align-items: center;
   }
   
-  .icon {
-    font-size: 40px;
+  .transaction-summary {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .merchant-info {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 10px;
   }
   
-  .success .icon {
-    color: #28a745; /* Green for success */
+  .amount {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 5px;
   }
   
-  .error .icon {
-    color: #dc3545; /* Red for error */
+  .total-billing {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 15px;
+    text-align: center;
   }
   
-  .transaction-details {
-    margin: 10px 0;
-    text-align: left;
-  }
-  
-  .transaction-details p {
+  .details p {
     margin: 5px 0;
+    color: #666;
   }
   
-  .transaction-details strong {
+  .details strong {
     font-size: 1.1em;
+    color: #333;
   }
   
-  .error {
-    color: red;
-  }
-  
-  input, button {
-    display: block;
+  .passcode-input {
     width: 100%;
+    padding: 10px;
     margin: 10px 0;
-    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    text-align: center;
   }
   
-  button {
+  .passcode-section {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .info-text {
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .confirm-button {
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
+    padding: 10px;
+    width: 100%;
     cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px;
   }
   
-  button:disabled {
+  .confirm-button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
   }
   
-  button[type="button"] {
-    background-color: #6c757d;
+  .cancel-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
   }
   
-  /* Ensure multiple buttons in a popup don't stack awkwardly */
-  .popup-content button {
-    margin: 5px 0; /* Reduced margin for multiple buttons */
+  .close-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .success-content,
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .success-content .icon {
+    color: #28a745;
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  
+  .error-content .icon {
+    color: #dc3545;
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  
+  .success-content h3,
+  .error-content h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .success-content p,
+  .error-content p {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
   }

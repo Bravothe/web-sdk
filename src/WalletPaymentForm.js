@@ -1,4 +1,3 @@
-// src/WalletPaymentForm.js
 import React, { useState, useEffect } from 'react';
 import './WalletPaymentForm.css';
 import { FaCheckCircle, FaExclamationCircle, FaLock, FaWallet, FaTimesCircle } from 'react-icons/fa';
@@ -40,7 +39,7 @@ const validatePasscode = (customerId, passcode, amount) => {
 };
 
 const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
-  const [popup, setPopup] = useState('orderDetails'); // Tracks current popup
+  const [popup, setPopup] = useState('transactionSummary');
   const [passcode, setPasscode] = useState('');
   const [hasAccount, setHasAccount] = useState(null);
   const [hasFunds, setHasFunds] = useState(null);
@@ -50,25 +49,20 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   useEffect(() => {
     const checkConditions = async () => {
       if (!customerId) {
-        setPopup('accountNotFound');
+        setHasAccount(false);
         return;
       }
       const accountExists = await checkAccountExists(customerId);
       setHasAccount(accountExists);
-      if (!accountExists) {
-        setPopup('accountNotFound');
-        return;
-      }
+      if (!accountExists) return;
+
       const fundsOk = await checkFunds(customerId, amount);
       setHasFunds(fundsOk);
-      if (!fundsOk) {
-        setPopup('insufficientFunds');
-      }
     };
     checkConditions();
   }, [customerId, amount]);
 
-  const handleContinue = () => {
+  const handleConfirm = () => {
     if (hasAccount && hasFunds) {
       setPopup('enterPasscode');
     }
@@ -81,89 +75,126 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
     setPaymentStatus(success ? 'success' : 'failed');
     setPopup(success ? 'paymentSuccess' : 'paymentFailed');
     if (success && onSuccess) onSuccess();
-    setTimeout(() => onClose(), 2000);
+    setTimeout(() => {
+      setPopup('transactionSummary');
+      setPasscode('');
+      setPaymentStatus('idle');
+      onClose();
+    }, 5000);
   };
+
+  const renderHeader = () => (
+    <div className="popup-header">
+      <div className="logo">
+        <FaWallet className="header-icon" />
+      </div>
+      <h2>EvZone Pay</h2>
+    </div>
+  );
 
   const renderPopup = () => {
     switch (popup) {
-      case 'orderDetails':
+      case 'transactionSummary':
+        if (!hasAccount) {
+          return (
+            <div className="popup-content">
+              {renderHeader()}
+              <div className="error-content">
+                <FaExclamationCircle className="icon" />
+                <h3>Account Not Found</h3>
+                <p>No wallet account matches the provided credentials.</p>
+                <button onClick={onClose} className="close-button">Close</button>
+              </div>
+            </div>
+          );
+        }
+        if (!hasFunds) {
+          return (
+            <div className="popup-content">
+              {renderHeader()}
+              <div className="error-content">
+                <FaExclamationCircle className="icon" />
+                <h3>Insufficient Funds</h3>
+                <p>The account did not have sufficient funds to cover the transaction amount.</p>
+                <button onClick={onClose} className="close-button">Add Amount</button>
+              </div>
+            </div>
+          );
+        }
         return (
           <div className="popup-content">
-            <FaWallet className="icon" />
-            <h2>Order Details</h2>
-            <div className="transaction-details">
-              <p><strong>Total Billing:</strong> UGX {transactionDetails.totalBilling.toFixed(2)}</p>
-              <p>Type: {transactionDetails.type}</p>
-              <p>ID: {transactionDetails.id}</p>
-              <p>Particulars: {transactionDetails.particulars}</p>
-              <p>Currency: {transactionDetails.billedCurrency}</p>
-              <p>Amount: UGX {transactionDetails.billedAmount.toFixed(2)}</p>
+            {renderHeader()}
+            <div className="transaction-summary">
+              <div className="merchant-info">Airbnb</div>
+              <div className="total-billing">UGX {transactionDetails.totalBilling.toFixed(2)}</div>
+              <div className="details">
+                <p><strong>Type:</strong> {transactionDetails.type}</p>
+                <p><strong>ID:</strong> {transactionDetails.id}</p>
+                <p><strong>Particulars:</strong> {transactionDetails.particulars}</p>
+                <p><strong>Billed Currency:</strong> {transactionDetails.billedCurrency}</p>
+                <p><strong>Billed Amount:</strong> UGX {transactionDetails.billedAmount.toFixed(2)}</p>
+                <p><strong>Total Billing:</strong> UGX {transactionDetails.totalBilling.toFixed(2)}</p>
+              </div>
+              <button onClick={handleConfirm} className="confirm-button">Confirm</button>
             </div>
-            <button onClick={handleContinue} disabled={!hasFunds || !hasAccount}>
-              Continue
-            </button>
-            <button onClick={onClose}>Cancel</button>
           </div>
         );
       case 'enterPasscode':
         return (
           <div className="popup-content">
-            <FaLock className="icon" />
-            <h2>Enter Passcode</h2>
-            <form onSubmit={handleSubmit}>
-              <label>
-                Wallet Passcode
-                <input
-                  type="password"
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  required
-                  autoFocus
-                  placeholder="Enter passcode"
-                />
-              </label>
-              <button type="submit" disabled={paymentStatus === 'pending'}>
-                {paymentStatus === 'pending' ? 'Processing...' : 'Pay Now'}
+            {renderHeader()}
+            <div className="transaction-summary">
+              <div className="merchant-info">Airbnb</div>
+              <div className="amount">Amount</div>
+              <div className="total-billing">UGX {transactionDetails.totalBilling.toFixed(2)}</div>
+              <div className="passcode-section">
+                <label>
+                  <input
+                    type="password"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    required
+                    autoFocus
+                    placeholder="Enter Passcode"
+                    className="passcode-input"
+                  />
+                </label>
+                <p className="info-text">
+                  You are making a payment to Airbnb<br />
+                  UGX {transactionDetails.totalBilling.toFixed(2)} will be deducted off your wallet
+                </p>
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={paymentStatus === 'pending' || !passcode}
+                className="confirm-button"
+              >
+                {paymentStatus === 'pending' ? 'Processing...' : 'Confirm'}
               </button>
-              <button type="button" onClick={() => setPopup('orderDetails')}>
-                Back
-              </button>
-            </form>
-          </div>
-        );
-      case 'insufficientFunds':
-        return (
-          <div className="popup-content error">
-            <FaExclamationCircle className="icon" />
-            <h2>Insufficient Funds</h2>
-            <p>Your wallet balance is not enough to cover this transaction.</p>
-            <button onClick={onClose}>Close</button>
-          </div>
-        );
-      case 'accountNotFound':
-        return (
-          <div className="popup-content error">
-            <FaExclamationCircle className="icon" />
-            <h2>Account Not Found</h2>
-            <p>No wallet account matches the provided credentials.</p>
-            <button onClick={onClose}>Close</button>
+            </div>
           </div>
         );
       case 'paymentSuccess':
         return (
-          <div className="popup-content success">
-            <FaCheckCircle className="icon" />
-            <h2>Payment Successful</h2>
-            <p>Your payment of UGX {amount.toFixed(2)} was processed successfully!</p>
+          <div className="popup-content">
+            {renderHeader()}
+            <div className="success-content">
+              <FaCheckCircle className="icon" />
+              <h3>Payment Successful</h3>
+              <p>Your payment of UGX {amount.toFixed(2)} was processed successfully!</p>
+            </div>
           </div>
         );
       case 'paymentFailed':
         return (
-          <div className="popup-content error">
-            <FaTimesCircle className="icon" />
-            <h2>Payment Failed</h2>
-            <p>Invalid passcode or transaction could not be completed.</p>
-            <button onClick={onClose}>Close</button>
+          <div className="popup-content">
+            {renderHeader()}
+            <div className="error-content">
+              <FaTimesCircle className="icon" />
+              <h3>Payment Failed</h3>
+              <p>Please check your wallet for details.</p>
+              <button onClick={onClose} className="close-button">Details</button>
+            </div>
           </div>
         );
       default:

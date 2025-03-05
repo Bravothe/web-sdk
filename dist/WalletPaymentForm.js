@@ -66,15 +66,11 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"},"child":[]}]})(props);
   }function FaExclamationCircle (props) {
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"},"child":[]}]})(props);
-  }function FaLock (props) {
-    return GenIcon({"attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"},"child":[]}]})(props);
   }function FaTimesCircle (props) {
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"},"child":[]}]})(props);
   }function FaWallet (props) {
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M461.2 128H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h384c8.84 0 16-7.16 16-16 0-26.51-21.49-48-48-48H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h397.2c28.02 0 50.8-21.53 50.8-48V176c0-26.47-22.78-48-50.8-48zM416 336c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"},"child":[]}]})(props);
   }
-
-  // src/WalletPaymentForm.js
 
   // Fake customer data for testing
   const SAMPLE_CUSTOMERS = {
@@ -129,7 +125,7 @@
     onClose,
     onSuccess
   }) => {
-    const [popup, setPopup] = React.useState('orderDetails'); // Tracks current popup
+    const [popup, setPopup] = React.useState('transactionSummary');
     const [passcode, setPasscode] = React.useState('');
     const [hasAccount, setHasAccount] = React.useState(null);
     const [hasFunds, setHasFunds] = React.useState(null);
@@ -138,24 +134,18 @@
     React.useEffect(() => {
       const checkConditions = async () => {
         if (!customerId) {
-          setPopup('accountNotFound');
+          setHasAccount(false);
           return;
         }
         const accountExists = await checkAccountExists(customerId);
         setHasAccount(accountExists);
-        if (!accountExists) {
-          setPopup('accountNotFound');
-          return;
-        }
+        if (!accountExists) return;
         const fundsOk = await checkFunds(customerId, amount);
         setHasFunds(fundsOk);
-        if (!fundsOk) {
-          setPopup('insufficientFunds');
-        }
       };
       checkConditions();
     }, [customerId, amount]);
-    const handleContinue = () => {
+    const handleConfirm = () => {
       if (hasAccount && hasFunds) {
         setPopup('enterPasscode');
       }
@@ -167,74 +157,108 @@
       setPaymentStatus(success ? 'success' : 'failed');
       setPopup(success ? 'paymentSuccess' : 'paymentFailed');
       if (success && onSuccess) onSuccess();
-      setTimeout(() => onClose(), 2000);
+      setTimeout(() => {
+        setPopup('transactionSummary');
+        setPasscode('');
+        setPaymentStatus('idle');
+        onClose();
+      }, 5000);
     };
+    const renderHeader = () => /*#__PURE__*/React.createElement("div", {
+      className: "popup-header"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "logo"
+    }, /*#__PURE__*/React.createElement(FaWallet, {
+      className: "header-icon"
+    })), /*#__PURE__*/React.createElement("h2", null, "EvZone Pay"));
     const renderPopup = () => {
       switch (popup) {
-        case 'orderDetails':
+        case 'transactionSummary':
+          if (!hasAccount) {
+            return /*#__PURE__*/React.createElement("div", {
+              className: "popup-content"
+            }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+              className: "error-content"
+            }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
+              className: "icon"
+            }), /*#__PURE__*/React.createElement("h3", null, "Account Not Found"), /*#__PURE__*/React.createElement("p", null, "No wallet account matches the provided credentials."), /*#__PURE__*/React.createElement("button", {
+              onClick: onClose,
+              className: "close-button"
+            }, "Close")));
+          }
+          if (!hasFunds) {
+            return /*#__PURE__*/React.createElement("div", {
+              className: "popup-content"
+            }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+              className: "error-content"
+            }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
+              className: "icon"
+            }), /*#__PURE__*/React.createElement("h3", null, "Insufficient Funds"), /*#__PURE__*/React.createElement("p", null, "The account did not have sufficient funds to cover the transaction amount."), /*#__PURE__*/React.createElement("button", {
+              onClick: onClose,
+              className: "close-button"
+            }, "Add Amount")));
+          }
           return /*#__PURE__*/React.createElement("div", {
             className: "popup-content"
-          }, /*#__PURE__*/React.createElement(FaWallet, {
-            className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Order Details"), /*#__PURE__*/React.createElement("div", {
-            className: "transaction-details"
-          }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Total Billing:"), " UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("p", null, "Type: ", transactionDetails.type), /*#__PURE__*/React.createElement("p", null, "ID: ", transactionDetails.id), /*#__PURE__*/React.createElement("p", null, "Particulars: ", transactionDetails.particulars), /*#__PURE__*/React.createElement("p", null, "Currency: ", transactionDetails.billedCurrency), /*#__PURE__*/React.createElement("p", null, "Amount: UGX ", transactionDetails.billedAmount.toFixed(2))), /*#__PURE__*/React.createElement("button", {
-            onClick: handleContinue,
-            disabled: !hasFunds || !hasAccount
-          }, "Continue"), /*#__PURE__*/React.createElement("button", {
-            onClick: onClose
-          }, "Cancel"));
+          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+            className: "transaction-summary"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "merchant-info"
+          }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
+            className: "total-billing"
+          }, "UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("div", {
+            className: "details"
+          }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Type:"), " ", transactionDetails.type), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "ID:"), " ", transactionDetails.id), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Particulars:"), " ", transactionDetails.particulars), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Billed Currency:"), " ", transactionDetails.billedCurrency), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Billed Amount:"), " UGX ", transactionDetails.billedAmount.toFixed(2)), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Total Billing:"), " UGX ", transactionDetails.totalBilling.toFixed(2))), /*#__PURE__*/React.createElement("button", {
+            onClick: handleConfirm,
+            className: "confirm-button"
+          }, "Confirm")));
         case 'enterPasscode':
           return /*#__PURE__*/React.createElement("div", {
             className: "popup-content"
-          }, /*#__PURE__*/React.createElement(FaLock, {
-            className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Enter Passcode"), /*#__PURE__*/React.createElement("form", {
-            onSubmit: handleSubmit
-          }, /*#__PURE__*/React.createElement("label", null, "Wallet Passcode", /*#__PURE__*/React.createElement("input", {
+          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+            className: "transaction-summary"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "merchant-info"
+          }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
+            className: "amount"
+          }, "Amount"), /*#__PURE__*/React.createElement("div", {
+            className: "total-billing"
+          }, "UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("div", {
+            className: "passcode-section"
+          }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
             type: "password",
             value: passcode,
             onChange: e => setPasscode(e.target.value),
             required: true,
             autoFocus: true,
-            placeholder: "Enter passcode"
-          })), /*#__PURE__*/React.createElement("button", {
-            type: "submit",
-            disabled: paymentStatus === 'pending'
-          }, paymentStatus === 'pending' ? 'Processing...' : 'Pay Now'), /*#__PURE__*/React.createElement("button", {
-            type: "button",
-            onClick: () => setPopup('orderDetails')
-          }, "Back")));
-        case 'insufficientFunds':
-          return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content error"
-          }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
-            className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Insufficient Funds"), /*#__PURE__*/React.createElement("p", null, "Your wallet balance is not enough to cover this transaction."), /*#__PURE__*/React.createElement("button", {
-            onClick: onClose
-          }, "Close"));
-        case 'accountNotFound':
-          return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content error"
-          }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
-            className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Account Not Found"), /*#__PURE__*/React.createElement("p", null, "No wallet account matches the provided credentials."), /*#__PURE__*/React.createElement("button", {
-            onClick: onClose
-          }, "Close"));
+            placeholder: "Enter Passcode",
+            className: "passcode-input"
+          })), /*#__PURE__*/React.createElement("p", {
+            className: "info-text"
+          }, "You are making a payment to Airbnb", /*#__PURE__*/React.createElement("br", null), "UGX ", transactionDetails.totalBilling.toFixed(2), " will be deducted off your wallet")), /*#__PURE__*/React.createElement("button", {
+            onClick: handleSubmit,
+            disabled: paymentStatus === 'pending' || !passcode,
+            className: "confirm-button"
+          }, paymentStatus === 'pending' ? 'Processing...' : 'Confirm')));
         case 'paymentSuccess':
           return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content success"
+            className: "popup-content"
+          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+            className: "success-content"
           }, /*#__PURE__*/React.createElement(FaCheckCircle, {
             className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Payment Successful"), /*#__PURE__*/React.createElement("p", null, "Your payment of UGX ", amount.toFixed(2), " was processed successfully!"));
+          }), /*#__PURE__*/React.createElement("h3", null, "Payment Successful"), /*#__PURE__*/React.createElement("p", null, "Your payment of UGX ", amount.toFixed(2), " was processed successfully!")));
         case 'paymentFailed':
           return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content error"
+            className: "popup-content"
+          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+            className: "error-content"
           }, /*#__PURE__*/React.createElement(FaTimesCircle, {
             className: "icon"
-          }), /*#__PURE__*/React.createElement("h2", null, "Payment Failed"), /*#__PURE__*/React.createElement("p", null, "Invalid passcode or transaction could not be completed."), /*#__PURE__*/React.createElement("button", {
-            onClick: onClose
-          }, "Close"));
+          }), /*#__PURE__*/React.createElement("h3", null, "Payment Failed"), /*#__PURE__*/React.createElement("p", null, "Please check your wallet for details."), /*#__PURE__*/React.createElement("button", {
+            onClick: onClose,
+            className: "close-button"
+          }, "Details")));
         default:
           return null;
       }
