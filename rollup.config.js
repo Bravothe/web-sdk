@@ -8,17 +8,17 @@ export default {
   output: {
     file: 'dist/WalletPaymentForm.js',
     format: 'umd',
-    name: 'WalletPaymentForm'
+    name: 'WalletPaymentForm',
   },
   plugins: [
     babel({
       babelHelpers: 'bundled',
       presets: ['@babel/preset-react'],
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx'],
     }),
     resolve(),
     commonjs(),
-    css({ output: 'dist/WalletPaymentForm.css' })
+    css({ output: 'dist/WalletPaymentForm.css' }),
   ],
-  external: ['react']
+  external: ['react'],
 };

@@ -68,8 +68,6 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"},"child":[]}]})(props);
   }function FaTimesCircle (props) {
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"},"child":[]}]})(props);
-  }function FaWallet (props) {
-    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M461.2 128H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h384c8.84 0 16-7.16 16-16 0-26.51-21.49-48-48-48H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h397.2c28.02 0 50.8-21.53 50.8-48V176c0-26.47-22.78-48-50.8-48zM416 336c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"},"child":[]}]})(props);
   }
 
   // THIS FILE IS AUTO GENERATED
@@ -79,7 +77,6 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"circle","attr":{"cx":"256","cy":"256","r":"64"},"child":[]},{"tag":"path","attr":{"d":"M490.84 238.6c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.66 96c-42.52 0-84.33 12.15-124.27 36.11-40.73 24.43-77.63 60.12-109.68 106.07a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.4 76.14 98.28 100.65C162 402 207.9 416 255.66 416c46.71 0 93.81-14.43 136.2-41.72 38.46-24.77 72.72-59.66 99.08-100.92a32.2 32.2 0 0 0-.1-34.76zM256 352a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"},"child":[]}]})(props);
   }
 
-  // Fake customer data for testing
   const SAMPLE_CUSTOMERS = {
     "customer123": {
       name: "John Doe",
@@ -97,24 +94,31 @@
       passcode: "9012"
     }
   };
-
-  // Fake transaction details
-  const generateTransactionDetails = amount => ({
+  const generateTransactionDetails = (amount, transactionId) => ({
     type: "Booking",
-    id: `W-${Math.floor(Math.random() * 1000000000)}`,
+    id: transactionId,
+    // Using the state-based transaction ID
     particulars: "Hotel Booking",
     billedCurrency: "UGX",
     billedAmount: amount,
     totalBilling: amount
   });
-
-  // Check if customer has an account
   const checkAccountExists = customerId => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
 
   // Check sufficient funds
   const checkFunds = (customerId, amount) => {
     const customer = SAMPLE_CUSTOMERS[customerId];
     return Promise.resolve(customer && customer.balance >= amount);
+  };
+
+  // Validate passcode and process payment
+  const validatePasscode = (customerId, passcode, amount) => {
+    const customer = SAMPLE_CUSTOMERS[customerId];
+    if (customer && customer.passcode === passcode && customer.balance >= amount) {
+      SAMPLE_CUSTOMERS[customerId].balance -= amount;
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
   };
   const WalletPaymentForm = ({
     customerId,
@@ -127,8 +131,8 @@
     const [hasAccount, setHasAccount] = React.useState(null);
     const [hasFunds, setHasFunds] = React.useState(null);
     const [paymentStatus, setPaymentStatus] = React.useState('idle');
-    const transactionDetails = generateTransactionDetails(amount);
     const [showPasscode, setShowPasscode] = React.useState(false);
+    const [transactionId] = React.useState(`W-${Math.floor(Math.random() * 1000000000)}`);
     React.useEffect(() => {
       const checkConditions = async () => {
         if (!customerId) {
@@ -148,13 +152,35 @@
         setPopup('enterPasscode');
       }
     };
+    const handleSubmit = async e => {
+      e.preventDefault();
+      setPaymentStatus('pending');
+      const success = await validatePasscode(customerId, passcode, amount);
+      setPaymentStatus(success ? 'success' : 'failed');
+      setPopup(success ? 'paymentSuccess' : 'paymentFailed');
+      if (success && onSuccess) onSuccess();
+      setTimeout(() => {
+        setPopup('transactionSummary');
+        setPasscode('');
+        setPaymentStatus('idle');
+        onClose();
+      }, 5000);
+    };
+    const transactionDetails = generateTransactionDetails(amount, transactionId);
+    const logoImage = '/logo.jpg';
     const renderHeader = () => /*#__PURE__*/React.createElement("div", {
       className: "popup-header"
     }, /*#__PURE__*/React.createElement("div", {
       className: "logo"
-    }, /*#__PURE__*/React.createElement(FaWallet, {
+    }, /*#__PURE__*/React.createElement("img", {
+      src: logoImage,
+      alt: "EvZone Logo",
       className: "header-icon"
-    })), /*#__PURE__*/React.createElement("h2", null, "EvZone Pay"));
+    })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
+      className: "evzone"
+    }, "EvZone"), /*#__PURE__*/React.createElement("span", {
+      className: "pay"
+    }, " Pay")));
     const renderPopup = () => {
       switch (popup) {
         case 'transactionSummary':
@@ -191,19 +217,6 @@
           }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
             className: "total-billing"
           }, "UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("div", {
-            className: "details"
-          }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Type:"), " ", transactionDetails.type), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "ID:"), " ", transactionDetails.id), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Particulars:"), " ", transactionDetails.particulars), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Billed Currency:"), " ", transactionDetails.billedCurrency), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Billed Amount:"), " UGX ", transactionDetails.billedAmount.toFixed(2)), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Total Billing:"), " UGX ", transactionDetails.totalBilling.toFixed(2))), /*#__PURE__*/React.createElement("button", {
-            onClick: handleConfirm,
-            className: "confirm-button"
-          }, "Confirm")));
-        case 'enterPasscode':
-          return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content"
-          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
-            className: "transaction-summary"
-          }, /*#__PURE__*/React.createElement("div", {
-            className: "merchant-info"
-          }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
             className: "transaction-details"
           }, /*#__PURE__*/React.createElement("div", {
             className: "detail"
@@ -215,9 +228,18 @@
             className: "detail"
           }, /*#__PURE__*/React.createElement("span", null, "Billed Currency:"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency)), /*#__PURE__*/React.createElement("div", {
             className: "detail"
-          }, /*#__PURE__*/React.createElement("span", null, "Billed Amount:"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.billedAmount.toFixed(2))), /*#__PURE__*/React.createElement("div", {
-            className: "total-billing"
-          }, /*#__PURE__*/React.createElement("span", null, "Total Billing:"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
+          }, /*#__PURE__*/React.createElement("span", null, "Billed Amount:"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.billedAmount.toFixed(2)))), /*#__PURE__*/React.createElement("button", {
+            onClick: handleConfirm,
+            className: "confirm-button"
+          }, "Confirm")));
+        case 'enterPasscode':
+          return /*#__PURE__*/React.createElement("div", {
+            className: "popup-content"
+          }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+            className: "transaction-summary"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "merchant-info"
+          }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
             className: "passcode-section"
           }, /*#__PURE__*/React.createElement("label", {
             htmlFor: "passcode"
@@ -232,8 +254,32 @@
           }), /*#__PURE__*/React.createElement("span", {
             className: "toggle-visibility",
             onClick: () => setShowPasscode(!showPasscode)
-          }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("button", {
-            onClick: handleConfirm,
+          }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("div", {
+            className: "transaction-details"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "total-billing"
+          }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", {
+            style: {
+              fontWeight: 'bold',
+              color: 'black'
+            }
+          }, "Airbnb Online Shop"), " and an amount of", /*#__PURE__*/React.createElement("strong", {
+            style: {
+              fontWeight: 'bold',
+              color: 'black'
+            }
+          }, "UGX ", transactionDetails.totalBilling.toFixed(2)), " will be deducted from your Wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", {
+            style: {
+              fontWeight: 'bold',
+              color: 'black'
+            }
+          }, "0.2% Tax:"), "UGX ", (transactionDetails.totalBilling * 0.002).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", {
+            style: {
+              fontWeight: 'bold',
+              color: 'black'
+            }
+          }, "1% Wallet Fee:"), "UGX ", (transactionDetails.totalBilling * 0.01).toFixed(2)))), /*#__PURE__*/React.createElement("button", {
+            onClick: handleSubmit,
             className: "confirm-button",
             disabled: !passcode
           }, "Confirm Payment")));

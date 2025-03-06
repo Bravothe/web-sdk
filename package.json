@@ -1,6 +1,6 @@
 {
-  "name": "evzone-paybtn33",
-  "version": "1.0.0",
+  "name": "evzone-paybtn58",
+  "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",
   "type": "module",
@@ -26,6 +26,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "rollup": "^4.9.6",
+    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-css-only": "^4.5.2"
   }
 }
