@@ -97,21 +97,16 @@
   const generateTransactionDetails = (amount, transactionId) => ({
     type: "Booking",
     id: transactionId,
-    // Using the state-based transaction ID
     particulars: "Hotel Booking",
     billedCurrency: "UGX",
     billedAmount: amount,
     totalBilling: amount
   });
   const checkAccountExists = customerId => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
-
-  // Check sufficient funds
   const checkFunds = (customerId, amount) => {
     const customer = SAMPLE_CUSTOMERS[customerId];
     return Promise.resolve(customer && customer.balance >= amount);
   };
-
-  // Validate passcode and process payment
   const validatePasscode = (customerId, passcode, amount) => {
     const customer = SAMPLE_CUSTOMERS[customerId];
     if (customer && customer.passcode === passcode && customer.balance >= amount) {
@@ -133,7 +128,13 @@
     const [paymentStatus, setPaymentStatus] = React.useState('idle');
     const [showPasscode, setShowPasscode] = React.useState(false);
     const [transactionId] = React.useState(`W-${Math.floor(Math.random() * 1000000000)}`);
+    const [loading, setLoading] = React.useState(true); // New loading state
+
     React.useEffect(() => {
+      // Show loading animation for 5 seconds
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 5000);
       const checkConditions = async () => {
         if (!customerId) {
           setHasAccount(false);
@@ -146,6 +147,9 @@
         setHasFunds(fundsOk);
       };
       checkConditions();
+
+      // Cleanup timer on unmount
+      return () => clearTimeout(timer);
     }, [customerId, amount]);
     const handleConfirm = () => {
       if (hasAccount && hasFunds) {
@@ -234,12 +238,22 @@
           }, "Confirm")));
         case 'enterPasscode':
           return /*#__PURE__*/React.createElement("div", {
-            className: "popup-content"
+            className: "passcode-popup"
           }, renderHeader(), /*#__PURE__*/React.createElement("div", {
-            className: "transaction-summary"
+            className: "merchant-header"
+          }, "Merchant Info :"), /*#__PURE__*/React.createElement("div", {
+            className: "merchant-details"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "merchant-left"
           }, /*#__PURE__*/React.createElement("div", {
             className: "merchant-info"
+          }, /*#__PURE__*/React.createElement("div", {
+            className: "merchant-name"
           }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
+            className: "merchant-id"
+          }, "W-123456789"))), /*#__PURE__*/React.createElement("div", {
+            className: "merchant-amount"
+          }, /*#__PURE__*/React.createElement("span", null, "Amount"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
             className: "passcode-section"
           }, /*#__PURE__*/React.createElement("label", {
             htmlFor: "passcode"
@@ -250,39 +264,23 @@
             id: "passcode",
             value: passcode,
             onChange: e => setPasscode(e.target.value),
-            placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022"
+            placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022",
+            maxLength: "6"
           }), /*#__PURE__*/React.createElement("span", {
             className: "toggle-visibility",
             onClick: () => setShowPasscode(!showPasscode)
           }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("div", {
             className: "transaction-details"
-          }, /*#__PURE__*/React.createElement("div", {
-            className: "total-billing"
-          }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", {
-            style: {
-              fontWeight: 'bold',
-              color: 'black'
-            }
-          }, "Airbnb Online Shop"), " and an amount of", /*#__PURE__*/React.createElement("strong", {
-            style: {
-              fontWeight: 'bold',
-              color: 'black'
-            }
-          }, "UGX ", transactionDetails.totalBilling.toFixed(2)), " will be deducted from your Wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", {
-            style: {
-              fontWeight: 'bold',
-              color: 'black'
-            }
-          }, "0.2% Tax:"), "UGX ", (transactionDetails.totalBilling * 0.002).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", {
-            style: {
-              fontWeight: 'bold',
-              color: 'black'
-            }
-          }, "1% Wallet Fee:"), "UGX ", (transactionDetails.totalBilling * 0.01).toFixed(2)))), /*#__PURE__*/React.createElement("button", {
+          }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", null, "Acorn International School"), " and an amount of", /*#__PURE__*/React.createElement("strong", null, " UGX ", transactionDetails.totalBilling.toFixed(2)), " will be deducted off your wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Tax:"), " UGX ", (transactionDetails.totalBilling * 0.005).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Wallet Fee:"), " UGX ", (transactionDetails.totalBilling * 0.005).toFixed(2))), /*#__PURE__*/React.createElement("div", {
+            className: "buttons-container"
+          }, /*#__PURE__*/React.createElement("button", {
             onClick: handleSubmit,
             className: "confirm-button",
             disabled: !passcode
-          }, "Confirm Payment")));
+          }, "Confirm Payment"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+            onClick: () => setPopup('transactionSummary'),
+            className: "back-button"
+          }, "Back")));
         case 'paymentSuccess':
           return /*#__PURE__*/React.createElement("div", {
             className: "popup-content"
@@ -308,12 +306,16 @@
     };
     return /*#__PURE__*/React.createElement("div", {
       className: "wallet-payment-form"
+    }, loading ? /*#__PURE__*/React.createElement("div", {
+      className: "loading-overlay"
     }, /*#__PURE__*/React.createElement("div", {
+      className: "spinner"
+    })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "overlay",
       onClick: onClose
     }), /*#__PURE__*/React.createElement("div", {
       className: "content"
-    }, renderPopup()));
+    }, renderPopup())));
   };
 
   return WalletPaymentForm;

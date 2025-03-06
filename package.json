@@ -1,5 +1,5 @@
 {
-  "name": "evzone-paybtn58",
+  "name": "evzone-paybt16",
   "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",

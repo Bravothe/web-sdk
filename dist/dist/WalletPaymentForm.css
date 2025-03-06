@@ -1,39 +1,39 @@
 /* Wallet Payment Form */
 .wallet-payment-form {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-  }
-  
-  /* Popup Content */
-  .content {
-    position: relative;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    border: 1px solid #ddd;
-    font-family: Arial, sans-serif;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Popup Content */
+.content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+}
+
 /* Popup Header */
 .popup-header {
   display: flex;
@@ -90,185 +90,302 @@
   }
 }
 
+/* Popup Content (generic container) */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  
-  /* Transaction Summary */
-  .popup-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .merchant-info {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .amount {
-    font-size: 1em;
-    color: #666;
-    margin-bottom: 5px;
-  }
-  
-  .transaction-details {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .transaction-details .detail {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
-  
-  .transaction-details span {
-    color: #666;
-    font-size: 0.9em;
-  }
-  
-  /* Total Billing */
-  .total-billing {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #28a745;
-    text-align: center;
-    padding: 10px 0;
-  }
-  
-  /* Passcode Section */
-  .passcode-section {
-    text-align: center;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .passcode-section label {
-    font-size: 0.9em;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .passcode-input {
-    position: relative;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 1.2em;
-    text-align: center;
-    letter-spacing: 3px;
-    background: white;
-    display: flex;
-    align-items: center;
-  }
-  
-  .passcode-input input {
-    flex: 1;
-    border: none;
-    outline: none;
-    text-align: center;
-    font-size: 1.2em;
-    letter-spacing: 3px;
-    background: transparent;
-  }
-  
-  .passcode-input .toggle-visibility {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 1.2em;
-    color: #007bff;
-  }
-  
-  .passcode-input .toggle-visibility:hover {
-    color: #0056b3;
-  }
-  
-  .info-text {
-    font-size: 0.9em;
-    color: #666;
-    text-align: center;
-  }
-  
-  /* Buttons */
-  .confirm-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 12px;
-    width: 100%;
-    cursor: pointer;
-    font-size: 1em;
-    margin-bottom: 10px;
-  }
-  
-  .confirm-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .cancel-button {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-  }
-  
-  .close-button {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  /* Success & Error Messages */
-  .success-content,
-  .error-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0;
-  }
-  
-  .success-content .icon {
-    color: #28a745;
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  
-  .error-content .icon {
-    color: #dc3545;
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  
-  .success-content h3,
-  .error-content h3 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .success-content p,
-  .error-content p {
-    font-size: 1em;
-    color: #666;
-    margin-bottom: 15px;
-  }
-  
+/* Transaction Summary */
+.transaction-summary {
+  text-align: center;
+  width: 100%;
+}
+
+.merchant-info {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.amount {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.transaction-details {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.transaction-details .detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.transaction-details span {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Total Billing */
+.total-billing {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #28a745;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.passcode-popup {
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Merchant Info Header */
+.merchant-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #0288d1;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+/* Merchant Details Section */
+.merchant-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* Merchant Logo & Name */
+.merchant-left {
+  display: flex;
+  align-items: center;
+}
+
+.merchant-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.merchant-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.merchant-name {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.merchant-id {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Amount Styling */
+.merchant-amount {
+  text-align: right;
+}
+
+.merchant-amount span {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.merchant-amount strong {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Passcode Section */
+.passcode-section {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.passcode-section label {
+  font-size: 1em;
+  font-weight: bold;
+  color: #000;
+}
+
+.passcode-input {
+  position: relative;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1em;
+  text-align: center;
+  letter-spacing: 5px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.passcode-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: 1.4em;
+  letter-spacing: 5px;
+  background: transparent;
+  color: #000;
+  font-weight: bold;
+}
+
+.passcode-input .toggle-visibility {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.5em;
+  color: #000;
+}
+
+/* Transaction Details */
+.transaction-details {
+  display: flex;
+  align-items: flex-start;
+  background: #e0f0ff;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.transaction-details .info-icon {
+  font-size: 1.2em;
+  color: #0288d1;
+  margin-right: 10px;
+}
+
+.transaction-details p {
+  font-size: 1em;
+  color: #000;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.confirm-button {
+  width: 100%;
+  background: #ccc;
+  color: #fff;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border: none;
+}
+
+.confirm-button:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
+
+.back-button {
+  background: white !important;
+  border: 2px solid red !important;
+  color: red !important;
+  padding: 10px 15px !important;
+  border-radius: 5px !important;
+  font-size: 1em !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.back-button:hover {
+  background: white !important;  /* Ensures it stays white */
+  color: red !important;         /* Ensures text stays red */
+  border-color: red !important;  /* Ensures border stays red */
+}
+
+
+/* Success & Error Messages */
+.success-content,
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.success-content .icon {
+  color: #28a745;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.error-content .icon {
+  color: #dc3545;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.success-content h3,
+.error-content h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.success-content p,
+.error-content p {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dims the page */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Spinner */
+.spinner {
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top: 6px solid #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+

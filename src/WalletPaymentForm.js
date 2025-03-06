@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './WalletPaymentForm.css';
-import { FaCheckCircle, FaExclamationCircle,FaTimesCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
-
 
 const SAMPLE_CUSTOMERS = {
   "customer123": { name: "John Doe", balance: 1000, passcode: "1234" },
@@ -10,11 +9,9 @@ const SAMPLE_CUSTOMERS = {
   "customer789": { name: "Alice Brown", balance: 50, passcode: "9012" },
 };
 
-
-
 const generateTransactionDetails = (amount, transactionId) => ({
   type: "Booking",
-  id: transactionId,  // Using the state-based transaction ID
+  id: transactionId,
   particulars: "Hotel Booking",
   billedCurrency: "UGX",
   billedAmount: amount,
@@ -23,13 +20,11 @@ const generateTransactionDetails = (amount, transactionId) => ({
 
 const checkAccountExists = (customerId) => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
 
-// Check sufficient funds
 const checkFunds = (customerId, amount) => {
   const customer = SAMPLE_CUSTOMERS[customerId];
   return Promise.resolve(customer && customer.balance >= amount);
 };
 
-// Validate passcode and process payment
 const validatePasscode = (customerId, passcode, amount) => {
   const customer = SAMPLE_CUSTOMERS[customerId];
   if (customer && customer.passcode === passcode && customer.balance >= amount) {
@@ -47,8 +42,14 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const [paymentStatus, setPaymentStatus] = useState('idle');
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
+    // Show loading animation for 5 seconds
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     const checkConditions = async () => {
       if (!customerId) {
         setHasAccount(false);
@@ -61,7 +62,11 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
       const fundsOk = await checkFunds(customerId, amount);
       setHasFunds(fundsOk);
     };
+
     checkConditions();
+
+    // Cleanup timer on unmount
+    return () => clearTimeout(timer);
   }, [customerId, amount]);
 
   const handleConfirm = () => {
@@ -163,51 +168,56 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
         );
       case 'enterPasscode':
         return (
-          <div className="popup-content">
-          {renderHeader()}
-          <div className="transaction-summary">
-            <div className="merchant-info">Airbnb</div>
-        
+          <div className="passcode-popup">
+            {renderHeader()}
+            <div className="merchant-header">Merchant Info :</div>
+            <div className="merchant-details">
+              <div className="merchant-left">
+                <div className="merchant-info">
+                  <div className="merchant-name">Airbnb</div>
+                  <div className="merchant-id">W-123456789</div>
+                </div>
+              </div>
+              <div className="merchant-amount">
+                <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
+              </div>
+            </div>
             <div className="passcode-section">
               <label htmlFor="passcode">Enter Passcode</label>
               <div className="passcode-input">
-                <input 
-                  type={showPasscode ? "text" : "password"} 
-                  id="passcode" 
-                  value={passcode} 
+                <input
+                  type={showPasscode ? "text" : "password"}
+                  id="passcode"
+                  value={passcode}
                   onChange={(e) => setPasscode(e.target.value)}
                   placeholder="••••••"
+                  maxLength="6"
                 />
                 <span className="toggle-visibility" onClick={() => setShowPasscode(!showPasscode)}>
                   {showPasscode ? <IoEye /> : <IoEyeOff />}
                 </span>
               </div>
             </div>
-        
             <div className="transaction-details">
-              <div className="total-billing">
-                <p>
-                  You are making a payment to <strong style={{ fontWeight: 'bold', color: 'black' }}>Airbnb Online Shop</strong> and an amount of
-                  <strong style={{ fontWeight: 'bold', color: 'black' }}>
-                    UGX {transactionDetails.totalBilling.toFixed(2)}
-                  </strong> will be deducted from your Wallet, including:
-                  <br />
-                  <strong style={{ fontWeight: 'bold', color: 'black' }}>0.2% Tax:</strong> 
-                  UGX {(transactionDetails.totalBilling * 0.002).toFixed(2)} 
-                  <br />
-                  <strong style={{ fontWeight: 'bold', color: 'black' }}>1% Wallet Fee:</strong> 
-                  UGX {(transactionDetails.totalBilling * 0.01).toFixed(2)}
-                </p>
-              </div>
+              <p>
+                You are making a payment to <strong>Acorn International School</strong> and an amount of
+                <strong> UGX {transactionDetails.totalBilling.toFixed(2)}</strong> will be deducted off your wallet, including:
+                <br />
+                <strong>0.5% Tax:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+                <br />
+                <strong>0.5% Wallet Fee:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+              </p>
             </div>
-        
-            {/* Passcode Input Section */}
-            <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
-              Confirm Payment
-            </button>
+            <div className="buttons-container">
+              <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
+                Confirm Payment
+              </button>
+              <br />
+              <button onClick={() => setPopup('transactionSummary')} className="back-button">
+                Back
+              </button>
+            </div>
           </div>
-        </div>
-        
         );
       case 'paymentSuccess':
         return (
@@ -239,8 +249,16 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
 
   return (
     <div className="wallet-payment-form">
-      <div className="overlay" onClick={onClose}></div>
-      <div className="content">{renderPopup()}</div>
+      {loading ? (
+        <div className="loading-overlay">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <>
+          <div className="overlay" onClick={onClose}></div>
+          <div className="content">{renderPopup()}</div>
+        </>
+      )}
     </div>
   );
 };
