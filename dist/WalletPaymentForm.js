@@ -253,7 +253,7 @@
             className: "merchant-id"
           }, "W-123456789"))), /*#__PURE__*/React.createElement("div", {
             className: "merchant-amount"
-          }, /*#__PURE__*/React.createElement("span", null, "Amount"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
+          }, /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
             className: "passcode-section"
           }, /*#__PURE__*/React.createElement("label", {
             htmlFor: "passcode"
@@ -277,9 +277,12 @@
             onClick: handleSubmit,
             className: "confirm-button",
             disabled: !passcode
-          }, "Confirm Payment"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+          }, "Confirm Payment"), /*#__PURE__*/React.createElement("button", {
             onClick: () => setPopup('transactionSummary'),
-            className: "back-button"
+            className: "back-button",
+            style: {
+              marginTop: '15px'
+            } // Adds space above the Back button
           }, "Back")));
         case 'paymentSuccess':
           return /*#__PURE__*/React.createElement("div", {

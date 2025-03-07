@@ -116,22 +116,35 @@
   margin-bottom: 5px;
 }
 
+/* Transaction Details */
 .transaction-details {
   background: #f9f9f9;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 10px;
+  display: flex;           /* Ensures vertical stacking of .detail divs */
+  flex-direction: column;
 }
 
 .transaction-details .detail {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Spreads items across the full width */
+  align-items: center;    /* Vertically centers the items */
   padding: 5px 0;
+  width: 100%;            /* Ensures the flex container takes full width */
 }
 
 .transaction-details span {
   color: #666;
   font-size: 0.9em;
+  flex-shrink: 0;         /* Prevents the span from shrinking too much */
+}
+
+.transaction-details strong {
+  color: #000;            /* Optional: Ensure strong text stands out */
+  font-size: 0.9em;
+  text-align: right;      /* Aligns the text to the right */
+  flex-shrink: 0;         /* Prevents the strong from shrinking too much */
 }
 
 /* Total Billing */
@@ -383,6 +396,7 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 
 
 

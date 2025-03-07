@@ -209,14 +209,17 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
               </p>
             </div>
             <div className="buttons-container">
-              <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
-                Confirm Payment
-              </button>
-              <br />
-              <button onClick={() => setPopup('transactionSummary')} className="back-button">
-                Back
-              </button>
-            </div>
+  <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
+    Confirm Payment
+  </button>
+  <button
+    onClick={() => setPopup('transactionSummary')}
+    className="back-button"
+    style={{ marginTop: '15px' }} // Adds space above the Back button
+  >
+    Back
+  </button>
+</div>
           </div>
         );
       case 'paymentSuccess':
