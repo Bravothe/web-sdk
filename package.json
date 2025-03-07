@@ -1,5 +1,5 @@
 {
-  "name": "evzone-paybt17",
+  "name": "evzone-paybt24",
   "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",
@@ -25,8 +25,14 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-url": "^8.0.2",
     "rollup": "^4.9.6",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-css-only": "^4.5.2"
-  }
+  },
+  "files": [
+    "dist/WalletPaymentForm.js",
+    "dist/WalletPaymentForm.css",
+    "dist/logo.jpg"
+  ]
 }
