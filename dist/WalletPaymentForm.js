@@ -103,7 +103,7 @@
     }, /*#__PURE__*/React.createElement("div", {
       className: "logo"
     }, /*#__PURE__*/React.createElement("img", {
-      src: "https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true",
+      src: "https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true",
       alt: "EvZone Logo",
       className: "header-icon"
     })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
@@ -240,11 +240,7 @@
     }, /*#__PURE__*/React.createElement("div", {
       class: "loading-content"
     }, /*#__PURE__*/React.createElement("img", {
-      src: "https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true",
-      alt: "EvZone Logo",
-      class: "logo"
-    }), /*#__PURE__*/React.createElement("img", {
-      src: "/payment-library/blob/main/images/logo.jpg?raw=true",
+      src: "https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true",
       alt: "EvZone Logo",
       class: "logo"
     }), /*#__PURE__*/React.createElement("p", {

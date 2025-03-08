@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './WalletPaymentForm.css';
 import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
@@ -95,7 +95,7 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const renderHeader = () => (
     <div className="popup-header">
       <div className="logo">
-      <img src={"https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true"} alt="EvZone Logo" className="header-icon" />
+      <img src={"https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true"} alt="EvZone Logo" className="header-icon" />
 
       </div>
       <h2>
@@ -254,7 +254,7 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
       {loading ? (
         <div class="loading-overlay">
         <div class="loading-content">
-        <img src={"https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true"} alt="EvZone Logo" class="logo" />
+         <img src={"https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true"} alt="EvZone Logo" class="logo" />
           <p class="loading-text">Evzone Wallet Pay</p>
         </div>
       </div>

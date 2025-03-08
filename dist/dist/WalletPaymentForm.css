@@ -70,12 +70,11 @@
 
 /* Green color for 'EvZone' and orange for 'Pay' */
 .popup-header .evzone {
-  color: #0a0a0a; /* Green */
+  color: #0a0a0a;
 }
 
 .popup-header .pay {
-  color: #0a0a0a; /* Orange */
-  animation: blink 1.5s infinite alternate;
+  color: #0a0a0a;
 }
 
 /* Blinking effect */

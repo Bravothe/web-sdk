@@ -1,5 +1,5 @@
 {
-  "name": "evzone-soda91",
+  "name": "evzone-chec",
   "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",
