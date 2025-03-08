@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import './WalletPaymentForm.css';
 import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
-import logoImage from './logo.jpg';
-
 
 const SAMPLE_CUSTOMERS = {
   "customer123": { name: "John Doe", balance: 1000, passcode: "1234" },
@@ -97,7 +95,8 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const renderHeader = () => (
     <div className="popup-header">
       <div className="logo">
-      <img src={logoImage} alt="EvZone Logo" className="header-icon" />
+      <img src={"https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true"} alt="EvZone Logo" className="header-icon" />
+
       </div>
       <h2>
         <span className="evzone">EvZone</span><span className="pay"> Pay</span>
@@ -253,9 +252,13 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   return (
     <div className="wallet-payment-form">
       {loading ? (
-        <div className="loading-overlay">
-          <div className="spinner"></div>
+        <div class="loading-overlay">
+        <div class="loading-content">
+        <img src={"https://github.com/Bravothe/payment-library/blob/main/images/logo.jpg?raw=true"} alt="EvZone Logo" class="logo" />
+          <p class="loading-text">Evzone Wallet Pay</p>
         </div>
+      </div>
+      
       ) : (
         <>
           <div className="overlay" onClick={onClose}></div>

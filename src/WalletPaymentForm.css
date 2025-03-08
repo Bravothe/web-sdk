@@ -44,12 +44,14 @@
 }
 
 .logo {
-  width: 40px; /* Control the size of the logo */
-  height: 40px;
+  width: 60px; /* Increased size of the logo */
+  height: 60px; /* Increased size of the logo */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  border-radius: 50%; /* Makes the logo have rounded corners (circle shape if square) */
+  overflow: hidden; /* Ensures the image stays within the rounded container */
 }
 
 .header-icon {
@@ -68,13 +70,11 @@
 
 /* Green color for 'EvZone' and orange for 'Pay' */
 .popup-header .evzone {
-  color: #28a745; /* Green */
-  animation: blink 1.5s infinite alternate;
+  color: #0a0a0a;
 }
 
 .popup-header .pay {
-  color: orange; /* Orange */
-  animation: blink 1.5s infinite alternate;
+  color: #0a0a0a;
 }
 
 /* Blinking effect */
@@ -367,7 +367,6 @@
   margin-bottom: 15px;
 }
 
-
 /* Loading Overlay */
 .loading-overlay {
   position: fixed;
@@ -382,19 +381,44 @@
   z-index: 9999;
 }
 
-/* Spinner */
-.spinner {
-  border: 6px solid rgba(255, 255, 255, 0.3);
-  border-top: 6px solid #fff;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
+/* Content inside the loading overlay (logo and text) */
+.loading-content {
+  text-align: center; /* Center align logo and text */
+  color: white;
+  display: flex;
+  flex-direction: column; /* Stack the logo and text vertically */
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Logo Styles */
+.logo {
+  width: 80px; /* Adjust size of the logo */
+  height: 80px; /* Adjust size of the logo */
+  margin-bottom: 20px; /* Space between the logo and text */
+  border-radius: 50%; /* Optional: makes the logo round if it's square */
+  overflow: hidden; /* Ensure logo stays within the rounded shape */
+}
+
+/* Loading Text */
+.loading-text {
+  font-size: 18px; /* Adjust text size */
+  font-weight: 600; /* Make the text bold */
+  margin: 0;
+  animation: blink 1.5s step-start infinite; /* Blink animation */
+}
+
+/* Blinking Animation */
+@keyframes blink {
+  0% {
+    opacity: 1; /* Text is visible */
+  }
+  50% {
+    opacity: 0; /* Text is hidden */
+  }
+  100% {
+    opacity: 1; /* Text is visible again */
+  }
 }
 
 

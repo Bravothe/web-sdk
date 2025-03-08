@@ -1,5 +1,5 @@
 {
-  "name": "evzone-paybt24",
+  "name": "evzone-soda91",
   "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",
@@ -30,9 +30,8 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-css-only": "^4.5.2"
   },
-  "files": [
-    "dist/WalletPaymentForm.js",
-    "dist/WalletPaymentForm.css",
-    "dist/logo.jpg"
-  ]
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bravothe/payment-library.git"
+  }
 }
