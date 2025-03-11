@@ -31,4 +31,4 @@ int main()
 
 I will be learning more from [Markdown Tutorial Website](httpps://www.markdowntutorial.com), and there is an [Online Markdown Editor](https://dillinger.io) i will be using in addition to tutorials.
 
-## Admin Dasboard
+## Admin Dashboard
