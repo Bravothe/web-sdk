@@ -49,7 +49,7 @@ yarn add evzone-africa
 
 Additionally, import the CSS file for styling the payment form:
 
-```jsx
+```js
 import "evzone-africa/dist/WalletPaymentForm.css";
 ```
 
@@ -61,7 +61,8 @@ import "evzone-africa/dist/WalletPaymentForm.css";
 
 Here’s an example usage in a shopping cart component:
 
-```jsx
+```js
+
 import React, { useState } from "react";
 import WalletPaymentForm from "evzone-africa/dist/WalletPaymentForm";
 import "evzone-africa/dist/WalletPaymentForm.css";
@@ -94,9 +95,11 @@ const Cart = () => {
 };
 
 export default Cart;
+
 ```
 
 ### Notes
+
 - The `WalletPaymentForm` component is rendered conditionally (e.g., in a popup or modal).
 - The `customerId` should be obtained from your authentication system or merchant account.
 - The `amount` should reflect the total amount to be paid (e.g., from your cart).
