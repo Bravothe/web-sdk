@@ -102,7 +102,9 @@ export default Cart;
 - The `amount` should reflect the total amount to be paid (e.g., from your cart).
 
 ## API Reference
+
 ### Frontend (React)
+
 - **`WalletPaymentForm` Component**
   - `customerId` (string, required): The unique identifier for the customer making the payment.
   - `amount` (number, required): The payment amount in the default currency.
@@ -110,7 +112,9 @@ export default Cart;
   - `onSuccess` (function, required): Callback triggered on successful payment.
 
 ## Examples
+
 ### Complete Checkout Flow
+
 1. User adds items to the cart.
 2. User clicks "Make Payments" to trigger the payment form.
 3. The `WalletPaymentForm` component is displayed.
@@ -119,14 +123,17 @@ export default Cart;
 See the [examples folder](examples/) for more detailed sample code.
 
 ## Configuration
+
 The `WalletPaymentForm` component currently supports the props listed in the API Reference. Additional customization (e.g., theming, currency) may be added in future updates. Check the latest documentation or release notes for updates.
 
 ## Troubleshooting
+
 - **Payment Form Not Displaying**: Ensure the CSS file is correctly imported (`evzone-africa/dist/WalletPaymentForm.css`) and that the `showPopup` state (or equivalent) is toggled correctly.
 - **"Invalid Customer ID" Error**: Verify that the `customerId` is valid and matches your Evzone Africa merchant account records.
 - **Payment Not Processing**: Ensure your network connection is stable and that the Evzone Africa servers are reachable.
 
 ## Contributing
+
 We welcome contributions to improve `evzone-africa`! To contribute:
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/your-feature`).
@@ -137,30 +144,12 @@ We welcome contributions to improve `evzone-africa`! To contribute:
 Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
 ## Support
+
 For questions, issues, or feature requests, please:
 - Open an issue on our [GitHub Issues page](https://github.com/yourusername/evzone-africa/issues).
 - Contact our support team at support@evzoneafrica.com.
-```
 
----
-
-### Instructions:
-1. **Copy and Paste**: Copy the entire content above (including the ```markdown tags) and paste it directly into your Markdown editor (e.g., in a `README.md` file).
-2. **Replace Placeholders**:
-   - Replace `yourusername` in the GitHub link with your actual GitHub username or organization.
-   - Replace `support@evzoneafrica.com` with your actual support email.
-3. **Adjust Paths**: 
-   - If your package name is different (e.g., `evzone-africa8` instead of `evzone-africa`), update the import statements and installation commands accordingly.
-   - If you don’t have `examples/`, `CONTRIBUTING.md`, or `LICENSE` files in your repository, either create them or remove the corresponding links.
-4. **Verify CSS Path**: Your code uses `evzone-africa8/dist/dist/WalletPaymentForm.css`, which I corrected to `evzone-africa/dist/WalletPaymentForm.css` in the README. Ensure the path matches your actual package structure.
-5. **Test**: Preview the README in your Markdown editor or GitHub to ensure formatting looks correct.
-
-### Notes:
-- **Backend Section Removed**: Your provided code only shows frontend usage with `WalletPaymentForm`. If you have a backend component (e.g., for verification or webhooks), please share it, and I’ll add a backend section.
-- **SVG Namespace**: The SVG namespace document you shared seems unrelated to the `evzone-africa` library. I’ve excluded it from the README, but let me know if you want it included for some reason.
-- **Props Extracted**: The `WalletPaymentForm` props (`customerId`, `amount`, `onClose`, `onSuccess`) are based on your `Cart` component usage.
-
-Let me know if you need further adjustments or additional sections!
