@@ -1,5 +1,6 @@
-
 # Evzone Pay
+
+<img src="https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true" alt="Evzone Pay Logo" width="200" />
 
 **Evzone Africa** is a library designed to simplify the integration of a digital wallet payment system into e-commerce platforms. Built with **React** and **Node.js**, it provides a seamless way for developers to enable their customers to make payments using the Evzone Africa digital wallet. This package is lightweight, customizable, and developer-friendly.
 
