@@ -64,9 +64,10 @@ Here’s an example usage in a shopping cart component:
 
 ```js
 
+
 import React, { useState } from "react";
-import WalletPaymentForm from "evzone-africa/dist/WalletPaymentForm";
-import "evzone-africa/dist/WalletPaymentForm.css";
+import WalletPaymentForm from "evzone-africa13/dist/WalletPaymentForm.esm";
+import "evzone-africa13/dist/dist/WalletPaymentForm.css";
 
 const Cart = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -96,6 +97,7 @@ const Cart = () => {
 };
 
 export default Cart;
+
 
 ```
 
