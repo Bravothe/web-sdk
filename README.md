@@ -156,3 +156,6 @@ For questions, issues, or feature requests, please:
 - Open an issue on our [GitHub Issues page](https://github.com/yourusername/evzone-africa/issues).
 - Contact our support team at support@evzoneafrica.com.
 
+  ![Evzone Pay Logo](https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true)
+
+
