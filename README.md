@@ -132,7 +132,7 @@ The `WalletPaymentForm` component currently supports the props listed in the API
 
 ## Troubleshooting
 
-- **Payment Form Not Displaying**: Ensure the CSS file is correctly imported (`evzone-africa/dist/WalletPaymentForm.css`) and that the `showPopup` state (or equivalent) is toggled correctly.
+- **Payment Form Not Displaying**: Ensure the CSS file is correctly imported (`evzone-africa/dist/dist/WalletPaymentForm.css`) and that the `showPopup` state (or equivalent) is toggled correctly.
 - **"Invalid Customer ID" Error**: Verify that the `customerId` is valid and matches your Evzone Africa merchant account records.
 - **Payment Not Processing**: Ensure your network connection is stable and that the Evzone Africa servers are reachable.
 
