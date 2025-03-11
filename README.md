@@ -51,7 +51,7 @@ yarn add evzone-africa
 Additionally, import the CSS file for styling the payment form:
 
 ```js
-import "evzone-africa/dist/dist/WalletPaymentForm.css";
+import "evzone-africa13/dist/dist/WalletPaymentForm.css";
 ```
 
 ## Usage
