@@ -1,9 +1,5 @@
-Below is the updated README content tailored to your `evzone-africa` package, specifically reflecting the usage of the `WalletPaymentForm` component as shown in your provided `Cart` component. This README is written in Markdown and can be copied directly into your Markdown editor. I've extracted the props and functionality from your code and adjusted the content to match your implementation.
 
----
-
-```markdown
-# Evzone Africa
+# Evzone Pay
 
 **Evzone Africa** is a library designed to simplify the integration of a digital wallet payment system into e-commerce platforms. Built with **React** and **Node.js**, it provides a seamless way for developers to enable their customers to make payments using the Evzone Africa digital wallet. This package is lightweight, customizable, and developer-friendly.
 
@@ -21,6 +17,7 @@ Below is the updated README content tailored to your `evzone-africa` package, sp
 - [Support](#support)
 
 ## Features
+
 - Easy integration with e-commerce platforms.
 - Support for React-based frontends.
 - Secure payment processing with Evzone Africa digital wallet.
@@ -29,6 +26,7 @@ Below is the updated README content tailored to your `evzone-africa` package, sp
 - Lightweight and optimized for performance.
 
 ## Prerequisites
+
 Before you begin, ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (v16 or higher)
 - [npm](https://www.npmjs.com/) (v8 or higher) or [yarn](https://yarnpkg.com/)
@@ -38,7 +36,9 @@ Before you begin, ensure you have the following installed:
 To install the `evzone-africa` library, run the following command in your project directory:
 
 ```bash
+
 npm install evzone-africa
+
 ```
 
 Or, if you're using Yarn:
