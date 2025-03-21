@@ -34,24 +34,18 @@ Before you begin, ensure you have the following installed:
 - A registered Evzone Africa merchant account (to obtain necessary credentials).
 
 ## Installation
-To install the `evzone-africa` library, run the following command in your project directory:
+To install the `evzone-alb` library, run the following command in your project directory:
 
 ```bash
 
-npm install evzone-africa
+npm install evzone-alb
 
-```
-
-Or, if you're using Yarn:
-
-```bash
-yarn add evzone-africa
 ```
 
 Additionally, import the CSS file for styling the payment form:
 
 ```js
-import "evzone-africa13/dist/dist/WalletPaymentForm.css";
+import "evzone-alb/dist/dist/WalletPaymentForm.css";
 ```
 
 ## Usage
@@ -67,7 +61,7 @@ Here’s an example usage in a shopping cart component:
 
 import React, { useState } from "react";
 import WalletPaymentForm from "evzone-alb/dist/WalletPaymentForm.esm";
-import "evzone-africa13/alb/dist/WalletPaymentForm.css";
+import "evzone-alb/dist/dist/WalletPaymentForm.css";
 
 const Cart = () => {
   const [showPopup, setShowPopup] = useState(false);
