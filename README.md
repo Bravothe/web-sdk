@@ -66,8 +66,8 @@ Here’s an example usage in a shopping cart component:
 
 
 import React, { useState } from "react";
-import WalletPaymentForm from "evzone-africa13/dist/WalletPaymentForm.esm";
-import "evzone-africa13/dist/dist/WalletPaymentForm.css";
+import WalletPaymentForm from "evzone-alb/dist/WalletPaymentForm.esm";
+import "evzone-africa13/alb/dist/WalletPaymentForm.css";
 
 const Cart = () => {
   const [showPopup, setShowPopup] = useState(false);
