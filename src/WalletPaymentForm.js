@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './WalletPaymentForm.css';
-import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
-import { IoEye, IoEyeOff } from 'react-icons/io5';
+import TransactionSummary from './TransactionSummary';
+import EnterPasscode from './EnterPasscode';
+import PaymentSuccess from './PaymentSuccess';
+import PaymentFailed from './PaymentFailed';
+import LoadingOverlay from './LoadingOverlay';
 
 const SAMPLE_CUSTOMERS = {
-  "customer123": { name: "John Doe", balance: 1000, passcode: "1234" },
-  "customer456": { name: "Jane Smith", balance: 500, passcode: "5678" },
-  "customer789": { name: "Alice Brown", balance: 50, passcode: "9012" },
+  "customer123": { name: "John Doe", balance: 1000, passcode: "123456" },
+  "customer456": { name: "Jane Smith", balance: 500, passcode: "567856" },
+  "customer789": { name: "Alice Brown", balance: 50, passcode: "901256" },
 };
 
 const generateTransactionDetails = (amount, transactionId) => ({
@@ -42,10 +45,9 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const [paymentStatus, setPaymentStatus] = useState('idle');
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Show loading animation for 5 seconds
     const timer = setTimeout(() => {
       setLoading(false);
     }, 5000);
@@ -65,7 +67,6 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
 
     checkConditions();
 
-    // Cleanup timer on unmount
     return () => clearTimeout(timer);
   }, [customerId, amount]);
 
@@ -82,168 +83,54 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
     setPaymentStatus(success ? 'success' : 'failed');
     setPopup(success ? 'paymentSuccess' : 'paymentFailed');
     if (success && onSuccess) onSuccess();
-    setTimeout(() => {
-      setPopup('transactionSummary');
-      setPasscode('');
-      setPaymentStatus('idle');
-      onClose();
-    }, 5000);
+
+    if (!success) {
+      setTimeout(() => {
+        setPopup('transactionSummary');
+        setPasscode('');
+        setPaymentStatus('idle');
+        onClose();
+      }, 5000);
+    }
+  };
+
+  const handleSuccessClose = () => {
+    setPopup('transactionSummary');
+    setPasscode('');
+    setPaymentStatus('idle');
+    onClose();
   };
 
   const transactionDetails = generateTransactionDetails(amount, transactionId);
 
-  const renderHeader = () => (
-    <div className="popup-header">
-      <div className="logo">
-      <img src={"https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true"} alt="EvZone Logo" className="header-icon" />
-
-      </div>
-      <h2>
-        <span className="evzone">EvZone</span><span className="pay"> Pay</span>
-      </h2>
-    </div>
-  );
-
   const renderPopup = () => {
     switch (popup) {
       case 'transactionSummary':
-        if (!hasAccount) {
-          return (
-            <div className="popup-content">
-              {renderHeader()}
-              <div className="error-content">
-                <FaExclamationCircle className="icon" />
-                <h3>Account Not Found</h3>
-                <p>No wallet account matches the provided credentials.</p>
-                <button onClick={onClose} className="close-button">Close</button>
-              </div>
-            </div>
-          );
-        }
-        if (!hasFunds) {
-          return (
-            <div className="popup-content">
-              {renderHeader()}
-              <div className="error-content">
-                <FaExclamationCircle className="icon" />
-                <h3>Insufficient Funds</h3>
-                <p>The account did not have sufficient funds to cover the transaction amount.</p>
-                <button onClick={onClose} className="close-button">Add Amount</button>
-              </div>
-            </div>
-          );
-        }
         return (
-          <div className="popup-content">
-            {renderHeader()}
-            <div className="transaction-summary">
-              <div className="merchant-info">Airbnb</div>
-              <div className="total-billing">UGX {transactionDetails.totalBilling.toFixed(2)}</div>
-              <div className="transaction-details">
-                  <div className="detail">
-                    <span>Transaction Type:</span>
-                    <strong>{transactionDetails.type}</strong>
-                  </div>
-                  <div className="detail">
-                    <span>Transaction ID:</span>
-                    <strong>{transactionDetails.id}</strong>
-                  </div>
-                  <div className="detail">
-                    <span>Particulars:</span>
-                    <strong>{transactionDetails.particulars}</strong>
-                  </div>
-                  <div className="detail">
-                    <span>Billed Currency:</span>
-                    <strong>{transactionDetails.billedCurrency}</strong>
-                  </div>
-                  <div className="detail">
-                    <span>Billed Amount:</span>
-                    <strong>UGX {transactionDetails.billedAmount.toFixed(2)}</strong>
-                  </div>
-                </div>
-              <button onClick={handleConfirm} className="confirm-button">Confirm</button>
-            </div>
-          </div>
+          <TransactionSummary
+            hasAccount={hasAccount}
+            hasFunds={hasFunds}
+            transactionDetails={transactionDetails}
+            onClose={onClose}
+            onConfirm={handleConfirm}
+          />
         );
       case 'enterPasscode':
         return (
-          <div className="passcode-popup">
-            {renderHeader()}
-            <div className="merchant-header">Merchant Info :</div>
-            <div className="merchant-details">
-              <div className="merchant-left">
-                <div className="merchant-info">
-                  <div className="merchant-name">Airbnb</div>
-                  <div className="merchant-id">W-123456789</div>
-                </div>
-              </div>
-              <div className="merchant-amount">
-                <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
-              </div>
-            </div>
-            <div className="passcode-section">
-              <label htmlFor="passcode">Enter Passcode</label>
-              <div className="passcode-input">
-                <input
-                  type={showPasscode ? "text" : "password"}
-                  id="passcode"
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  placeholder="••••••"
-                  maxLength="6"
-                />
-                <span className="toggle-visibility" onClick={() => setShowPasscode(!showPasscode)}>
-                  {showPasscode ? <IoEye /> : <IoEyeOff />}
-                </span>
-              </div>
-            </div>
-            <div className="transaction-details">
-              <p>
-                You are making a payment to <strong>Acorn International School</strong> and an amount of
-                <strong> UGX {transactionDetails.totalBilling.toFixed(2)}</strong> will be deducted off your wallet, including:
-                <br />
-                <strong>0.5% Tax:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
-                <br />
-                <strong>0.5% Wallet Fee:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
-              </p>
-            </div>
-            <div className="buttons-container">
-  <button onClick={handleSubmit} className="confirm-button" disabled={!passcode}>
-    Confirm Payment
-  </button>
-  <button
-    onClick={() => setPopup('transactionSummary')}
-    className="back-button"
-    style={{ marginTop: '15px' }} // Adds space above the Back button
-  >
-    Back
-  </button>
-</div>
-          </div>
+          <EnterPasscode
+            passcode={passcode}
+            setPasscode={setPasscode}
+            showPasscode={showPasscode}
+            setShowPasscode={setShowPasscode}
+            transactionDetails={transactionDetails}
+            onSubmit={handleSubmit}
+            onBack={() => setPopup('transactionSummary')}
+          />
         );
       case 'paymentSuccess':
-        return (
-          <div className="popup-content">
-            {renderHeader()}
-            <div className="success-content">
-              <FaCheckCircle className="icon" />
-              <h3>Payment Successful</h3>
-              <p>Your payment of UGX {amount.toFixed(2)} was processed successfully!</p>
-            </div>
-          </div>
-        );
+        return <PaymentSuccess amount={amount} onClose={handleSuccessClose} />;
       case 'paymentFailed':
-        return (
-          <div className="popup-content">
-            {renderHeader()}
-            <div className="error-content">
-              <FaTimesCircle className="icon" />
-              <h3>Payment Failed</h3>
-              <p>Please check your wallet for details.</p>
-              <button onClick={onClose} className="close-button">Details</button>
-            </div>
-          </div>
-        );
+        return <PaymentFailed onClose={onClose} />;
       default:
         return null;
     }
@@ -251,15 +138,7 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
 
   return (
     <div className="wallet-payment-form">
-      {loading ? (
-        <div class="loading-overlay">
-        <div class="loading-content">
-         <img src={"https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true"} alt="EvZone Logo" class="logo" />
-          <p class="loading-text">Evzone Wallet Pay</p>
-        </div>
-      </div>
-      
-      ) : (
+      {loading ? <LoadingOverlay /> : (
         <>
           <div className="overlay" onClick={onClose}></div>
           <div className="content">{renderPopup()}</div>

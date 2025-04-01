@@ -367,47 +367,6 @@
   margin-bottom: 15px;
 }
 
-/* Loading Overlay */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dims the page */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-/* Content inside the loading overlay (logo and text) */
-.loading-content {
-  text-align: center; /* Center align logo and text */
-  color: white;
-  display: flex;
-  flex-direction: column; /* Stack the logo and text vertically */
-  justify-content: center;
-  align-items: center;
-}
-
-/* Logo Styles */
-.logo {
-  width: 80px; /* Adjust size of the logo */
-  height: 80px; /* Adjust size of the logo */
-  margin-bottom: 20px; /* Space between the logo and text */
-  border-radius: 50%; /* Optional: makes the logo round if it's square */
-  overflow: hidden; /* Ensure logo stays within the rounded shape */
-}
-
-/* Loading Text */
-.loading-text {
-  font-size: 18px; /* Adjust text size */
-  font-weight: 600; /* Make the text bold */
-  margin: 0;
-  animation: blink 1.5s step-start infinite; /* Blink animation */
-}
-
 /* Blinking Animation */
 @keyframes blink {
   0% {
@@ -420,7 +379,6 @@
     opacity: 1; /* Text is visible again */
   }
 }
-
 
 
 

@@ -1,13 +1,15 @@
 {
-  "name": "evzone-africa11",
+  "name": "evzone-web-lib",
   "version": "1.0.1",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.js",
   "type": "module",
-  "scripts": {
-    "build": "rollup -c",
-    "prepublishOnly": "npm run build"
-  },
+ "scripts": {
+  "build": "rollup -c",
+  "start": "rollup -c --watch",
+  "prepublishOnly": "npm run build"
+}
+,
   "keywords": [
     "wallet",
     "payment",
