@@ -12,7 +12,7 @@ const PaymentSuccess = ({ amount, onClose }) => {
         />
       </div>
       <h2>
-        <span className="evzone">EvZone</span><span className="pay"> Pay</span>
+        <span className="evzone">EVzone</span><span className="pay"> Pay</span>
       </h2>
     </div>
   );

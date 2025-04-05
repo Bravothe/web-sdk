@@ -12,7 +12,7 @@ const TransactionSummary = ({ hasAccount, hasFunds, transactionDetails, onClose,
         />
       </div>
       <h2>
-        <span className="evzone">EvZone</span><span className="pay"> Pay</span>
+        <span className="evzone">EVzone</span><span className="pay"> Pay</span>
       </h2>
     </div>
   );
@@ -22,10 +22,13 @@ const TransactionSummary = ({ hasAccount, hasFunds, transactionDetails, onClose,
       <div className="popup-content">
         {renderHeader()}
         <div className="error-content">
-          <FaExclamationCircle className="icon" />
-          <h3>Account Not Found</h3>
-          <p>No wallet account matches the provided credentials.</p>
-          <button onClick={onClose} className="close-button">Close</button>
+          <div className="message-container">
+            <div className="info-icon">i</div>
+            <div className="message-text">
+              <h3>EVzone requires you to sign to proceed with this transaction</h3>
+            </div>
+          </div>
+          <button onClick={onClose} className="submit-button">Sign in</button>
         </div>
       </div>
     );
@@ -36,10 +39,13 @@ const TransactionSummary = ({ hasAccount, hasFunds, transactionDetails, onClose,
       <div className="popup-content">
         {renderHeader()}
         <div className="error-content">
-          <FaExclamationCircle className="icon" />
-          <h3>Insufficient Funds</h3>
-          <p>The account did not have sufficient funds to cover the transaction amount.</p>
-          <button onClick={onClose} className="close-button">Add Amount</button>
+          <div className="message-container">
+            <div className="info-icon">i</div>
+            <div className="message-text">
+              <h3>EVzone requires you to sign to proceed with this transaction</h3>
+            </div>
+          </div>
+          <button onClick={onClose} className="submit-button">Sign in</button>
         </div>
       </div>
     );

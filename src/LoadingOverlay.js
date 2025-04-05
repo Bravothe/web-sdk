@@ -50,7 +50,7 @@ const LoadingOverlay = () => {
               color: 'rgb(82, 190, 128)', // Smooth green for "Evzone"
             }}
           >
-            Evzone
+            EVzone
           </span>{' '}
           <span
             style={{

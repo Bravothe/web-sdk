@@ -7,7 +7,7 @@ const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, t
       <div className="logo">
         <img
           src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
-          alt="EvZone Logo"
+          alt="EVzone Logo"
           className="header-icon"
         />
       </div>
