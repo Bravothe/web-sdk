@@ -34,197 +34,12 @@
   font-family: Arial, sans-serif;
 }
 
-/* Popup Header */
-.popup-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-.logo {
-  width: 60px; /* Increased size of the logo */
-  height: 60px; /* Increased size of the logo */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  border-radius: 50%; /* Makes the logo have rounded corners (circle shape if square) */
-  overflow: hidden; /* Ensures the image stays within the rounded container */
-}
-
-.header-icon {
-  width: 100%; /* Make the image take up the full width of its container */
-  height: auto; /* Ensure the image maintains its aspect ratio */
-}
-
-.popup-header h2 {
-  font-size: 1.2em;
-  color: #080808;
-  margin: 0;
-  font-weight: bold;
-  text-align: left;
-  flex-grow: 1;
-}
-
-/* Green color for 'EvZone' and orange for 'Pay' */
-.popup-header .evzone {
-  color: #0a0a0a;
-}
-
-.popup-header .pay {
-  color: #0a0a0a;
-}
-
-/* Blinking effect */
-@keyframes blink {
-  0% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
-
-/* Popup Content (generic container) */
-.popup-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Transaction Summary */
-.transaction-summary {
-  text-align: center;
-  width: 100%;
-}
-
-.merchant-info {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.amount {
-  font-size: 1em;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-/* Transaction Details */
-.transaction-details {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: flex;           /* Ensures vertical stacking of .detail divs */
-  flex-direction: column;
-}
-
-.transaction-details .detail {
-  display: flex;
-  justify-content: space-between; /* Spreads items across the full width */
-  align-items: center;    /* Vertically centers the items */
-  padding: 5px 0;
-  width: 100%;            /* Ensures the flex container takes full width */
-}
-
-.transaction-details span {
-  color: #666;
-  font-size: 0.9em;
-  flex-shrink: 0;         /* Prevents the span from shrinking too much */
-}
-
-.transaction-details strong {
-  color: #000;            /* Optional: Ensure strong text stands out */
-  font-size: 0.9em;
-  text-align: right;      /* Aligns the text to the right */
-  flex-shrink: 0;         /* Prevents the strong from shrinking too much */
-}
-
-/* Total Billing */
-.total-billing {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #28a745;
-  text-align: center;
-  padding: 10px 0;
-}
-
+/* Passcode Popup (used by EnterPasscode) */
 .passcode-popup {
   padding: 20px;
   background: white;
   border-radius: 10px;
   text-align: center;
-}
-
-/* Merchant Info Header */
-.merchant-header {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #0288d1;
-  text-align: left;
-  margin-bottom: 10px;
-}
-
-/* Merchant Details Section */
-.merchant-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f9f9f9;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-/* Merchant Logo & Name */
-.merchant-left {
-  display: flex;
-  align-items: center;
-}
-
-.merchant-logo {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-.merchant-info {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-
-.merchant-name {
-  font-size: 1em;
-  font-weight: bold;
-}
-
-.merchant-id {
-  font-size: 0.9em;
-  color: #666;
-}
-
-/* Amount Styling */
-.merchant-amount {
-  text-align: right;
-}
-
-.merchant-amount span {
-  font-size: 0.9em;
-  color: #666;
-}
-
-.merchant-amount strong {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #000;
 }
 
 /* Passcode Section */
@@ -275,45 +90,7 @@
   color: #000;
 }
 
-/* Transaction Details */
-.transaction-details {
-  display: flex;
-  align-items: flex-start;
-  background: #e0f0ff;
-  padding: 12px;
-  border-radius: 8px;
-  text-align: left;
-}
-
-.transaction-details .info-icon {
-  font-size: 1.2em;
-  color: #0288d1;
-  margin-right: 10px;
-}
-
-.transaction-details p {
-  font-size: 1em;
-  color: #000;
-  line-height: 1.5;
-}
-
 /* Buttons */
-.confirm-button {
-  width: 100%;
-  background: #ccc;
-  color: #fff;
-  padding: 12px;
-  border-radius: 5px;
-  font-size: 1.1em;
-  cursor: pointer;
-  border: none;
-}
-
-.confirm-button:disabled {
-  background: #ddd;
-  cursor: not-allowed;
-}
-
 .back-button {
   background: white !important;
   border: 2px solid red !important;
@@ -326,77 +103,14 @@
 }
 
 .back-button:hover {
-  background: white !important;  /* Ensures it stays white */
-  color: red !important;         /* Ensures text stays red */
-  border-color: red !important;  /* Ensures border stays red */
+  background: white !important;
+  color: red !important;
+  border-color: red !important;
 }
 
-.error-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.message-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
-  background-color: #e0f7fa; /* Light blue background for the container */
-  border-radius: 10px; /* Rounded corners for the container */
-  padding: 10px 15px; /* Padding inside the container */
-}
-
-.info-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  background-color: #b3e5fc; /* Slightly darker blue for the icon background */
-  color: #0288d1;
-  border-radius: 50%;
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 15px;
-}
-
-.message-text {
-  flex: 1;
-}
-
-.message-text h3 {
-  font-size: 1.2em;
-  margin: 0;
-  color: #333;
-  font-weight: 500;
-}
-
-.submit-button {
-  background-color: #0288d1;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  max-width: 200px;
-}
-
-.submit-button:hover {
-  background-color: #0277bd;
-}
-
-/* Remove or adjust these if they are not needed */
+/* Success/Failed Content (used by PaymentSuccess/PaymentFailed) */
 .success-content .icon {
-  color: #28a745;
+  color: #02CD8D;
   font-size: 40px;
   margin-bottom: 10px;
 }
@@ -408,20 +122,15 @@
   margin-bottom: 15px;
 }
 
-/* Blinking Animation */
+/* Blinking Animation (possibly used by LoadingOverlay) */
 @keyframes blink {
   0% {
-    opacity: 1; /* Text is visible */
+    opacity: 1;
   }
   50% {
-    opacity: 0; /* Text is hidden */
+    opacity: 0;
   }
   100% {
-    opacity: 1; /* Text is visible again */
+    opacity: 1;
   }
 }
-
-
-
-
-

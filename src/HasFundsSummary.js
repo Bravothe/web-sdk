@@ -1,31 +1,33 @@
 import React from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
 
-const PaymentSuccess = ({ amount, onClose }) => {
-  const renderHeader = () => (
-    <div className="popup-header">
-      <div className="logo">
-        <img
-          src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
-          alt="EVzone Logo"
-          className="header-icon"
-        />
-      </div>
-      <h2>
-        <span className="evzone">EVzone</span><span className="pay"> Pay</span>
-      </h2>
-    </div>
-  );
-
+const HasAccountSummary = ({ onClose }) => {
   return (
     <>
       <div className="popup-content">
-        {renderHeader()}
-        <div className="success-content">
-          <FaCheckCircle className="icon" />
-          <h3>Payment Successful</h3>
-          <p>Your payment of UGX {amount.toFixed(2)} was processed successfully!</p>
-          <button onClick={onClose} className="close-button">Close</button>
+        <div className="popup-header">
+          <div className="logo">
+            <img
+              src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
+              alt="EvZone Logo"
+              className="header-icon"
+            />
+          </div>
+          <h2>
+            <span className="evzone">EVzone</span>
+            <span className="pay"> Pay</span>
+          </h2>
+          <button className="close-btn" onClick={onClose}>
+            <span>×</span>
+          </button>
+        </div>
+        <div className="error-content">
+          <div className="message-container">
+            <div className="info-icon">i</div>
+            <div className="message-text">
+              <h3>EVzone requires you to sign in to proceed with this transaction</h3>
+            </div>
+          </div>
+          <button onClick={onClose} className="submit-button">Sign in</button>
         </div>
       </div>
       <style>{`
@@ -41,15 +43,12 @@ const PaymentSuccess = ({ amount, onClose }) => {
           text-align: center;
           border: 1px solid #ddd;
           font-family: Arial, sans-serif;
-          z-index: 1001;
-          position: relative;
-          pointer-events: auto;
         }
 
         .popup-header {
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: space-between;
           margin-bottom: 15px;
           width: 100%;
           padding: 10px 15px;
@@ -77,6 +76,8 @@ const PaymentSuccess = ({ amount, onClose }) => {
           color: #080808;
           margin: 0;
           font-weight: bold;
+          text-align: left;
+          flex-grow: 1;
         }
 
         .popup-header .evzone {
@@ -87,7 +88,15 @@ const PaymentSuccess = ({ amount, onClose }) => {
           color: #0a0a0a;
         }
 
-        .success-content {
+        .close-btn {
+          background: none;
+          border: none;
+          font-size: 1.5em;
+          color: #ff5a5f;
+          cursor: pointer;
+        }
+
+        .error-content {
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -96,26 +105,42 @@ const PaymentSuccess = ({ amount, onClose }) => {
           border-radius: 8px;
         }
 
-        .success-content .icon {
-          color: #02CD8D;
-          font-size: 40px;
-          margin-bottom: 10px;
+        .message-container {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          margin-bottom: 20px;
+          background-color: #e0f7fa;
+          border-radius: 10px;
+          padding: 10px 15px;
         }
 
-        .success-content h3 {
+        .info-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          background-color: #b3e5fc;
+          color: #0288d1;
+          border-radius: 50%;
+          font-size: 24px;
+          font-weight: bold;
+          margin-right: 15px;
+        }
+
+        .message-text {
+          flex: 1;
+        }
+
+        .message-text h3 {
           font-size: 1.2em;
-          margin: 0 0 15px;
+          margin: 0;
           color: #333;
           font-weight: 500;
         }
 
-        .success-content p {
-          font-size: 1em;
-          color: #666;
-          margin-bottom: 15px;
-        }
-
-        .close-button {
+        .submit-button {
           background-color: #0288d1;
           color: #fff;
           border: none;
@@ -129,7 +154,7 @@ const PaymentSuccess = ({ amount, onClose }) => {
           max-width: 200px;
         }
 
-        .close-button:hover {
+        .submit-button:hover {
           background-color: #0277bd;
         }
       `}</style>
@@ -137,4 +162,4 @@ const PaymentSuccess = ({ amount, onClose }) => {
   );
 };
 
-export default PaymentSuccess;
+export default HasAccountSummary;
