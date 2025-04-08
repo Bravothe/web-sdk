@@ -1,22 +1,11 @@
 import React from 'react';
+import Header from './Header';
 
 const TransactionSummary = ({ transactionDetails, onConfirm }) => {
   return (
     <>
       <div className="popup-content">
-        <div className="popup-header">
-          <div className="logo">
-            <img
-              src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
-              alt="EvZone Logo"
-              className="header-icon"
-            />
-          </div>
-          <h2>
-            <span className="evzone">EVzone</span>
-            <span className="pay"> Pay</span>
-          </h2>
-        </div>
+        <Header />
         <div className="transaction-summary">
           <div className="merchant-info">
             <strong>Airbnb</strong>
@@ -67,48 +56,9 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
           text-align: center;
           border: 1px solid #ddd;
           font-family: Arial, sans-serif;
-          z-index: 1001; /* Ensure popup is above overlay */
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
+          z-index: 1001;
+          position: relative;
+          pointer-events: auto;
         }
 
         .transaction-summary {

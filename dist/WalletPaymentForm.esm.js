@@ -1,58 +1,25 @@
 import React, { useState, useEffect } from 'react';
 
-const HasAccountSummary = ({
+const Header = ({
   onClose
 }) => {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "popup-content"
-  }, /*#__PURE__*/React.createElement("div", {
     className: "popup-header"
   }, /*#__PURE__*/React.createElement("div", {
     className: "logo"
   }, /*#__PURE__*/React.createElement("img", {
     src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EvZone Logo",
+    alt: "EVzone Logo",
     className: "header-icon"
   })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
     className: "evzone"
   }, "EVzone"), /*#__PURE__*/React.createElement("span", {
     className: "pay"
-  }, " Pay")), /*#__PURE__*/React.createElement("button", {
-    className: "close-btn",
-    onClick: onClose
-  }, /*#__PURE__*/React.createElement("span", null, "\xD7"))), /*#__PURE__*/React.createElement("div", {
-    className: "error-content"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "message-container"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "info-icon"
-  }, "i"), /*#__PURE__*/React.createElement("div", {
-    className: "message-text"
-  }, /*#__PURE__*/React.createElement("h3", null, "EVzone requires you to sign in to proceed with this transaction"))), /*#__PURE__*/React.createElement("button", {
-    onClick: onClose,
-    className: "submit-button"
-  }, "Sign in"))), /*#__PURE__*/React.createElement("style", null, `
-        .popup-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          background: white;
-          border-radius: 10px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          max-width: 400px;
-          width: 90%;
-          text-align: center;
-          border: 1px solid #ddd;
-          font-family: Arial, sans-serif;
-          z-index: 1001;
-          position: relative;
-          pointer-events: auto;
-        }
-
+  }, " Pay"))), /*#__PURE__*/React.createElement("style", null, `
         .popup-header {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: ${onClose ? 'space-between' : 'center'};
           margin-bottom: 15px;
           width: 100%;
           padding: 10px 15px;
@@ -80,8 +47,7 @@ const HasAccountSummary = ({
           color: #080808;
           margin: 0;
           font-weight: bold;
-          text-align: left;
-          flex-grow: 1;
+          ${onClose ? 'text-align: left; flex-grow: 1;' : ''}
         }
 
         .popup-header .evzone {
@@ -98,6 +64,44 @@ const HasAccountSummary = ({
           font-size: 1.5em;
           color: #ff5a5f;
           cursor: pointer;
+        }
+      `));
+};
+
+const HasAccountSummary = ({
+  onClose
+}) => {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "popup-content"
+  }, /*#__PURE__*/React.createElement(Header, {
+    onClose: onClose
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "error-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "message-container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "info-icon"
+  }, "i"), /*#__PURE__*/React.createElement("div", {
+    className: "message-text"
+  }, /*#__PURE__*/React.createElement("h3", null, "EVzone requires you to sign in to proceed with this transaction"))), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    className: "submit-button"
+  }, "Sign in"))), /*#__PURE__*/React.createElement("style", null, `
+        .popup-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          width: 90%;
+          text-align: center;
+          border: 1px solid #ddd;
+          font-family: Arial, sans-serif;
+          z-index: 1001;
+          position: relative;
+          pointer-events: auto;
         }
 
         .error-content {
@@ -170,19 +174,7 @@ const TransactionSummary = ({
 }) => {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "popup-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "logo"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EvZone Logo",
-    className: "header-icon"
-  })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-    className: "evzone"
-  }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-    className: "pay"
-  }, " Pay"))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "transaction-summary"
   }, /*#__PURE__*/React.createElement("div", {
     className: "merchant-info"
@@ -218,48 +210,9 @@ const TransactionSummary = ({
           text-align: center;
           border: 1px solid #ddd;
           font-family: Arial, sans-serif;
-          z-index: 1001; /* Ensure popup is above overlay */
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
+          z-index: 1001;
+          position: relative;
+          pointer-events: auto;
         }
 
         .transaction-summary {
@@ -419,22 +372,9 @@ const EnterPasscode = ({
   onSubmit,
   onBack
 }) => {
-  const renderHeader = () => /*#__PURE__*/React.createElement("div", {
-    className: "popup-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "logo"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EVzone Logo",
-    className: "header-icon"
-  })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-    className: "evzone"
-  }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-    className: "pay"
-  }, " Pay")));
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "passcode-popup"
-  }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "merchant-header"
   }, "Merchant Info :"), /*#__PURE__*/React.createElement("div", {
     className: "merchant-details"
@@ -495,47 +435,6 @@ const EnterPasscode = ({
           z-index: 1001;
           position: relative;
           pointer-events: auto;
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
         }
 
         .merchant-header {
@@ -713,22 +612,9 @@ const PaymentSuccess = ({
   amount,
   onClose
 }) => {
-  const renderHeader = () => /*#__PURE__*/React.createElement("div", {
-    className: "popup-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "logo"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EVzone Logo",
-    className: "header-icon"
-  })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-    className: "evzone"
-  }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-    className: "pay"
-  }, " Pay")));
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
-  }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "success-content"
   }, /*#__PURE__*/React.createElement(FaCheckCircle, {
     className: "icon"
@@ -751,47 +637,6 @@ const PaymentSuccess = ({
           z-index: 1001;
           position: relative;
           pointer-events: auto;
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
         }
 
         .success-content {
@@ -845,22 +690,9 @@ const PaymentSuccess = ({
 const PaymentFailed = ({
   onClose
 }) => {
-  const renderHeader = () => /*#__PURE__*/React.createElement("div", {
-    className: "popup-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "logo"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EVzone Logo",
-    className: "header-icon"
-  })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-    className: "evzone"
-  }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-    className: "pay"
-  }, " Pay")));
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
-  }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "error-content"
   }, /*#__PURE__*/React.createElement(FaTimesCircle, {
     className: "icon"
@@ -883,47 +715,6 @@ const PaymentFailed = ({
           z-index: 1001;
           position: relative;
           pointer-events: auto;
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
         }
 
         .error-content {
@@ -977,22 +768,9 @@ const PaymentFailed = ({
 const InsufficientFunds = ({
   onClose
 }) => {
-  const renderHeader = () => /*#__PURE__*/React.createElement("div", {
-    className: "popup-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "logo"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-    alt: "EVzone Logo",
-    className: "header-icon"
-  })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-    className: "evzone"
-  }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-    className: "pay"
-  }, " Pay")));
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
-  }, renderHeader(), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "error-content"
   }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
     className: "icon"
@@ -1015,47 +793,6 @@ const InsufficientFunds = ({
           z-index: 1001;
           position: relative;
           pointer-events: auto;
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
         }
 
         .error-content {

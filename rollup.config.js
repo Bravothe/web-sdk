@@ -1,7 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
-import css from 'rollup-plugin-css-only';
 import url from '@rollup/plugin-url';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
@@ -26,7 +25,6 @@ export default {
     }),
     resolve(),
     commonjs(),
-    css({ output: 'dist/WalletPaymentForm.css' }),
     url({
       include: ['**/*.jpg', '**/*.png', '**/*.gif'],
       limit: 0,

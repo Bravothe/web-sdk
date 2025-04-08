@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import HasAccountSummary from './HasAccountSummary';
-import HasFundsSummary from './HasFundsSummary';
 import TransactionDetailsSummary from './TransactionSummary';
 import EnterPasscode from './EnterPasscode';
 import PaymentSuccess from './PaymentSuccess';

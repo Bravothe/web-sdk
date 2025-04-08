@@ -1,26 +1,12 @@
 import React from 'react';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
+import Header from './Header';
 
 const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, transactionDetails, onSubmit, onBack }) => {
-  const renderHeader = () => (
-    <div className="popup-header">
-      <div className="logo">
-        <img
-          src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
-          alt="EVzone Logo"
-          className="header-icon"
-        />
-      </div>
-      <h2>
-        <span className="evzone">EVzone</span><span className="pay"> Pay</span>
-      </h2>
-    </div>
-  );
-
   return (
     <>
       <div className="passcode-popup">
-        {renderHeader()}
+        <Header />
         <div className="merchant-header">Merchant Info :</div>
         <div className="merchant-details">
           <div className="merchant-left">
@@ -85,47 +71,6 @@ const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, t
           z-index: 1001;
           position: relative;
           pointer-events: auto;
-        }
-
-        .popup-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 15px;
-          width: 100%;
-          padding: 10px 15px;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-
-        .header-icon {
-          width: 100%;
-          height: auto;
-        }
-
-        .popup-header h2 {
-          font-size: 1.2em;
-          color: #080808;
-          margin: 0;
-          font-weight: bold;
-        }
-
-        .popup-header .evzone {
-          color: #0a0a0a;
-        }
-
-        .popup-header .pay {
-          color: #0a0a0a;
         }
 
         .merchant-header {
