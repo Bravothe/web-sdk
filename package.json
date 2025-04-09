@@ -1,28 +1,31 @@
 {
-  "name": "pay-sdk-web11", 
-  "version": "1.0.1",
+  "name": "pay-sdk-th",
+  "version": "1.0.2",
   "description": "A wallet payment form component with live API verification",
-  "main": "dist/WalletPaymentForm.js",
+  "main": "dist/WalletPaymentForm.umd.js",
+  "module": "dist/WalletPaymentForm.esm.js",
   "type": "module",
- "scripts": {
-  "build": "rollup -c",
-  "start": "rollup -c --watch",
-  "prepublishOnly": "npm run build"
-}
-,
+  "scripts": {
+    "build": "rollup -c",
+    "start": "rollup -c --watch",
+    "prepublishOnly": "npm run build"
+  },
+
   "keywords": [
     "wallet",
     "payment",
     "react"
   ],
-  "author": "Allan Bravo",
+  "author": "Allan Bravo",  
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
@@ -39,6 +42,8 @@
   },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "react-dom": "^18.3.1"
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "reactjs-popup": "^2.0.6"
   }
 }

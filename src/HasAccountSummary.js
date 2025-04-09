@@ -2,6 +2,14 @@ import React from 'react';
 import Header from './Header';
 
 const HasAccountSummary = ({ onClose }) => {
+  const handleSignIn = () => {
+    window.open(
+      'https://accounts.dev.evzone.app?redirect_uri=http://localhost:3000/callback',
+      'Sign In',
+      'width=500,height=600'
+    );
+  };
+
   return (
     <>
       <div className="popup-content">
@@ -13,9 +21,10 @@ const HasAccountSummary = ({ onClose }) => {
               <h3>EVzone requires you to sign in to proceed with this transaction</h3>
             </div>
           </div>
-          <button onClick={onClose} className="submit-button">Sign in</button>
+          <button onClick={handleSignIn} className="submit-button">Sign in</button>
         </div>
       </div>
+      {/* Your existing styles remain unchanged */}
       <style>{`
         .popup-content {
           display: flex;
@@ -33,7 +42,6 @@ const HasAccountSummary = ({ onClose }) => {
           position: relative;
           pointer-events: auto;
         }
-
         .error-content {
           display: flex;
           flex-direction: column;
@@ -42,7 +50,6 @@ const HasAccountSummary = ({ onClose }) => {
           background-color: #fff;
           border-radius: 8px;
         }
-
         .message-container {
           display: flex;
           align-items: center;
@@ -52,7 +59,6 @@ const HasAccountSummary = ({ onClose }) => {
           border-radius: 10px;
           padding: 10px 15px;
         }
-
         .info-icon {
           display: flex;
           justify-content: center;
@@ -66,18 +72,15 @@ const HasAccountSummary = ({ onClose }) => {
           font-weight: bold;
           margin-right: 15px;
         }
-
         .message-text {
           flex: 1;
         }
-
         .message-text h3 {
           font-size: 1.2em;
           margin: 0;
           color: #333;
           font-weight: 500;
         }
-
         .submit-button {
           background-color: #0288d1;
           color: #fff;
@@ -91,7 +94,6 @@ const HasAccountSummary = ({ onClose }) => {
           width: 100%;
           max-width: 200px;
         }
-
         .submit-button:hover {
           background-color: #0277bd;
         }

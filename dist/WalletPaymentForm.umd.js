@@ -4,9 +4,10 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.WalletPaymentForm = factory(global.React));
 })(this, (function (React) { 'use strict';
 
-  const Header = ({
-    onClose
-  }) => {
+  const Header = _ref => {
+    let {
+      onClose
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-header"
     }, /*#__PURE__*/React.createElement("div", {
@@ -72,9 +73,13 @@
       `));
   };
 
-  const HasAccountSummary = ({
-    onClose
-  }) => {
+  const HasAccountSummary = _ref => {
+    let {
+      onClose
+    } = _ref;
+    const handleSignIn = () => {
+      window.open('https://accounts.dev.evzone.app?redirect_uri=http://localhost:3000/callback', 'Sign In', 'width=500,height=600');
+    };
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, {
@@ -88,7 +93,7 @@
     }, "i"), /*#__PURE__*/React.createElement("div", {
       className: "message-text"
     }, /*#__PURE__*/React.createElement("h3", null, "EVzone requires you to sign in to proceed with this transaction"))), /*#__PURE__*/React.createElement("button", {
-      onClick: onClose,
+      onClick: handleSignIn,
       className: "submit-button"
     }, "Sign in"))), /*#__PURE__*/React.createElement("style", null, `
         .popup-content {
@@ -107,7 +112,6 @@
           position: relative;
           pointer-events: auto;
         }
-
         .error-content {
           display: flex;
           flex-direction: column;
@@ -116,7 +120,6 @@
           background-color: #fff;
           border-radius: 8px;
         }
-
         .message-container {
           display: flex;
           align-items: center;
@@ -126,7 +129,6 @@
           border-radius: 10px;
           padding: 10px 15px;
         }
-
         .info-icon {
           display: flex;
           justify-content: center;
@@ -140,18 +142,15 @@
           font-weight: bold;
           margin-right: 15px;
         }
-
         .message-text {
           flex: 1;
         }
-
         .message-text h3 {
           font-size: 1.2em;
           margin: 0;
           color: #333;
           font-weight: 500;
         }
-
         .submit-button {
           background-color: #0288d1;
           color: #fff;
@@ -165,17 +164,17 @@
           width: 100%;
           max-width: 200px;
         }
-
         .submit-button:hover {
           background-color: #0277bd;
         }
       `));
   };
 
-  const TransactionSummary = ({
-    transactionDetails,
-    onConfirm
-  }) => {
+  const TransactionSummary = _ref => {
+    let {
+      transactionDetails,
+      onConfirm
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -367,15 +366,16 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"circle","attr":{"cx":"256","cy":"256","r":"64"},"child":[]},{"tag":"path","attr":{"d":"M490.84 238.6c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.66 96c-42.52 0-84.33 12.15-124.27 36.11-40.73 24.43-77.63 60.12-109.68 106.07a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.4 76.14 98.28 100.65C162 402 207.9 416 255.66 416c46.71 0 93.81-14.43 136.2-41.72 38.46-24.77 72.72-59.66 99.08-100.92a32.2 32.2 0 0 0-.1-34.76zM256 352a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"},"child":[]}]})(props);
   }
 
-  const EnterPasscode = ({
-    passcode,
-    setPasscode,
-    showPasscode,
-    setShowPasscode,
-    transactionDetails,
-    onSubmit,
-    onBack
-  }) => {
+  const EnterPasscode = _ref => {
+    let {
+      passcode,
+      setPasscode,
+      showPasscode,
+      setShowPasscode,
+      transactionDetails,
+      onSubmit,
+      onBack
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "passcode-popup"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -612,10 +612,11 @@
     return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"},"child":[]}]})(props);
   }
 
-  const PaymentSuccess = ({
-    amount,
-    onClose
-  }) => {
+  const PaymentSuccess = _ref => {
+    let {
+      amount,
+      onClose
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -691,9 +692,10 @@
       `));
   };
 
-  const PaymentFailed = ({
-    onClose
-  }) => {
+  const PaymentFailed = _ref => {
+    let {
+      onClose
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -769,9 +771,10 @@
       `));
   };
 
-  const InsufficientFunds = ({
-    onClose
-  }) => {
+  const InsufficientFunds = _ref => {
+    let {
+      onClose
+    } = _ref;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -926,6 +929,7 @@
       `));
   };
 
+  // Sample customers for testing
   const SAMPLE_CUSTOMERS = {
     "customer123": {
       name: "John Doe",
@@ -941,7 +945,20 @@
       name: "Alice Brown",
       balance: 50,
       passcode: "901256"
-    }
+    },
+    "admin": {
+      name: "Admin User",
+      balance: 2000,
+      passcode: "admin123"
+    } // Added for cookie user
+  };
+
+  // Function to get a cookie by name
+  const getCookie = name => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
   };
   const generateTransactionDetails = (amount, transactionId) => ({
     type: "Booking",
@@ -971,12 +988,13 @@
       success: true
     };
   };
-  const WalletPaymentForm = ({
-    customerId,
-    amount,
-    onClose,
-    onSuccess
-  }) => {
+  const WalletPaymentForm = _ref => {
+    let {
+      customerId: propCustomerId,
+      amount,
+      onClose,
+      onSuccess
+    } = _ref;
     const [popup, setPopup] = React.useState('transactionSummary');
     const [passcode, setPasscode] = React.useState('');
     const [hasAccount, setHasAccount] = React.useState(null);
@@ -984,30 +1002,63 @@
     const [showPasscode, setShowPasscode] = React.useState(false);
     const [transactionId] = React.useState(`W-${Math.floor(Math.random() * 1000000000)}`);
     const [loading, setLoading] = React.useState(true);
+    const [authData, setAuthData] = React.useState(null);
+    const [effectiveCustomerId, setEffectiveCustomerId] = React.useState(propCustomerId);
     React.useEffect(() => {
-      console.log('useEffect running, customerId:', customerId, 'amount:', amount);
+      console.log('useEffect running, propCustomerId:', propCustomerId, 'amount:', amount);
       const timer = setTimeout(() => {
         console.log('Loading finished');
         setLoading(false);
       }, 5000);
       const checkConditions = async () => {
-        if (!customerId) {
-          console.log('No customerId provided, setting hasAccount to false');
-          setHasAccount(false);
-          return;
+        let customerIdToUse = propCustomerId;
+
+        // Check if propCustomerId exists in SAMPLE_CUSTOMERS
+        if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
+          console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
+          const cookieUserId = getCookie('user_id');
+          if (cookieUserId) {
+            console.log('Found user_id in cookies:', cookieUserId);
+            customerIdToUse = cookieUserId; // Use cookie user_id (e.g., "admin")
+          } else {
+            console.log('No valid customerId or cookie found, prompting login');
+            setHasAccount(false); // No account, show login
+            setEffectiveCustomerId(null);
+            return;
+          }
         }
-        if (!SAMPLE_CUSTOMERS[customerId]) {
-          console.log(`Invalid customerId: ${customerId}, setting hasAccount to false`);
-          setHasAccount(false);
-          return;
-        }
-        const accountExists = await checkAccountExists(customerId);
-        console.log('Account exists:', accountExists);
+        const accountExists = await checkAccountExists(customerIdToUse);
+        console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
         setHasAccount(accountExists);
+        setEffectiveCustomerId(customerIdToUse);
+
+        // If cookies indicate a logged-in user but no SAMPLE_CUSTOMERS match, simulate authData
+        if (!accountExists && getCookie('user_id')) {
+          setAuthData({
+            name: '_EV_DEV_MUID',
+            value: getCookie('user_id')
+          });
+          setHasAccount(true); // Treat as authenticated
+          setPopup('transactionSummary');
+        }
       };
       checkConditions();
       return () => clearTimeout(timer);
-    }, [customerId, amount]);
+    }, [propCustomerId, amount]);
+    const handleLoginSuccess = _ref2 => {
+      let {
+        name,
+        value
+      } = _ref2;
+      console.log('Login success, name:', name, 'value:', value);
+      setAuthData({
+        name,
+        value
+      });
+      setHasAccount(true);
+      setEffectiveCustomerId(value); // Use the value from login (e.g., _EV_DEV_MUID)
+      setPopup('transactionSummary');
+    };
     const handleConfirm = () => {
       console.log('Confirm clicked, hasAccount:', hasAccount);
       if (hasAccount === null) {
@@ -1025,7 +1076,8 @@
       e.preventDefault();
       console.log('Submitting passcode:', passcode);
       setPaymentStatus('pending');
-      const result = await validatePasscode(customerId, passcode, amount);
+      const idToValidate = effectiveCustomerId || authData?.value;
+      const result = await validatePasscode(idToValidate, passcode, amount);
       console.log('Validation result:', result);
       setPaymentStatus(result.success ? 'success' : 'failed');
       if (result.success) {
@@ -1059,7 +1111,8 @@
         case 'transactionSummary':
           if (!hasAccount) {
             return /*#__PURE__*/React.createElement(HasAccountSummary, {
-              onClose: onClose
+              onClose: onClose,
+              onLoginSuccess: handleLoginSuccess
             });
           }
           return /*#__PURE__*/React.createElement(TransactionSummary, {
@@ -1113,7 +1166,6 @@
           align-items: center;
           z-index: 1000;
         }
-
         .overlay {
           position: absolute;
           top: 0;
@@ -1130,3 +1182,4 @@
   return WalletPaymentForm;
 
 }));
+//# sourceMappingURL=WalletPaymentForm.umd.js.map

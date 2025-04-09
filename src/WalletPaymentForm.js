@@ -7,10 +7,20 @@ import PaymentFailed from './PaymentFailed';
 import InsufficientFunds from './InsufficientFunds';
 import LoadingOverlay from './LoadingOverlay';
 
+// Sample customers for testing
 const SAMPLE_CUSTOMERS = {
   "customer123": { name: "John Doe", balance: 1000, passcode: "123456" },
   "customer456": { name: "Jane Smith", balance: 500, passcode: "567856" },
   "customer789": { name: "Alice Brown", balance: 50, passcode: "901256" },
+  "admin": { name: "Admin User", balance: 2000, passcode: "admin123" }, // Added for cookie user
+};
+
+// Function to get a cookie by name
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
 };
 
 const generateTransactionDetails = (amount, transactionId) => ({
@@ -29,12 +39,11 @@ const validatePasscode = (customerId, passcode, amount) => {
   if (!customer) return { success: false, reason: 'no_account' };
   if (customer.passcode !== passcode) return { success: false, reason: 'invalid_passcode' };
   if (customer.balance < amount) return { success: false, reason: 'insufficient_funds' };
-  
   SAMPLE_CUSTOMERS[customerId].balance -= amount;
   return { success: true };
 };
 
-const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
+const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSuccess }) => {
   const [popup, setPopup] = useState('transactionSummary');
   const [passcode, setPasscode] = useState('');
   const [hasAccount, setHasAccount] = useState(null);
@@ -42,34 +51,59 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
   const [loading, setLoading] = useState(true);
+  const [authData, setAuthData] = useState(null);
+  const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
   useEffect(() => {
-    console.log('useEffect running, customerId:', customerId, 'amount:', amount);
+    console.log('useEffect running, propCustomerId:', propCustomerId, 'amount:', amount);
     const timer = setTimeout(() => {
       console.log('Loading finished');
       setLoading(false);
     }, 5000);
 
     const checkConditions = async () => {
-      if (!customerId) {
-        console.log('No customerId provided, setting hasAccount to false');
-        setHasAccount(false);
-        return;
+      let customerIdToUse = propCustomerId;
+
+      // Check if propCustomerId exists in SAMPLE_CUSTOMERS
+      if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
+        console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
+        const cookieUserId = getCookie('user_id');
+        if (cookieUserId) {
+          console.log('Found user_id in cookies:', cookieUserId);
+          customerIdToUse = cookieUserId; // Use cookie user_id (e.g., "admin")
+        } else {
+          console.log('No valid customerId or cookie found, prompting login');
+          setHasAccount(false); // No account, show login
+          setEffectiveCustomerId(null);
+          return;
+        }
       }
-      if (!SAMPLE_CUSTOMERS[customerId]) {
-        console.log(`Invalid customerId: ${customerId}, setting hasAccount to false`);
-        setHasAccount(false);
-        return;
-      }
-      const accountExists = await checkAccountExists(customerId);
-      console.log('Account exists:', accountExists);
+
+      const accountExists = await checkAccountExists(customerIdToUse);
+      console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
       setHasAccount(accountExists);
+      setEffectiveCustomerId(customerIdToUse);
+
+      // If cookies indicate a logged-in user but no SAMPLE_CUSTOMERS match, simulate authData
+      if (!accountExists && getCookie('user_id')) {
+        setAuthData({ name: '_EV_DEV_MUID', value: getCookie('user_id') });
+        setHasAccount(true); // Treat as authenticated
+        setPopup('transactionSummary');
+      }
     };
 
     checkConditions();
 
     return () => clearTimeout(timer);
-  }, [customerId, amount]);
+  }, [propCustomerId, amount]);
+
+  const handleLoginSuccess = ({ name, value }) => {
+    console.log('Login success, name:', name, 'value:', value);
+    setAuthData({ name, value });
+    setHasAccount(true);
+    setEffectiveCustomerId(value); // Use the value from login (e.g., _EV_DEV_MUID)
+    setPopup('transactionSummary');
+  };
 
   const handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount);
@@ -89,7 +123,8 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
     e.preventDefault();
     console.log('Submitting passcode:', passcode);
     setPaymentStatus('pending');
-    const result = await validatePasscode(customerId, passcode, amount);
+    const idToValidate = effectiveCustomerId || authData?.value;
+    const result = await validatePasscode(idToValidate, passcode, amount);
     console.log('Validation result:', result);
     setPaymentStatus(result.success ? 'success' : 'failed');
     
@@ -126,7 +161,7 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
     switch (popup) {
       case 'transactionSummary':
         if (!hasAccount) {
-          return <HasAccountSummary onClose={onClose} />;
+          return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
         }
         return (
           <TransactionDetailsSummary
@@ -184,7 +219,6 @@ const WalletPaymentForm = ({ customerId, amount, onClose, onSuccess }) => {
           align-items: center;
           z-index: 1000;
         }
-
         .overlay {
           position: absolute;
           top: 0;

@@ -10,18 +10,24 @@ export default {
     {
       file: 'dist/WalletPaymentForm.esm.js',
       format: 'esm',
+      sourcemap: true, // Helpful for debugging
     },
     {
       file: 'dist/WalletPaymentForm.umd.js',
       format: 'umd',
       name: 'WalletPaymentForm',
+      sourcemap: true,
     },
   ],
   plugins: [
     babel({
       babelHelpers: 'bundled',
-      presets: ['@babel/preset-react'],
+      presets: [
+        ['@babel/preset-env', { targets: '> 0.25%, not dead' }], // Transpile to widely supported JS
+        '@babel/preset-react', // Handle JSX
+      ],
       extensions: ['.js', '.jsx'],
+      exclude: 'node_modules/**', // Don’t transpile dependencies
     }),
     resolve(),
     commonjs(),
@@ -37,5 +43,5 @@ export default {
       buffer: true,
     }),
   ],
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom'], // Keep these as peer dependencies
 };
