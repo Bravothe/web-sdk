@@ -7,11 +7,19 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
       <div className="popup-content">
         <Header />
         <div className="transaction-summary">
+          {transactionDetails.merchantLogo && (
+            <img
+              src={transactionDetails.merchantLogo}
+              alt="Merchant Logo"
+              className="merchant-logo"
+            />
+          )}
           <div className="merchant-info">
-            <strong>Airbnb</strong>
+            <strong>{transactionDetails.merchantName}</strong>
           </div>
           <div className="total-billing">
-            UGX {transactionDetails.totalBilling.toFixed(2)}
+            <span>Total Billing</span>
+            <strong>{transactionDetails.billedCurrency} {transactionDetails.totalBilling.toFixed(2)}</strong>
           </div>
           <div className="transaction-details">
             <h4>Transaction Details</h4>
@@ -20,7 +28,7 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
               <strong>{transactionDetails.type}</strong>
             </div>
             <div className="detail">
-              <span>ID</span>
+              <span>To</span>
               <strong>{transactionDetails.id}</strong>
             </div>
             <div className="detail">
@@ -33,14 +41,14 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
             </div>
             <div className="detail">
               <span>Billed Amount</span>
-              <strong>UGX {transactionDetails.billedAmount.toFixed(2)}</strong>
+              <strong>{transactionDetails.billedCurrency} {transactionDetails.billedAmount.toFixed(2)}</strong>
             </div>
             <div className="detail total-billing-detail">
               <span>Total Billing</span>
-              <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
+              <strong>{transactionDetails.billedCurrency} {transactionDetails.totalBilling.toFixed(2)}</strong>
             </div>
           </div>
-          <button onClick={onConfirm} className="confirm-button">Confirm</button><br/>
+          <button onClick={onConfirm} className="confirm-button">Confirm</button>
         </div>
       </div>
       <style>{`
@@ -67,20 +75,36 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
           padding: 0 15px;
         }
 
+        .merchant-logo {
+          width: 60px;
+          height: 60px;
+          margin: 10px auto;
+          border-radius: 50%;
+          object-fit: contain;
+        }
+
         .merchant-info {
           font-size: 1.2em;
           font-weight: bold;
           color: #333;
-          margin-bottom: 10px;
+          margin-bottom: 5px;
         }
 
         .total-billing {
+          margin-bottom: 15px;
+        }
+
+        .total-billing span {
+          display: block;
+          font-size: 1em;
+          color: #666;
+          margin-bottom: 5px;
+        }
+
+        .total-billing strong {
           font-size: 1.5em;
           font-weight: bold;
-          color: #02CD8D;
-          text-align: center;
-          padding: 10px 0;
-          margin-bottom: 15px;
+          color: #000;
         }
 
         .transaction-details {
@@ -132,11 +156,13 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
           background: #007bff;
           color: #fff;
           padding: 12px;
-          border-radius: 5px;
+          border-radius: 10px;
           font-size: 1.1em;
+          font-weight: bold;
           cursor: pointer;
           border: none;
           transition: background-color 0.3s ease;
+          margin-bottom: 15px;
         }
 
         .confirm-button:hover {

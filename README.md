@@ -1,28 +1,37 @@
+---
+
 # Evzone Pay
 
 <img src="https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true" alt="Evzone Pay Logo" width="200" />
 
-**Evzone Africa** is a library designed to simplify the integration of a digital wallet payment system into e-commerce platforms. Built with **React** and **Node.js**, it provides a seamless way for developers to enable their customers to make payments using the Evzone Africa digital wallet. This package is lightweight, customizable, and developer-friendly.
+**EVzone Africa** is a library designed to simplify the integration of a digital wallet payment system into e-commerce platforms. Built with **React** and **Node.js**, it provides a seamless way for developers to enable their customers to make payments using the Evzone Africa digital wallet. This package is lightweight, customizable, and developer-friendly.
 
 ## Table of Contents
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Examples](#examples)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Support](#support)
+- [Evzone Pay](#evzone-pay)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Frontend (React)](#frontend-react)
+    - [Notes](#notes)
+  - [API Reference](#api-reference)
+    - [Frontend (React)](#frontend-react-1)
+  - [Examples](#examples)
+    - [Complete Checkout Flow](#complete-checkout-flow)
+  - [Configuration](#configuration)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Support](#support)
+    - [Key Changes Made](#key-changes-made)
 
 ## Features
 
 - Easy integration with e-commerce platforms.
 - Support for React-based frontends.
-- Secure payment processing with Evzone Africa digital wallet.
-- Customizable payment form component.
+- Secure payment processing with EVzone digital wallet.
+- Customizable payment form component with support for transaction details and merchant branding.
 - Comprehensive error handling and validation.
 - Lightweight and optimized for performance.
 
@@ -37,40 +46,43 @@ Before you begin, ensure you have the following installed:
 To install the `evzone-alb` library, run the following command in your project directory:
 
 ```bash
-
-npm install evzone-alb
-
+npm install pay-sdk-tx5
 ```
-
-Additionally, import the CSS file for styling the payment form:
-
-```js
-import "evzone-alb/dist/dist/WalletPaymentForm.css";
-```
-
 ## Usage
+
 ### Frontend (React)
+
 1. Import the `WalletPaymentForm` component into your React application.
-2. Use it within a conditional render to show the payment form when needed.
-3. Pass the required props, such as `customerId`, `amount`, `onClose`, and `onSuccess`.
+2. Use it within a conditional render to show the payment form when needed (e.g., in a popup or modal).
+3. Pass the required props: `customerId`, `amount`, `onClose`, and `onSuccess`.
+4. Pass additional props to customize the transaction: `type`, `particulars`, `currency`, `merchantName`, and `merchantLogo`.
 
 Here’s an example usage in a shopping cart component:
 
-```js
-
-
+```jsx
 import React, { useState } from "react";
-import WalletPaymentForm from "evzone-alb/dist/WalletPaymentForm.esm";
-import "evzone-alb/dist/dist/WalletPaymentForm.css";
+import WalletPaymentForm from "pay-sdk-tx5/dist/WalletPaymentForm.esm";
 
 const Cart = () => {
   const [showPopup, setShowPopup] = useState(false);
   const cartTotalAmount = 99.99; // Example amount (replace with your cart logic)
   const customerId = "customer123"; // Example customer ID (replace with your auth logic)
 
+  // Transaction details to pass to WalletPaymentForm
+  const transactionType = "Cart Purchase";
+  const transactionParticulars = "Purchase of Shirt, Pants"; // Example: Dynamically generate based on cart items
+  const transactionCurrency = "USD";
+  const merchantName = "My Awesome Store";
+  const merchantLogo = "https://example.com/merchant-logo.png"; // Replace with your merchant logo URL
+
   const handlePaymentSuccess = () => {
     console.log("Payment successful");
     // Add logic to clear cart or update order status
+    setShowPopup(false);
+  };
+
+  const handlePaymentClose = () => {
+    console.log("Payment popup closed");
     setShowPopup(false);
   };
 
@@ -82,7 +94,12 @@ const Cart = () => {
         <WalletPaymentForm
           customerId={customerId}
           amount={cartTotalAmount}
-          onClose={() => setShowPopup(false)}
+          type={transactionType}
+          particulars={transactionParticulars}
+          currency={transactionCurrency}
+          merchantName={merchantName}
+          merchantLogo={merchantLogo}
+          onClose={handlePaymentClose}
           onSuccess={handlePaymentSuccess}
         />
       )}
@@ -91,57 +108,23 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
 ```
 
 ### Notes
-
 - The `WalletPaymentForm` component is rendered conditionally (e.g., in a popup or modal).
 - The `customerId` should be obtained from your authentication system or merchant account.
 - The `amount` should reflect the total amount to be paid (e.g., from your cart).
-
-## API Reference
-
-### Frontend (React)
-
-- **`WalletPaymentForm` Component**
-  - `customerId` (string, required): The unique identifier for the customer making the payment.
-  - `amount` (number, required): The payment amount in the default currency.
-  - `onClose` (function, required): Callback triggered when the payment form is closed.
-  - `onSuccess` (function, required): Callback triggered on successful payment.
-
-## Examples
-
-### Complete Checkout Flow
-
-1. User adds items to the cart.
-2. User clicks "Make Payments" to trigger the payment form.
-3. The `WalletPaymentForm` component is displayed.
-4. Upon successful payment, the `onSuccess` callback is triggered, and the form is closed via `onClose`.
-
-See the [examples folder](examples/) for more detailed sample code.
+- **Transaction Details**:
+  - `type`: Specifies the type of transaction (e.g., "Cart Purchase", "Subscription").
+  - `particulars`: Describes the transaction (e.g., "Purchase of Shirt, Pants", "Student Bus Fees").
+  - `currency`: The currency for the transaction (e.g., "USD", "UGX").
+  - `merchantName`: The name of the merchant (e.g., "My Awesome Store").
+  - `merchantLogo`: The URL to the merchant’s logo (e.g., "https://example.com/merchant-logo.png").
+- These props allow you to customize the payment form to reflect your transaction and branding.
 
 ## Configuration
 
-The `WalletPaymentForm` component currently supports the props listed in the API Reference. Additional customization (e.g., theming, currency) may be added in future updates. Check the latest documentation or release notes for updates.
-
-## Troubleshooting
-
-- **Payment Form Not Displaying**: Ensure the CSS file is correctly imported (`evzone-africa/dist/dist/WalletPaymentForm.css`) and that the `showPopup` state (or equivalent) is toggled correctly.
-- **"Invalid Customer ID" Error**: Verify that the `customerId` is valid and matches your Evzone Africa merchant account records.
-- **Payment Not Processing**: Ensure your network connection is stable and that the Evzone Africa servers are reachable.
-
-## Contributing
-
-We welcome contributions to improve `evzone-africa`! To contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Make your changes and commit them (`git commit -m "Add your feature"`).
-4. Push to your branch (`git push origin feature/your-feature`).
-5. Open a Pull Request.
-
-Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+The `WalletPaymentForm` component supports the props listed in the API Reference. You can customize the transaction details and merchant branding by passing the optional props (`type`, `particulars`, `currency`, `merchantName`, `merchantLogo`). Additional customization (e.g., theming, additional fees) may be added in future updates. Check the latest documentation or release notes for updates.
 
 ## License
 
@@ -150,8 +133,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Support
 
 For questions, issues, or feature requests, please:
-- Open an issue on our [GitHub Issues page](https://github.com/yourusername/evzone-africa/issues).
+- Open an issue on our [GitHub Issues page](https://github.com/yourusername/evzone-alb/issues).
 - Contact our support team at support@evzoneafrica.com.
 
-
-
+---

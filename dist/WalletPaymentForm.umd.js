@@ -284,25 +284,29 @@
       className: "popup-content"
     }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
       className: "transaction-summary"
-    }, /*#__PURE__*/React.createElement("div", {
+    }, transactionDetails.merchantLogo && /*#__PURE__*/React.createElement("img", {
+      src: transactionDetails.merchantLogo,
+      alt: "Merchant Logo",
+      className: "merchant-logo"
+    }), /*#__PURE__*/React.createElement("div", {
       className: "merchant-info"
-    }, /*#__PURE__*/React.createElement("strong", null, "Airbnb")), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("strong", null, transactionDetails.merchantName)), /*#__PURE__*/React.createElement("div", {
       className: "total-billing"
-    }, "UGX ", transactionDetails.totalBilling.toFixed(2)), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "Total Billing"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2))), /*#__PURE__*/React.createElement("div", {
       className: "transaction-details"
     }, /*#__PURE__*/React.createElement("h4", null, "Transaction Details"), /*#__PURE__*/React.createElement("div", {
       className: "detail"
     }, /*#__PURE__*/React.createElement("span", null, "Type"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.type)), /*#__PURE__*/React.createElement("div", {
       className: "detail"
-    }, /*#__PURE__*/React.createElement("span", null, "ID"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.id)), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "To"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.id)), /*#__PURE__*/React.createElement("div", {
       className: "detail"
     }, /*#__PURE__*/React.createElement("span", null, "Particulars"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.particulars)), /*#__PURE__*/React.createElement("div", {
       className: "detail"
     }, /*#__PURE__*/React.createElement("span", null, "Billed Currency"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency)), /*#__PURE__*/React.createElement("div", {
       className: "detail"
-    }, /*#__PURE__*/React.createElement("span", null, "Billed Amount"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.billedAmount.toFixed(2))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "Billed Amount"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency, " ", transactionDetails.billedAmount.toFixed(2))), /*#__PURE__*/React.createElement("div", {
       className: "detail total-billing-detail"
-    }, /*#__PURE__*/React.createElement("span", null, "Total Billing"), /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("span", null, "Total Billing"), /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("button", {
       onClick: onConfirm,
       className: "confirm-button"
     }, "Confirm"))), /*#__PURE__*/React.createElement("style", null, `
@@ -329,20 +333,36 @@
           padding: 0 15px;
         }
 
+        .merchant-logo {
+          width: 60px;
+          height: 60px;
+          margin: 10px auto;
+          border-radius: 50%;
+          object-fit: contain;
+        }
+
         .merchant-info {
           font-size: 1.2em;
           font-weight: bold;
           color: #333;
-          margin-bottom: 10px;
+          margin-bottom: 5px;
         }
 
         .total-billing {
+          margin-bottom: 15px;
+        }
+
+        .total-billing span {
+          display: block;
+          font-size: 1em;
+          color: #666;
+          margin-bottom: 5px;
+        }
+
+        .total-billing strong {
           font-size: 1.5em;
           font-weight: bold;
-          color: #02CD8D;
-          text-align: center;
-          padding: 10px 0;
-          margin-bottom: 15px;
+          color: #000;
         }
 
         .transaction-details {
@@ -394,11 +414,13 @@
           background: #007bff;
           color: #fff;
           padding: 12px;
-          border-radius: 5px;
+          border-radius: 10px;
           font-size: 1.1em;
+          font-weight: bold;
           cursor: pointer;
           border: none;
           transition: background-color 0.3s ease;
+          margin-bottom: 15px;
         }
 
         .confirm-button:hover {
@@ -457,7 +479,7 @@
       onClick: onSubmit,
       className: "confirm-button",
       disabled: !passcode
-    }, "Confirm Payment"), /*#__PURE__*/React.createElement("button", {
+    }, "Confirm"), /*#__PURE__*/React.createElement("button", {
       onClick: onBack,
       className: "back-button",
       style: {
@@ -1001,14 +1023,15 @@
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
   };
-  const generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName) => ({
+  const generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName, merchantLogo) => ({
     type: type || "Booking",
     id: transactionId,
     particulars: particulars || "Hotel Booking",
     billedCurrency: currency || "UGX",
     billedAmount: amount,
     totalBilling: amount,
-    merchantName: merchantName || "Unknown Merchant" // Fallback if not provided
+    merchantName: merchantName || "Unknown Merchant",
+    merchantLogo: merchantLogo || "" // Fallback to empty string if not provided
   });
   const checkAccountExists = customerId => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
   const validatePasscode = (customerId, passcode, amount) => {
@@ -1038,6 +1061,7 @@
       particulars,
       currency,
       merchantName,
+      merchantLogo,
       onClose,
       onSuccess
     } = _ref;
@@ -1128,7 +1152,7 @@
       setPaymentStatus('idle');
       onClose();
     };
-    const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName);
+    const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName, merchantLogo);
     const renderPopup = () => {
       console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
       switch (popup) {
