@@ -11,12 +11,12 @@ const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, t
         <div className="merchant-details">
           <div className="merchant-left">
             <div className="merchant-info">
-              <div className="merchant-name">Airbnb</div>
-              <div className="merchant-id">W-123456789</div>
+              <div className="merchant-name">{transactionDetails.merchantName}</div>
+              <div className="merchant-id">{transactionDetails.id}</div>
             </div>
           </div>
           <div className="merchant-amount">
-            <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
+            <strong>{transactionDetails.billedCurrency} {transactionDetails.totalBilling.toFixed(2)}</strong>
           </div>
         </div>
         <div className="passcode-section">
@@ -37,17 +37,17 @@ const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, t
         </div>
         <div className="transaction-details">
           <p>
-            You are making a payment to <strong>Acorn International School</strong> and an amount of
-            <strong> UGX {transactionDetails.totalBilling.toFixed(2)}</strong> will be deducted off your wallet, including:
+            You are making a payment to <strong>{transactionDetails.merchantName}</strong> and an amount of
+            <strong> {transactionDetails.billedCurrency} {transactionDetails.totalBilling.toFixed(2)}</strong> will be deducted off your wallet, including:
             <br />
-            <strong>0.5% Tax:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+            <strong>0.5% Tax:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
             <br />
-            <strong>0.5% Wallet Fee:</strong> UGX {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+            <strong>0.5% Wallet Fee:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
           </p>
         </div>
         <div className="buttons-container">
           <button onClick={onSubmit} className="confirm-button" disabled={!passcode}>
-            Confirm Payment
+            Confirm
           </button>
           <button onClick={onBack} className="back-button" style={{ marginTop: '15px' }}>
             Back

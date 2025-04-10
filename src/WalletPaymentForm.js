@@ -23,13 +23,14 @@ const getCookie = (name) => {
   return null;
 };
 
-const generateTransactionDetails = (amount, transactionId, type, particulars, currency) => ({
-  type: type || "Booking", // Fallback to "Booking" if not provided
+const generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName) => ({
+  type: type || "Booking",
   id: transactionId,
-  particulars: particulars || "Hotel Booking", // Fallback to "Hotel Booking"
-  billedCurrency: currency || "UGX", // Fallback to "UGX"
+  particulars: particulars || "Hotel Booking",
+  billedCurrency: currency || "UGX",
   billedAmount: amount,
   totalBilling: amount,
+  merchantName: merchantName || "Unknown Merchant" // Fallback if not provided
 });
 
 const checkAccountExists = (customerId) => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
@@ -49,6 +50,7 @@ const WalletPaymentForm = ({
   type, 
   particulars, 
   currency, 
+  merchantName, 
   onClose, 
   onSuccess 
 }) => {
@@ -148,7 +150,7 @@ const WalletPaymentForm = ({
     onClose();
   };
 
-  const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency);
+  const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName);
 
   const renderPopup = () => {
     console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);

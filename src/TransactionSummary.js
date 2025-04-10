@@ -40,7 +40,7 @@ const TransactionSummary = ({ transactionDetails, onConfirm }) => {
               <strong>UGX {transactionDetails.totalBilling.toFixed(2)}</strong>
             </div>
           </div>
-          <button onClick={onConfirm} className="confirm-button">Confirm</button>
+          <button onClick={onConfirm} className="confirm-button">Confirm</button><br/>
         </div>
       </div>
       <style>{`

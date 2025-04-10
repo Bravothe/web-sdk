@@ -429,11 +429,11 @@
       className: "merchant-info"
     }, /*#__PURE__*/React.createElement("div", {
       className: "merchant-name"
-    }, "Airbnb"), /*#__PURE__*/React.createElement("div", {
+    }, transactionDetails.merchantName), /*#__PURE__*/React.createElement("div", {
       className: "merchant-id"
-    }, "W-123456789"))), /*#__PURE__*/React.createElement("div", {
+    }, transactionDetails.id))), /*#__PURE__*/React.createElement("div", {
       className: "merchant-amount"
-    }, /*#__PURE__*/React.createElement("strong", null, "UGX ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("strong", null, transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2)))), /*#__PURE__*/React.createElement("div", {
       className: "passcode-section"
     }, /*#__PURE__*/React.createElement("label", {
       htmlFor: "passcode"
@@ -451,7 +451,7 @@
       onClick: () => setShowPasscode(!showPasscode)
     }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("div", {
       className: "transaction-details"
-    }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", null, "Acorn International School"), " and an amount of", /*#__PURE__*/React.createElement("strong", null, " UGX ", transactionDetails.totalBilling.toFixed(2)), " will be deducted off your wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Tax:"), " UGX ", (transactionDetails.totalBilling * 0.005).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Wallet Fee:"), " UGX ", (transactionDetails.totalBilling * 0.005).toFixed(2))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", null, transactionDetails.merchantName), " and an amount of", /*#__PURE__*/React.createElement("strong", null, " ", transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2)), " will be deducted off your wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Tax:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Wallet Fee:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2))), /*#__PURE__*/React.createElement("div", {
       className: "buttons-container"
     }, /*#__PURE__*/React.createElement("button", {
       onClick: onSubmit,
@@ -1001,16 +1001,14 @@
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
   };
-  const generateTransactionDetails = (amount, transactionId, type, particulars, currency) => ({
+  const generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName) => ({
     type: type || "Booking",
-    // Fallback to "Booking" if not provided
     id: transactionId,
     particulars: particulars || "Hotel Booking",
-    // Fallback to "Hotel Booking"
     billedCurrency: currency || "UGX",
-    // Fallback to "UGX"
     billedAmount: amount,
-    totalBilling: amount
+    totalBilling: amount,
+    merchantName: merchantName || "Unknown Merchant" // Fallback if not provided
   });
   const checkAccountExists = customerId => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
   const validatePasscode = (customerId, passcode, amount) => {
@@ -1039,6 +1037,7 @@
       type,
       particulars,
       currency,
+      merchantName,
       onClose,
       onSuccess
     } = _ref;
@@ -1129,7 +1128,7 @@
       setPaymentStatus('idle');
       onClose();
     };
-    const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency);
+    const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName);
     const renderPopup = () => {
       console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
       switch (popup) {
