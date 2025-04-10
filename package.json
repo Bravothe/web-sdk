@@ -1,5 +1,5 @@
 {
-  "name": "pay-sdk-th",
+  "name": "pay-sdk-tx1",
   "version": "1.0.2",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.umd.js",

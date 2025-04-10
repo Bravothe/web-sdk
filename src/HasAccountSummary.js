@@ -1,13 +1,31 @@
 import React from 'react';
 import Header from './Header';
 
-const HasAccountSummary = ({ onClose }) => {
+const HasAccountSummary = ({ onClose, onLoginSuccess }) => {
   const handleSignIn = () => {
-    window.open(
-      'https://accounts.dev.evzone.app?redirect_uri=http://localhost:3000/callback',
+    const redirectUri = 'http://localhost:3002/callback';
+    const loginUrl = `http://localhost:3000?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const popup = window.open(
+      loginUrl,
       'Sign In',
       'width=500,height=600'
     );
+
+    const handleMessage = (event) => {
+      if (event.origin !== 'http://localhost:3000') return;
+      console.log('Received login data:', event.data);
+      onLoginSuccess(event.data); // Pass data to WalletPaymentForm
+      window.removeEventListener('message', handleMessage);
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    const checkPopup = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkPopup);
+        window.removeEventListener('message', handleMessage);
+      }
+    }, 500);
   };
 
   return (
@@ -24,7 +42,6 @@ const HasAccountSummary = ({ onClose }) => {
           <button onClick={handleSignIn} className="submit-button">Sign in</button>
         </div>
       </div>
-      {/* Your existing styles remain unchanged */}
       <style>{`
         .popup-content {
           display: flex;

@@ -12,7 +12,7 @@ const SAMPLE_CUSTOMERS = {
   "customer123": { name: "John Doe", balance: 1000, passcode: "123456" },
   "customer456": { name: "Jane Smith", balance: 500, passcode: "567856" },
   "customer789": { name: "Alice Brown", balance: 50, passcode: "901256" },
-  "admin": { name: "Admin User", balance: 2000, passcode: "admin123" }, // Added for cookie user
+  "admin": { name: "Admin User", balance: 2000, passcode: "admin123" },
 };
 
 // Function to get a cookie by name
@@ -51,7 +51,6 @@ const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSucc
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
   const [loading, setLoading] = useState(true);
-  const [authData, setAuthData] = useState(null);
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
   useEffect(() => {
@@ -64,32 +63,27 @@ const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSucc
     const checkConditions = async () => {
       let customerIdToUse = propCustomerId;
 
-      // Check if propCustomerId exists in SAMPLE_CUSTOMERS
+      // Check propCustomerId first
       if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
         console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
         const cookieUserId = getCookie('user_id');
-        if (cookieUserId) {
-          console.log('Found user_id in cookies:', cookieUserId);
-          customerIdToUse = cookieUserId; // Use cookie user_id (e.g., "admin")
+        if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
+          console.log('Valid user_id found in cookies:', cookieUserId);
+          customerIdToUse = cookieUserId;
+          setHasAccount(true); // Valid cookie match, skip login
         } else {
           console.log('No valid customerId or cookie found, prompting login');
-          setHasAccount(false); // No account, show login
+          setHasAccount(false);
           setEffectiveCustomerId(null);
           return;
         }
+      } else {
+        setHasAccount(true); // Valid propCustomerId, proceed
       }
 
       const accountExists = await checkAccountExists(customerIdToUse);
       console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
-      setHasAccount(accountExists);
       setEffectiveCustomerId(customerIdToUse);
-
-      // If cookies indicate a logged-in user but no SAMPLE_CUSTOMERS match, simulate authData
-      if (!accountExists && getCookie('user_id')) {
-        setAuthData({ name: '_EV_DEV_MUID', value: getCookie('user_id') });
-        setHasAccount(true); // Treat as authenticated
-        setPopup('transactionSummary');
-      }
     };
 
     checkConditions();
@@ -97,25 +91,18 @@ const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSucc
     return () => clearTimeout(timer);
   }, [propCustomerId, amount]);
 
-  const handleLoginSuccess = ({ name, value }) => {
-    console.log('Login success, name:', name, 'value:', value);
-    setAuthData({ name, value });
+  const handleLoginSuccess = ({ user_id }) => {
+    console.log('Login success, user_id:', user_id);
+    setEffectiveCustomerId(user_id);
     setHasAccount(true);
-    setEffectiveCustomerId(value); // Use the value from login (e.g., _EV_DEV_MUID)
     setPopup('transactionSummary');
   };
 
   const handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount);
-    if (hasAccount === null) {
-      console.log('hasAccount is null, cannot proceed');
-      return;
-    }
+    if (hasAccount === null) return;
     if (hasAccount) {
       setPopup('enterPasscode');
-    } else {
-      console.log('No account, showing HasAccountSummary');
-      setPopup('transactionSummary');
     }
   };
 
@@ -123,7 +110,7 @@ const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSucc
     e.preventDefault();
     console.log('Submitting passcode:', passcode);
     setPaymentStatus('pending');
-    const idToValidate = effectiveCustomerId || authData?.value;
+    const idToValidate = effectiveCustomerId;
     const result = await validatePasscode(idToValidate, passcode, amount);
     console.log('Validation result:', result);
     setPaymentStatus(result.success ? 'success' : 'failed');
@@ -160,7 +147,7 @@ const WalletPaymentForm = ({ customerId: propCustomerId, amount, onClose, onSucc
     console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
     switch (popup) {
       case 'transactionSummary':
-        if (!hasAccount) {
+        if (hasAccount === false) {
           return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
         }
         return (

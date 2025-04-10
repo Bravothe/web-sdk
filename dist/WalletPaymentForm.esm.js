@@ -71,10 +71,26 @@ const Header = _ref => {
 
 const HasAccountSummary = _ref => {
   let {
-    onClose
+    onClose,
+    onLoginSuccess
   } = _ref;
   const handleSignIn = () => {
-    window.open('https://accounts.dev.evzone.app?redirect_uri=http://localhost:3000/callback', 'Sign In', 'width=500,height=600');
+    const redirectUri = 'http://localhost:3002/callback';
+    const loginUrl = `http://localhost:3000?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
+    const handleMessage = event => {
+      if (event.origin !== 'http://localhost:3000') return;
+      console.log('Received login data:', event.data);
+      onLoginSuccess(event.data); // Pass data to WalletPaymentForm
+      window.removeEventListener('message', handleMessage);
+    };
+    window.addEventListener('message', handleMessage);
+    const checkPopup = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkPopup);
+        window.removeEventListener('message', handleMessage);
+      }
+    }, 500);
   };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
@@ -946,7 +962,7 @@ const SAMPLE_CUSTOMERS = {
     name: "Admin User",
     balance: 2000,
     passcode: "admin123"
-  } // Added for cookie user
+  }
 };
 
 // Function to get a cookie by name
@@ -998,7 +1014,6 @@ const WalletPaymentForm = _ref => {
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
   const [loading, setLoading] = useState(true);
-  const [authData, setAuthData] = useState(null);
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
   useEffect(() => {
     console.log('useEffect running, propCustomerId:', propCustomerId, 'amount:', amount);
@@ -1009,70 +1024,51 @@ const WalletPaymentForm = _ref => {
     const checkConditions = async () => {
       let customerIdToUse = propCustomerId;
 
-      // Check if propCustomerId exists in SAMPLE_CUSTOMERS
+      // Check propCustomerId first
       if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
         console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
         const cookieUserId = getCookie('user_id');
-        if (cookieUserId) {
-          console.log('Found user_id in cookies:', cookieUserId);
-          customerIdToUse = cookieUserId; // Use cookie user_id (e.g., "admin")
+        if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
+          console.log('Valid user_id found in cookies:', cookieUserId);
+          customerIdToUse = cookieUserId;
+          setHasAccount(true); // Valid cookie match, skip login
         } else {
           console.log('No valid customerId or cookie found, prompting login');
-          setHasAccount(false); // No account, show login
+          setHasAccount(false);
           setEffectiveCustomerId(null);
           return;
         }
+      } else {
+        setHasAccount(true); // Valid propCustomerId, proceed
       }
       const accountExists = await checkAccountExists(customerIdToUse);
       console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
-      setHasAccount(accountExists);
       setEffectiveCustomerId(customerIdToUse);
-
-      // If cookies indicate a logged-in user but no SAMPLE_CUSTOMERS match, simulate authData
-      if (!accountExists && getCookie('user_id')) {
-        setAuthData({
-          name: '_EV_DEV_MUID',
-          value: getCookie('user_id')
-        });
-        setHasAccount(true); // Treat as authenticated
-        setPopup('transactionSummary');
-      }
     };
     checkConditions();
     return () => clearTimeout(timer);
   }, [propCustomerId, amount]);
   const handleLoginSuccess = _ref2 => {
     let {
-      name,
-      value
+      user_id
     } = _ref2;
-    console.log('Login success, name:', name, 'value:', value);
-    setAuthData({
-      name,
-      value
-    });
+    console.log('Login success, user_id:', user_id);
+    setEffectiveCustomerId(user_id);
     setHasAccount(true);
-    setEffectiveCustomerId(value); // Use the value from login (e.g., _EV_DEV_MUID)
     setPopup('transactionSummary');
   };
   const handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount);
-    if (hasAccount === null) {
-      console.log('hasAccount is null, cannot proceed');
-      return;
-    }
+    if (hasAccount === null) return;
     if (hasAccount) {
       setPopup('enterPasscode');
-    } else {
-      console.log('No account, showing HasAccountSummary');
-      setPopup('transactionSummary');
     }
   };
   const handleSubmit = async e => {
     e.preventDefault();
     console.log('Submitting passcode:', passcode);
     setPaymentStatus('pending');
-    const idToValidate = effectiveCustomerId || authData?.value;
+    const idToValidate = effectiveCustomerId;
     const result = await validatePasscode(idToValidate, passcode, amount);
     console.log('Validation result:', result);
     setPaymentStatus(result.success ? 'success' : 'failed');
@@ -1105,7 +1101,7 @@ const WalletPaymentForm = _ref => {
     console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
     switch (popup) {
       case 'transactionSummary':
-        if (!hasAccount) {
+        if (hasAccount === false) {
           return /*#__PURE__*/React.createElement(HasAccountSummary, {
             onClose: onClose,
             onLoginSuccess: handleLoginSuccess
