@@ -109,19 +109,6 @@ const Cart = () => {
 
 export default Cart;
 ```
-
-### Notes
-- The `WalletPaymentForm` component is rendered conditionally (e.g., in a popup or modal).
-- The `customerId` should be obtained from your authentication system or merchant account.
-- The `amount` should reflect the total amount to be paid (e.g., from your cart).
-- **Transaction Details**:
-  - `type`: Specifies the type of transaction (e.g., "Cart Purchase", "Subscription").
-  - `particulars`: Describes the transaction (e.g., "Purchase of Shirt, Pants", "Student Bus Fees").
-  - `currency`: The currency for the transaction (e.g., "USD", "UGX").
-  - `merchantName`: The name of the merchant (e.g., "My Awesome Store").
-  - `merchantLogo`: The URL to the merchant’s logo (e.g., "https://example.com/merchant-logo.png").
-- These props allow you to customize the payment form to reflect your transaction and branding.
-
 ## Configuration
 
 The `WalletPaymentForm` component supports the props listed in the API Reference. You can customize the transaction details and merchant branding by passing the optional props (`type`, `particulars`, `currency`, `merchantName`, `merchantLogo`). Additional customization (e.g., theming, additional fees) may be added in future updates. Check the latest documentation or release notes for updates.
