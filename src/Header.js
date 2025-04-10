@@ -1,35 +1,50 @@
 import React from 'react';
+import { IoClose } from 'react-icons/io5'; // Import the close icon
 
 const Header = ({ onClose }) => {
   return (
     <>
       <div className="popup-header">
-        <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
-            alt="EVzone Logo"
-            className="header-icon"
-          />
+        <div className="header-content">
+          <div className="logo">
+            <img
+              src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
+              alt="EVzone Logo"
+              className="header-icon"
+            />
+          </div>
+          <h2>
+            <span className="evzone">EVzone</span>
+            <span className="pay"> Pay</span>
+          </h2>
         </div>
-        <h2>
-          <span className="evzone">EVzone</span>
-          <span className="pay"> Pay</span>
-        </h2>
+        {onClose && (
+          <button className="close-btn" onClick={onClose}>
+            <IoClose />
+          </button>
+        )}
       </div>
       <style>{`
         .popup-header {
           display: flex;
           align-items: center;
-          justify-content: ${onClose ? 'space-between' : 'center'};
+          justify-content: space-between;
           margin-bottom: 15px;
           width: 100%;
           padding: 10px 15px;
           border-bottom: 1px solid #ddd;
         }
 
+        .header-content {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          padding-left: 5px;
+        }
+
         .logo {
-          width: 40px;
-          height: 40px;
+          width: 36px;
+          height: 36px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -44,11 +59,10 @@ const Header = ({ onClose }) => {
         }
 
         .popup-header h2 {
-          font-size: 1.2em;
+          font-size: 1.1em;
           color: #080808;
           margin: 0;
-          font-weight: bold;
-          ${onClose ? 'text-align: left; flex-grow: 1;' : ''}
+          font-weight: 600;
         }
 
         .popup-header .evzone {
@@ -62,9 +76,21 @@ const Header = ({ onClose }) => {
         .close-btn {
           background: none;
           border: none;
-          font-size: 1.5em;
-          color: #ff5a5f;
+          padding: 0; /* Remove padding to keep it minimal */
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .close-btn svg {
+          font-size: 1.2em; /* Smaller icon size */
+          color: #ff5a5f; /* Same color as before */
+          transition: color 0.3s ease;
+        }
+
+        .close-btn:hover svg {
+          color: #e04f53; /* Slightly darker on hover */
         }
       `}</style>
     </>
