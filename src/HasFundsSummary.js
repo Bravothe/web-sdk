@@ -16,9 +16,6 @@ const HasAccountSummary = ({ onClose }) => {
             <span className="evzone">EVzone</span>
             <span className="pay"> Pay</span>
           </h2>
-          <button className="close-btn" onClick={onClose}>
-            <span>×</span>
-          </button>
         </div>
         <div className="error-content">
           <div className="message-container">
@@ -86,14 +83,6 @@ const HasAccountSummary = ({ onClose }) => {
 
         .popup-header .pay {
           color: #0a0a0a;
-        }
-
-        .close-btn {
-          background: none;
-          border: none;
-          font-size: 1.5em;
-          color: #ff5a5f;
-          cursor: pointer;
         }
 
         .error-content {

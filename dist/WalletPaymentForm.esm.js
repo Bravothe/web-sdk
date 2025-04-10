@@ -997,11 +997,14 @@ const getCookie = name => {
   if (parts.length === 2) return parts.pop().split(';').shift();
   return null;
 };
-const generateTransactionDetails = (amount, transactionId) => ({
-  type: "Booking",
+const generateTransactionDetails = (amount, transactionId, type, particulars, currency) => ({
+  type: type || "Booking",
+  // Fallback to "Booking" if not provided
   id: transactionId,
-  particulars: "Hotel Booking",
-  billedCurrency: "UGX",
+  particulars: particulars || "Hotel Booking",
+  // Fallback to "Hotel Booking"
+  billedCurrency: currency || "UGX",
+  // Fallback to "UGX"
   billedAmount: amount,
   totalBilling: amount
 });
@@ -1029,6 +1032,9 @@ const WalletPaymentForm = _ref => {
   let {
     customerId: propCustomerId,
     amount,
+    type,
+    particulars,
+    currency,
     onClose,
     onSuccess
   } = _ref;
@@ -1048,15 +1054,13 @@ const WalletPaymentForm = _ref => {
     }, 5000);
     const checkConditions = async () => {
       let customerIdToUse = propCustomerId;
-
-      // Check propCustomerId first
       if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
         console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
         const cookieUserId = getCookie('user_id');
         if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
           console.log('Valid user_id found in cookies:', cookieUserId);
           customerIdToUse = cookieUserId;
-          setHasAccount(true); // Valid cookie match, skip login
+          setHasAccount(true);
         } else {
           console.log('No valid customerId or cookie found, prompting login');
           setHasAccount(false);
@@ -1064,7 +1068,7 @@ const WalletPaymentForm = _ref => {
           return;
         }
       } else {
-        setHasAccount(true); // Valid propCustomerId, proceed
+        setHasAccount(true);
       }
       const accountExists = await checkAccountExists(customerIdToUse);
       console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
@@ -1121,7 +1125,7 @@ const WalletPaymentForm = _ref => {
     setPaymentStatus('idle');
     onClose();
   };
-  const transactionDetails = generateTransactionDetails(amount, transactionId);
+  const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency);
   const renderPopup = () => {
     console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
     switch (popup) {
