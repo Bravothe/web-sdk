@@ -12,7 +12,7 @@ const Callback = () => {
     if (muid && window.opener) {
       window.opener.postMessage(
         { name: '__EV_DEV_MUID', value: muid },
-        'http://localhost:3000'
+        'https://efs-gp9p6.ondigitalocean.app/'
       );
       window.close();
     }

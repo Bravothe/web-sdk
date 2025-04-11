@@ -1,10 +1,10 @@
 import React from 'react';
 import Header from './Header';
 
-const HasAccountSummary = ({ onClose, onLoginSuccess }) => {
+const HasAccountSummary = ({ onLoginSuccess }) => {
   const handleSignIn = () => {
     const redirectUri = 'http://localhost:3002/callback';
-    const loginUrl = `http://localhost:3000?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(redirectUri)}`;
     const popup = window.open(
       loginUrl,
       'Sign In',
@@ -12,7 +12,7 @@ const HasAccountSummary = ({ onClose, onLoginSuccess }) => {
     );
 
     const handleMessage = (event) => {
-      if (event.origin !== 'http://localhost:3000') return;
+      if (event.origin !== 'https://efs-gp9p6.ondigitalocean.app') return;
       console.log('Received login data:', event.data);
       onLoginSuccess(event.data); // Pass data to WalletPaymentForm
       window.removeEventListener('message', handleMessage);
@@ -31,7 +31,7 @@ const HasAccountSummary = ({ onClose, onLoginSuccess }) => {
   return (
     <>
       <div className="popup-content">
-        <Header onClose={onClose} />
+        <Header />
         <div className="error-content">
           <div className="message-container">
             <div className="info-icon">i</div>

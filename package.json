@@ -1,5 +1,5 @@
 {
-  "name": "pay-sdk-tx5",
+  "name": "pay-sdk-afr",
   "version": "1.0.2",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.umd.js",

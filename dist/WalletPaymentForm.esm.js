@@ -160,15 +160,14 @@ const Header = _ref => {
 
 const HasAccountSummary = _ref => {
   let {
-    onClose,
     onLoginSuccess
   } = _ref;
   const handleSignIn = () => {
     const redirectUri = 'http://localhost:3002/callback';
-    const loginUrl = `http://localhost:3000?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(redirectUri)}`;
     const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
     const handleMessage = event => {
-      if (event.origin !== 'http://localhost:3000') return;
+      if (event.origin !== 'https://efs-gp9p6.ondigitalocean.app') return;
       console.log('Received login data:', event.data);
       onLoginSuccess(event.data); // Pass data to WalletPaymentForm
       window.removeEventListener('message', handleMessage);
@@ -183,9 +182,7 @@ const HasAccountSummary = _ref => {
   };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
-  }, /*#__PURE__*/React.createElement(Header, {
-    onClose: onClose
-  }), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "error-content"
   }, /*#__PURE__*/React.createElement("div", {
     className: "message-container"
