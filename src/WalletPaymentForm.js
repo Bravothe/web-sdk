@@ -9,13 +9,12 @@ import LoadingOverlay from './LoadingOverlay';
 
 // Sample customers for testing
 const SAMPLE_CUSTOMERS = {
-  "customer123": { name: "John Doe", balance: 1000, passcode: "123456" },
-  "customer456": { name: "Jane Smith", balance: 500, passcode: "567856" },
-  "customer789": { name: "Alice Brown", balance: 50, passcode: "901256" },
-  "admin": { name: "Admin User", balance: 2000, passcode: "admin123" },
+  customer123: { name: 'John Doe', balance: 1000, passcode: '123456' },
+  customer456: { name: 'Jane Smith', balance: 500, passcode: '567856' },
+  customer789: { name: 'Alice Brown', balance: 50, passcode: '901256' },
+  admin: { name: 'Admin User', balance: 2000, passcode: 'admin123' },
 };
 
-// Function to get a cookie by name
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -23,18 +22,24 @@ const getCookie = (name) => {
   return null;
 };
 
-const generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName, merchantLogo) => ({
-  type: type || "Booking",
+const generateTransactionDetails = (
+  amount,
+  transactionId,
+  type,
+  particulars,
+  currency,
+  merchantName,
+  merchantLogo
+) => ({
+  type: type || 'Booking',
   id: transactionId,
-  particulars: particulars || "Hotel Booking",
-  billedCurrency: currency || "UGX",
+  particulars: particulars || 'Hotel Booking',
+  billedCurrency: currency || 'UGX',
   billedAmount: amount,
   totalBilling: amount,
-  merchantName: merchantName || "Unknown Merchant",
-  merchantLogo: merchantLogo || "" // Fallback to empty string if not provided
+  merchantName: merchantName || 'Unknown Merchant',
+  merchantLogo: merchantLogo || '',
 });
-
-const checkAccountExists = (customerId) => Promise.resolve(!!SAMPLE_CUSTOMERS[customerId]);
 
 const validatePasscode = (customerId, passcode, amount) => {
   const customer = SAMPLE_CUSTOMERS[customerId];
@@ -45,16 +50,16 @@ const validatePasscode = (customerId, passcode, amount) => {
   return { success: true };
 };
 
-const WalletPaymentForm = ({ 
-  customerId: propCustomerId, 
-  amount, 
-  type, 
-  particulars, 
-  currency, 
-  merchantName, 
-  merchantLogo, 
-  onClose, 
-  onSuccess 
+const WalletPaymentForm = ({
+  customerId: propCustomerId,
+  amount,
+  type,
+  particulars,
+  currency,
+  merchantName,
+  merchantLogo,
+  onClose,
+  onSuccess,
 }) => {
   const [popup, setPopup] = useState('transactionSummary');
   const [passcode, setPasscode] = useState('');
@@ -66,51 +71,53 @@ const WalletPaymentForm = ({
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
   useEffect(() => {
-    console.log('useEffect running, propCustomerId:', propCustomerId, 'amount:', amount);
-    const timer = setTimeout(() => {
-      console.log('Loading finished');
-      setLoading(false);
-    }, 5000);
-
     const checkConditions = async () => {
       let customerIdToUse = propCustomerId;
 
+      console.log('Checking conditions, propCustomerId:', propCustomerId);
+
       if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
-        console.log(`Invalid or missing customerId: ${customerIdToUse}, checking cookies...`);
-        const cookieUserId = getCookie('user_id');
+        const cookieUserId = getCookie('wallet_session');
+        console.log('Cookie wallet_session:', cookieUserId);
         if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
-          console.log('Valid user_id found in cookies:', cookieUserId);
           customerIdToUse = cookieUserId;
           setHasAccount(true);
+          setEffectiveCustomerId(customerIdToUse);
+          setPopup('transactionSummary');
         } else {
-          console.log('No valid customerId or cookie found, prompting login');
           setHasAccount(false);
           setEffectiveCustomerId(null);
-          return;
+          setPopup('hasAccountSummary');
         }
       } else {
         setHasAccount(true);
+        setEffectiveCustomerId(customerIdToUse);
+        setPopup('transactionSummary');
       }
-
-      const accountExists = await checkAccountExists(customerIdToUse);
-      console.log('Account exists:', accountExists, 'for customerId:', customerIdToUse);
-      setEffectiveCustomerId(customerIdToUse);
+      setLoading(false);
     };
 
     checkConditions();
+  }, [propCustomerId]);
 
-    return () => clearTimeout(timer);
-  }, [propCustomerId, amount]);
-
-  const handleLoginSuccess = ({ user_id }) => {
-    console.log('Login success, user_id:', user_id);
-    setEffectiveCustomerId(user_id);
-    setHasAccount(true);
-    setPopup('transactionSummary');
+  const handleLoginSuccess = () => {
+    console.log('Handling login success');
+    const cookieUserId = getCookie('wallet_session');
+    console.log('Post-login cookie wallet_session:', cookieUserId);
+    if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
+      setEffectiveCustomerId(cookieUserId);
+      setHasAccount(true);
+      setPopup('transactionSummary');
+      console.log('Set to transactionSummary, customerId:', cookieUserId);
+    } else {
+      console.error('No wallet_session cookie found after login');
+      setHasAccount(false);
+      setPopup('hasAccountSummary');
+      alert('Login failed. Please try again.');
+    }
   };
 
   const handleConfirm = () => {
-    console.log('Confirm clicked, hasAccount:', hasAccount);
     if (hasAccount === null) return;
     if (hasAccount) {
       setPopup('enterPasscode');
@@ -125,7 +132,7 @@ const WalletPaymentForm = ({
     const result = await validatePasscode(idToValidate, passcode, amount);
     console.log('Validation result:', result);
     setPaymentStatus(result.success ? 'success' : 'failed');
-    
+
     if (result.success) {
       setPopup('paymentSuccess');
       if (onSuccess) onSuccess();
@@ -152,11 +159,21 @@ const WalletPaymentForm = ({
     onClose();
   };
 
-  const transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName, merchantLogo);
+  const transactionDetails = generateTransactionDetails(
+    amount,
+    transactionId,
+    type,
+    particulars,
+    currency,
+    merchantName,
+    merchantLogo
+  );
 
   const renderPopup = () => {
-    console.log('Rendering popup, current popup:', popup, 'hasAccount:', hasAccount);
+    console.log('Rendering popup:', popup, 'hasAccount:', hasAccount);
     switch (popup) {
+      case 'hasAccountSummary':
+        return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
       case 'transactionSummary':
         if (hasAccount === false) {
           return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
@@ -197,15 +214,18 @@ const WalletPaymentForm = ({
           <LoadingOverlay />
         ) : (
           <>
-            <div className="overlay" onClick={() => {
-              console.log('Overlay clicked, closing');
-              onClose();
-            }}></div>
+            <div
+              className="overlay"
+              onClick={() => {
+                console.log('Overlay clicked, closing');
+                onClose();
+              }}
+            ></div>
             {renderPopup()}
           </>
         )}
       </div>
-      <style>{`
+      <style jsx>{`
         .wallet-payment-form {
           position: fixed;
           top: 0;

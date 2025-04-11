@@ -1,29 +1,47 @@
 import React from 'react';
 import Header from './Header';
 
-const HasAccountSummary = ({ onLoginSuccess }) => {
+const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
   const handleSignIn = () => {
-    const redirectUri = 'http://localhost:3002/callback';
-    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    const popup = window.open(
-      loginUrl,
-      'Sign In',
-      'width=500,height=600'
-    );
+    const callbackUrl = `${window.location.origin}?wallet_callback=true`;
+    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;
+    const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
+
+    if (!popup) {
+      alert('Popup blocked. Please allow popups for this site.');
+      return;
+    }
 
     const handleMessage = (event) => {
-      if (event.origin !== 'https://efs-gp9p6.ondigitalocean.app') return;
-      console.log('Received login data:', event.data);
-      onLoginSuccess(event.data); // Pass data to WalletPaymentForm
-      window.removeEventListener('message', handleMessage);
+      if (event.origin !== window.location.origin) return;
+      if (event.data.status === 'login_success') {
+        console.log('Received login_success message');
+        onLoginSuccess();
+        window.removeEventListener('message', handleMessage);
+      }
     };
 
     window.addEventListener('message', handleMessage);
 
     const checkPopup = setInterval(() => {
       if (popup.closed) {
+        console.log('Popup closed manually');
         clearInterval(checkPopup);
         window.removeEventListener('message', handleMessage);
+        onClose(); // Only call onClose if user closes popup manually
+      } else {
+        try {
+          const popupUrl = popup.location.href;
+          if (popupUrl.includes('wallet_callback=true')) {
+            console.log('Detected callback URL, signaling success');
+            popup.opener.postMessage({ status: 'login_success' }, window.location.origin);
+            popup.close();
+            clearInterval(checkPopup);
+            window.removeEventListener('message', handleMessage);
+          }
+        } catch (e) {
+          // Ignore cross-origin errors
+        }
       }
     }, 500);
   };
@@ -39,10 +57,12 @@ const HasAccountSummary = ({ onLoginSuccess }) => {
               <h3>EVzone requires you to sign in to proceed with this transaction</h3>
             </div>
           </div>
-          <button onClick={handleSignIn} className="submit-button">Sign in</button>
+          <button onClick={handleSignIn} className="submit-button">
+            Sign in
+          </button>
         </div>
       </div>
-      <style>{`
+      <style jsx>{`
         .popup-content {
           display: flex;
           flex-direction: column;

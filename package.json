@@ -1,5 +1,5 @@
 {
-  "name": "pay-sdk-afr",
+  "name": "pay-sdk-kasese2",
   "version": "1.0.2",
   "description": "A wallet payment form component with live API verification",
   "main": "dist/WalletPaymentForm.umd.js",
@@ -10,27 +10,29 @@
     "start": "rollup -c --watch",
     "prepublishOnly": "npm run build"
   },
-
-  "keywords": [
-    "wallet",
-    "payment",
-    "react"
-  ],
-  "author": "Allan Bravo",  
+  "keywords": ["wallet", "payment", "react"],
+  "author": "Allan Bravo",
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-icons": "^5.0.0"
+    "react-icons": "^5.0.0",
+    "reactjs-popup": "^2.0.6" 
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-url": "^8.0.2",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "cookie-parser": "^1.4.7", 
+    "core-js": "^3.41.0",
+    "express": "^5.1.0", 
     "rollup": "^4.9.6",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-css-only": "^4.5.2",
@@ -41,9 +43,6 @@
     "url": "https://github.com/Bravothe/payment-library.git"
   },
   "dependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "cookie-parser": "^1.4.7",
-    "express": "^5.1.0",
     "reactjs-popup": "^2.0.6"
   }
 }
