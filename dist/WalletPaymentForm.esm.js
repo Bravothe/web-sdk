@@ -3169,8 +3169,6 @@ var EnterPasscode = _ref => {
 // THIS FILE IS AUTO GENERATED
 function FaCheckCircle (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"},"child":[]}]})(props);
-}function FaExclamationCircle (props) {
-  return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"},"child":[]}]})(props);
 }function FaTimesCircle (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"},"child":[]}]})(props);
 }
@@ -3212,16 +3210,25 @@ var InsufficientFunds = _ref => {
   var {
     onClose
   } = _ref;
+  var handleAddFunds = () => {
+    // Placeholder: Add logic to redirect to a funding page or trigger a funding flow
+    console.log('Add Funds clicked');
+    onClose(); // For now, just close the popup as per current behavior
+  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
   }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
     className: "error-content"
-  }, /*#__PURE__*/React.createElement(FaExclamationCircle, {
-    className: "icon"
-  }), /*#__PURE__*/React.createElement("h3", null, "Insufficient Funds"), /*#__PURE__*/React.createElement("p", null, "Please add funds to your wallet to proceed."), /*#__PURE__*/React.createElement("button", {
-    onClick: onClose,
-    className: "close-button"
-  }, "Close"))), /*#__PURE__*/React.createElement("style", null, "\n        .popup-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          background: white;\n          border-radius: 10px;\n          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);\n          max-width: 400px;\n          width: 90%;\n          text-align: center;\n          border: 1px solid #ddd;\n          font-family: Arial, sans-serif;\n          z-index: 1001;\n          position: relative;\n          pointer-events: auto;\n        }\n\n        .error-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          padding: 20px;\n          background-color: #fff;\n          border-radius: 8px;\n        }\n\n        .error-content .icon {\n          color: #ff9800;\n          font-size: 40px;\n          margin-bottom: 10px;\n        }\n\n        .error-content h3 {\n          font-size: 1.2em;\n          margin: 0 0 15px;\n          color: #333;\n          font-weight: 500;\n        }\n\n        .error-content p {\n          font-size: 1em;\n          color: #666;\n          margin-bottom: 15px;\n        }\n\n        .close-button {\n          background-color: #0288d1;\n          color: #fff;\n          border: none;\n          border-radius: 5px;\n          padding: 10px 20px;\n          font-size: 1em;\n          font-weight: 500;\n          cursor: pointer;\n          transition: background-color 0.3s ease;\n          width: 100%;\n          max-width: 200px;\n        }\n\n        .close-button:hover {\n          background-color: #0277bd;\n        }\n      "));
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "error-icon"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "x-mark"
+  }, "\u2715")), /*#__PURE__*/React.createElement("h3", null, "Insufficient Funds"), /*#__PURE__*/React.createElement("p", null, "The account did not have sufficient funds to cover the transaction amount at the time of the transaction"), /*#__PURE__*/React.createElement("button", {
+    onClick: handleAddFunds,
+    className: "add-funds-button"
+  }, "Add Funds"))), /*#__PURE__*/React.createElement("style", {
+    jsx: true
+  }, "\n        .popup-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          background: white;\n          border-radius: 16px;\n          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);\n          max-width: 400px;\n          width: 90%;\n          text-align: center;\n          font-family: Arial, sans-serif;\n          z-index: 1001;\n          position: relative;\n          pointer-events: auto;\n        }\n\n        .error-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          padding: 20px;\n          border-radius: 0 0 16px 16px; /* Match bottom corners of popup */\n        }\n\n        .error-icon {\n          width: 40px;\n          height: 40px;\n          background-color: #ff9800;\n          border-radius: 50%;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          margin-bottom: 15px;\n        }\n\n        .x-mark {\n          color: #fff;\n          font-size: 24px;\n          font-weight: bold;\n        }\n\n        .error-content h3 {\n          font-size: 1.5em;\n          margin: 0 0 10px;\n          color: #ff9800; /* Orange to match the icon background */\n          font-weight: 600;\n        }\n\n        .error-content p {\n          font-size: 1em;\n          color: #000; /* Black instead of gray */\n          margin: 0 0 20px;\n          line-height: 1.5;\n        }\n\n        .add-funds-button {\n          background-color: #007bff;\n          color: white;\n          border: none;\n          border-radius: 8px;\n          padding: 12px;\n          font-size: 1em;\n          font-weight: 500;\n          cursor: pointer;\n          transition: background-color 0.3s ease;\n          width: 100%;\n          max-width: 300px;\n        }\n\n        .add-funds-button:hover {\n          background-color: #0056b3;\n        }\n      "));
 };
 
 var LoadingOverlay = () => {
@@ -3285,7 +3292,7 @@ var generateTransactionDetails = (amount, transactionId, type, particulars, curr
   merchantName: merchantName || 'Unknown Merchant',
   merchantLogo: merchantLogo || ''
 });
-var validatePasscode = (customerId, passcode, amount) => {
+var validatePasscode = (customerId, passcode) => {
   var customer = SAMPLE_CUSTOMERS[customerId];
   if (!customer) return {
     success: false,
@@ -3295,11 +3302,6 @@ var validatePasscode = (customerId, passcode, amount) => {
     success: false,
     reason: 'invalid_passcode'
   };
-  if (customer.balance < amount) return {
-    success: false,
-    reason: 'insufficient_funds'
-  };
-  SAMPLE_CUSTOMERS[customerId].balance -= amount;
   return {
     success: true
   };
@@ -3412,7 +3414,14 @@ var WalletPaymentForm = _ref => {
   var handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
     if (hasAccount && effectiveCustomerId) {
-      setPopup('enterPasscode');
+      var customer = SAMPLE_CUSTOMERS[effectiveCustomerId];
+      if (customer && customer.balance < amount) {
+        console.log('Insufficient funds, balance:', customer.balance, 'amount:', amount);
+        setPopup('insufficientFunds');
+      } else {
+        console.log('Sufficient funds, proceeding to enterPasscode');
+        setPopup('enterPasscode');
+      }
     }
   };
   var handleSubmit = /*#__PURE__*/function () {
@@ -3421,18 +3430,16 @@ var WalletPaymentForm = _ref => {
       console.log('Submitting passcode:', passcode);
       setPaymentStatus('pending');
       var idToValidate = effectiveCustomerId;
-      var result = yield validatePasscode(idToValidate, passcode, amount);
+      var result = yield validatePasscode(idToValidate, passcode);
       console.log('Validation result:', result);
       setPaymentStatus(result.success ? 'success' : 'failed');
       if (result.success) {
+        // Deduct balance after successful passcode validation
+        SAMPLE_CUSTOMERS[idToValidate].balance -= amount;
         setPopup('paymentSuccess');
         if (onSuccess) onSuccess();
       } else {
-        if (result.reason === 'insufficient_funds') {
-          setPopup('insufficientFunds');
-        } else {
-          setPopup('paymentFailed');
-        }
+        setPopup('paymentFailed');
         setTimeout(() => {
           setPopup('transactionSummary');
           setPasscode('');
@@ -3451,6 +3458,10 @@ var WalletPaymentForm = _ref => {
     setPasscode('');
     setPaymentStatus('idle');
     handleClose();
+  };
+  var handleInsufficientFundsClose = () => {
+    console.log('Insufficient funds close clicked');
+    setPopup('transactionSummary');
   };
   var transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName, merchantLogo);
   var renderPopup = () => {
@@ -3493,7 +3504,7 @@ var WalletPaymentForm = _ref => {
         });
       case 'insufficientFunds':
         return /*#__PURE__*/React.createElement(InsufficientFunds, {
-          onClose: handleClose
+          onClose: handleInsufficientFundsClose
         });
       default:
         return null;

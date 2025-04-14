@@ -45,12 +45,10 @@ const generateTransactionDetails = (
   merchantLogo: merchantLogo || '',
 });
 
-const validatePasscode = (customerId, passcode, amount) => {
+const validatePasscode = (customerId, passcode) => {
   const customer = SAMPLE_CUSTOMERS[customerId];
   if (!customer) return { success: false, reason: 'no_account' };
   if (customer.passcode !== passcode) return { success: false, reason: 'invalid_passcode' };
-  if (customer.balance < amount) return { success: false, reason: 'insufficient_funds' };
-  SAMPLE_CUSTOMERS[customerId].balance -= amount;
   return { success: true };
 };
 
@@ -168,7 +166,14 @@ const WalletPaymentForm = ({
   const handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
     if (hasAccount && effectiveCustomerId) {
-      setPopup('enterPasscode');
+      const customer = SAMPLE_CUSTOMERS[effectiveCustomerId];
+      if (customer && customer.balance < amount) {
+        console.log('Insufficient funds, balance:', customer.balance, 'amount:', amount);
+        setPopup('insufficientFunds');
+      } else {
+        console.log('Sufficient funds, proceeding to enterPasscode');
+        setPopup('enterPasscode');
+      }
     }
   };
 
@@ -177,19 +182,17 @@ const WalletPaymentForm = ({
     console.log('Submitting passcode:', passcode);
     setPaymentStatus('pending');
     const idToValidate = effectiveCustomerId;
-    const result = await validatePasscode(idToValidate, passcode, amount);
+    const result = await validatePasscode(idToValidate, passcode);
     console.log('Validation result:', result);
     setPaymentStatus(result.success ? 'success' : 'failed');
 
     if (result.success) {
+      // Deduct balance after successful passcode validation
+      SAMPLE_CUSTOMERS[idToValidate].balance -= amount;
       setPopup('paymentSuccess');
       if (onSuccess) onSuccess();
     } else {
-      if (result.reason === 'insufficient_funds') {
-        setPopup('insufficientFunds');
-      } else {
-        setPopup('paymentFailed');
-      }
+      setPopup('paymentFailed');
       setTimeout(() => {
         setPopup('transactionSummary');
         setPasscode('');
@@ -205,6 +208,11 @@ const WalletPaymentForm = ({
     setPasscode('');
     setPaymentStatus('idle');
     handleClose();
+  };
+
+  const handleInsufficientFundsClose = () => {
+    console.log('Insufficient funds close clicked');
+    setPopup('transactionSummary');
   };
 
   const transactionDetails = generateTransactionDetails(
@@ -249,7 +257,7 @@ const WalletPaymentForm = ({
       case 'paymentFailed':
         return <PaymentFailed onClose={handleClose} />;
       case 'insufficientFunds':
-        return <InsufficientFunds onClose={handleClose} />;
+        return <InsufficientFunds onClose={handleInsufficientFundsClose} />;
       default:
         return null;
     }

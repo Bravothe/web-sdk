@@ -40,9 +40,9 @@ const EnterPasscode = ({ passcode, setPasscode, showPasscode, setShowPasscode, t
             You are making a payment to <strong>{transactionDetails.merchantName}</strong> and an amount of
             <strong> {transactionDetails.billedCurrency} {transactionDetails.totalBilling.toFixed(2)}</strong> will be deducted off your wallet, including:
             <br />
-            <strong>0.5% Tax:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+            <strong>2.5% Tax:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
             <br />
-            <strong>0.5% Wallet Fee:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
+            <strong>1.5% Wallet Fee:</strong> {transactionDetails.billedCurrency} {(transactionDetails.totalBilling * 0.005).toFixed(2)}
           </p>
         </div>
         <div className="buttons-container">

@@ -1,31 +1,37 @@
 import React from 'react';
-import { FaExclamationCircle } from 'react-icons/fa';
 import Header from './Header';
 
 const InsufficientFunds = ({ onClose }) => {
+
   return (
     <>
       <div className="popup-content">
         <Header />
         <div className="error-content">
-          <FaExclamationCircle className="icon" />
+          <div className="error-icon">
+            <span className="x-mark">✕</span>
+          </div>
           <h3>Insufficient Funds</h3>
-          <p>Please add funds to your wallet to proceed.</p>
-          <button onClick={onClose} className="close-button">Close</button>
+          <p>
+            The account did not have sufficient funds to cover the transaction
+            amount at the time of the transaction
+          </p>
+          <button onClick={onClose} className="add-funds-button">
+            Add Funds
+          </button>
         </div>
       </div>
-      <style>{`
+      <style jsx>{`
         .popup-content {
           display: flex;
           flex-direction: column;
           align-items: center;
           background: white;
-          border-radius: 10px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           max-width: 400px;
           width: 90%;
           text-align: center;
-          border: 1px solid #ddd;
           font-family: Arial, sans-serif;
           z-index: 1001;
           position: relative;
@@ -37,45 +43,56 @@ const InsufficientFunds = ({ onClose }) => {
           flex-direction: column;
           align-items: center;
           padding: 20px;
-          background-color: #fff;
-          border-radius: 8px;
+          border-radius: 0 0 16px 16px; /* Match bottom corners of popup */
         }
 
-        .error-content .icon {
-          color: #ff9800;
-          font-size: 40px;
-          margin-bottom: 10px;
+        .error-icon {
+          width: 40px;
+          height: 40px;
+          background-color: #ff9800;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+
+        .x-mark {
+          color: #fff;
+          font-size: 24px;
+          font-weight: bold;
         }
 
         .error-content h3 {
-          font-size: 1.2em;
-          margin: 0 0 15px;
-          color: #333;
-          font-weight: 500;
+          font-size: 1.5em;
+          margin: 0 0 10px;
+          color: #ff9800; /* Orange to match the icon background */
+          font-weight: 600;
         }
 
         .error-content p {
           font-size: 1em;
-          color: #666;
-          margin-bottom: 15px;
+          color: #000; /* Black instead of gray */
+          margin: 0 0 20px;
+          line-height: 1.5;
         }
 
-        .close-button {
-          background-color: #0288d1;
-          color: #fff;
+        .add-funds-button {
+          background-color: #007bff;
+          color: white;
           border: none;
-          border-radius: 5px;
-          padding: 10px 20px;
+          border-radius: 8px;
+          padding: 12px;
           font-size: 1em;
           font-weight: 500;
           cursor: pointer;
           transition: background-color 0.3s ease;
           width: 100%;
-          max-width: 200px;
+          max-width: 300px;
         }
 
-        .close-button:hover {
-          background-color: #0277bd;
+        .add-funds-button:hover {
+          background-color: #0056b3;
         }
       `}</style>
     </>
