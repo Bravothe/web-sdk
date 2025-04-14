@@ -12,7 +12,7 @@ const SAMPLE_CUSTOMERS = {
   customer123: { name: 'John Doe', balance: 1000, passcode: '123456' },
   customer456: { name: 'Jane Smith', balance: 500, passcode: '567856' },
   customer789: { name: 'Alice Brown', balance: 50, passcode: '901256' },
-  admin: { name: 'Admin User', balance: 2000, passcode: 'admin123' },
+  admin: { name: 'Admin User', balance: 2000, passcode: '234567' },
 };
 
 // Helper to get cookie by name
@@ -94,10 +94,13 @@ const WalletPaymentForm = ({
     console.log('Checking conditions, propCustomerId:', propCustomerId);
     let customerIdToUse = propCustomerId;
 
+    // Ensure minimum loading time of 7 seconds
+    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 7000));
+
     if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
       let attempts = 0;
       const maxAttempts = 5;
-      const tryCredentials = () => {
+      const tryCredentials = async () => {
         attempts++;
         const storedUserId = getStoredUserId();
         const storedAuthToken = getStoredAuthToken();
@@ -109,6 +112,7 @@ const WalletPaymentForm = ({
         );
         if (storedUserId && SAMPLE_CUSTOMERS[storedUserId]) {
           customerIdToUse = storedUserId;
+          await minLoadingTime; // Wait for 7 seconds
           setHasAccount(true);
           setEffectiveCustomerId(customerIdToUse);
           setPopup('transactionSummary');
@@ -116,6 +120,7 @@ const WalletPaymentForm = ({
         } else if (attempts < maxAttempts) {
           setTimeout(tryCredentials, 2000);
         } else {
+          await minLoadingTime; // Wait for 7 seconds
           setHasAccount(false);
           setEffectiveCustomerId(null);
           setPopup('hasAccountSummary');
@@ -124,6 +129,7 @@ const WalletPaymentForm = ({
       };
       tryCredentials();
     } else {
+      await minLoadingTime; // Wait for 7 seconds
       setHasAccount(true);
       setEffectiveCustomerId(customerIdToUse);
       setPopup('transactionSummary');

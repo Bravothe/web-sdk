@@ -7,7 +7,11 @@ const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
     let timeout;
 
     const handleMessage = (event) => {
-    
+      // Restrict origin for security (update to your auth server's origin)
+      if (event.origin !== 'https://efs-gp9p6.ondigitalocean.app') {
+        console.log('Message from untrusted origin:', event.origin);
+        return;
+      }
 
       if (!event.data || typeof event.data !== 'object') {
         console.log('Invalid event data');
@@ -34,7 +38,7 @@ const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
 
   const handleSignIn = () => {
     const callbackUrl = `${window.location.origin}/wallet-callback`;
-    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;  
+    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;
     const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
 
     if (!popup) {
@@ -43,7 +47,7 @@ const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
       return;
     }
 
-    const checkPopup = setInterval(() => {
+    checkPopup = setInterval(() => {
       if (popup.closed) {
         console.log('Popup closed');
         clearInterval(checkPopup);
@@ -51,7 +55,7 @@ const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
       }
     }, 500);
 
-    const timeout = setTimeout(() => {
+    timeout = setTimeout(() => {
       if (popup && !popup.closed) {
         popup.close();
       }
