@@ -1,49 +1,64 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './Header';
 
 const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
-  const handleSignIn = () => {
-    const callbackUrl = `${window.location.origin}?wallet_callback=true`;
-    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;
-    const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
-
-    if (!popup) {
-      alert('Popup blocked. Please allow popups for this site.');
-      return;
-    }
+  useEffect(() => {
+    let checkPopup;
+    let timeout;
 
     const handleMessage = (event) => {
-      if (event.origin !== window.location.origin) return;
-      if (event.data.status === 'login_success') {
-        console.log('Received login_success message');
-        onLoginSuccess();
+    
+
+      if (!event.data || typeof event.data !== 'object') {
+        console.log('Invalid event data');
+        return;
+      }
+
+      const { user_id, auth_token } = event.data;
+      if (user_id && auth_token) {
+        console.log('Received user_id:', user_id, 'auth_token:', auth_token);
+        onLoginSuccess(user_id, auth_token);
         window.removeEventListener('message', handleMessage);
       }
     };
 
     window.addEventListener('message', handleMessage);
 
+    return () => {
+      clearInterval(checkPopup);
+      clearTimeout(timeout);
+      window.removeEventListener('message', handleMessage);
+      console.log('HasAccountSummary unmounted');
+    };
+  }, [onLoginSuccess]);
+
+  const handleSignIn = () => {
+    const callbackUrl = `${window.location.origin}/wallet-callback`;
+    const loginUrl = `http://localhost:3001?redirect_uri=${encodeURIComponent(callbackUrl)}`;
+    const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
+
+    if (!popup) {
+      console.error('Popup blocked');
+      alert('Popup blocked. Please allow popups for this site.');
+      return;
+    }
+
     const checkPopup = setInterval(() => {
       if (popup.closed) {
-        console.log('Popup closed manually');
+        console.log('Popup closed');
         clearInterval(checkPopup);
-        window.removeEventListener('message', handleMessage);
-        onClose(); // Only call onClose if user closes popup manually
-      } else {
-        try {
-          const popupUrl = popup.location.href;
-          if (popupUrl.includes('wallet_callback=true')) {
-            console.log('Detected callback URL, signaling success');
-            popup.opener.postMessage({ status: 'login_success' }, window.location.origin);
-            popup.close();
-            clearInterval(checkPopup);
-            window.removeEventListener('message', handleMessage);
-          }
-        } catch (e) {
-          // Ignore cross-origin errors
-        }
+        onClose();
       }
     }, 500);
+
+    const timeout = setTimeout(() => {
+      if (popup && !popup.closed) {
+        popup.close();
+      }
+      clearInterval(checkPopup);
+      onClose();
+      alert('Login timed out. Please try again.');
+    }, 60000);
   };
 
   return (

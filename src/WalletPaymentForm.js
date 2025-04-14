@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// pay-sdk-kasese5/src/WalletPaymentForm.jsx
+import React, { useState, useEffect, useCallback } from 'react';
 import HasAccountSummary from './HasAccountSummary';
 import TransactionDetailsSummary from './TransactionSummary';
 import EnterPasscode from './EnterPasscode';
@@ -15,12 +16,8 @@ const SAMPLE_CUSTOMERS = {
   admin: { name: 'Admin User', balance: 2000, passcode: 'admin123' },
 };
 
-const getCookie = (name) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-  return null;
-};
+const getStoredUserId = () => localStorage.getItem('wallet_user_id');
+const getStoredAuthToken = () => localStorage.getItem('wallet_auth_token');
 
 const generateTransactionDetails = (
   amount,
@@ -70,56 +67,94 @@ const WalletPaymentForm = ({
   const [loading, setLoading] = useState(true);
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
-  useEffect(() => {
-    const checkConditions = async () => {
-      let customerIdToUse = propCustomerId;
+  // Debounce onClose
+  const debounceOnClose = useCallback(() => {
+    let timeout;
+    return () => {
+      if (!timeout) {
+        timeout = setTimeout(() => {
+          console.log('Executing debounced onClose');
+          onClose();
+          timeout = null;
+        }, 300);
+      }
+    };
+  }, [onClose]);
 
-      console.log('Checking conditions, propCustomerId:', propCustomerId);
+  const handleClose = debounceOnClose();
 
-      if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
-        const cookieUserId = getCookie('wallet_session');
-        console.log('Cookie wallet_session:', cookieUserId);
-        if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
-          customerIdToUse = cookieUserId;
+  const checkConditions = useCallback(async () => {
+    console.log('Checking conditions, propCustomerId:', propCustomerId);
+    let customerIdToUse = propCustomerId;
+
+    if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
+      let attempts = 0;
+      const maxAttempts = 5;
+      const tryCredentials = () => {
+        attempts++;
+        const storedUserId = getStoredUserId();
+        const storedAuthToken = getStoredAuthToken();
+        console.log(
+          `Initial check, attempt ${attempts}, user_id:`,
+          storedUserId,
+          'auth_token:',
+          storedAuthToken
+        );
+        if (storedUserId && SAMPLE_CUSTOMERS[storedUserId]) {
+          customerIdToUse = storedUserId;
           setHasAccount(true);
           setEffectiveCustomerId(customerIdToUse);
           setPopup('transactionSummary');
+          setLoading(false);
+        } else if (attempts < maxAttempts) {
+          setTimeout(tryCredentials, 2000);
         } else {
           setHasAccount(false);
           setEffectiveCustomerId(null);
           setPopup('hasAccountSummary');
+          setLoading(false);
         }
-      } else {
-        setHasAccount(true);
-        setEffectiveCustomerId(customerIdToUse);
-        setPopup('transactionSummary');
-      }
+      };
+      tryCredentials();
+    } else {
+      setHasAccount(true);
+      setEffectiveCustomerId(customerIdToUse);
+      setPopup('transactionSummary');
       setLoading(false);
-    };
-
-    checkConditions();
+    }
   }, [propCustomerId]);
 
-  const handleLoginSuccess = () => {
-    console.log('Handling login success');
-    const cookieUserId = getCookie('wallet_session');
-    console.log('Post-login cookie wallet_session:', cookieUserId);
-    if (cookieUserId && SAMPLE_CUSTOMERS[cookieUserId]) {
-      setEffectiveCustomerId(cookieUserId);
+  useEffect(() => {
+    checkConditions();
+  }, [checkConditions]);
+
+  const handleLoginSuccess = useCallback((muid, sid) => {
+    console.log('Handling login success (from postMessage):', muid, sid);
+  
+    // Store the received credentials
+    localStorage.setItem('wallet_user_id', muid);
+    localStorage.setItem('wallet_auth_token', sid);
+  
+    if (muid && SAMPLE_CUSTOMERS[muid]) {
+      setEffectiveCustomerId(muid);
       setHasAccount(true);
       setPopup('transactionSummary');
-      console.log('Set to transactionSummary, customerId:', cookieUserId);
+      setLoading(false);
+      console.log('Transitioned to transactionSummary, customerId:', muid);
     } else {
-      console.error('No wallet_session cookie found after login');
+      console.error('Invalid MUID or no test user found');
       setHasAccount(false);
       setPopup('hasAccountSummary');
+      setLoading(false);
       alert('Login failed. Please try again.');
+      handleClose();
     }
-  };
+  }, [handleClose]);
+  
 
   const handleConfirm = () => {
-    if (hasAccount === null) return;
-    if (hasAccount) {
+    console.log('Confirm clicked, hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
+    if (hasAccount && effectiveCustomerId) {
       setPopup('enterPasscode');
     }
   };
@@ -146,7 +181,7 @@ const WalletPaymentForm = ({
         setPopup('transactionSummary');
         setPasscode('');
         setPaymentStatus('idle');
-        onClose();
+        handleClose();
       }, 5000);
     }
   };
@@ -156,7 +191,7 @@ const WalletPaymentForm = ({
     setPopup('transactionSummary');
     setPasscode('');
     setPaymentStatus('idle');
-    onClose();
+    handleClose();
   };
 
   const transactionDetails = generateTransactionDetails(
@@ -170,13 +205,13 @@ const WalletPaymentForm = ({
   );
 
   const renderPopup = () => {
-    console.log('Rendering popup:', popup, 'hasAccount:', hasAccount);
+    console.log('Rendering popup:', popup, 'hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
     switch (popup) {
       case 'hasAccountSummary':
-        return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
+        return <HasAccountSummary onClose={handleClose} onLoginSuccess={handleLoginSuccess} />;
       case 'transactionSummary':
-        if (hasAccount === false) {
-          return <HasAccountSummary onClose={onClose} onLoginSuccess={handleLoginSuccess} />;
+        if (hasAccount === false || !effectiveCustomerId) {
+          return <HasAccountSummary onClose={handleClose} onLoginSuccess={handleLoginSuccess} />;
         }
         return (
           <TransactionDetailsSummary
@@ -199,9 +234,9 @@ const WalletPaymentForm = ({
       case 'paymentSuccess':
         return <PaymentSuccess amount={amount} onClose={handleSuccessClose} />;
       case 'paymentFailed':
-        return <PaymentFailed onClose={onClose} />;
+        return <PaymentFailed onClose={handleClose} />;
       case 'insufficientFunds':
-        return <InsufficientFunds onClose={onClose} />;
+        return <InsufficientFunds onClose={handleClose} />;
       default:
         return null;
     }
@@ -214,13 +249,7 @@ const WalletPaymentForm = ({
           <LoadingOverlay />
         ) : (
           <>
-            <div
-              className="overlay"
-              onClick={() => {
-                console.log('Overlay clicked, closing');
-                onClose();
-              }}
-            ></div>
+            <div className="overlay" onClick={handleClose}></div>
             {renderPopup()}
           </>
         )}
