@@ -1,4 +1,3 @@
-// pay-sdk-kasese5/src/WalletPaymentForm.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import HasAccountSummary from './HasAccountSummary';
 import TransactionDetailsSummary from './TransactionSummary';
@@ -16,8 +15,16 @@ const SAMPLE_CUSTOMERS = {
   admin: { name: 'Admin User', balance: 2000, passcode: 'admin123' },
 };
 
-const getStoredUserId = () => localStorage.getItem('wallet_user_id');
-const getStoredAuthToken = () => localStorage.getItem('wallet_auth_token');
+// Helper to get cookie by name
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+};
+
+const getStoredUserId = () => getCookie('wallet_user_id');
+const getStoredAuthToken = () => getCookie('wallet_auth_token');
 
 const generateTransactionDetails = (
   amount,
@@ -58,13 +65,13 @@ const WalletPaymentForm = ({
   onClose,
   onSuccess,
 }) => {
-  const [popup, setPopup] = useState('transactionSummary');
+  const [popup, setPopup] = useState('loading'); // Start with loading state
   const [passcode, setPasscode] = useState('');
   const [hasAccount, setHasAccount] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState('idle');
   const [showPasscode, setShowPasscode] = useState(false);
   const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Always start loading
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
   // Debounce onClose
@@ -125,16 +132,17 @@ const WalletPaymentForm = ({
   }, [propCustomerId]);
 
   useEffect(() => {
+    setLoading(true); // Ensure loading starts true
     checkConditions();
   }, [checkConditions]);
 
   const handleLoginSuccess = useCallback((muid, sid) => {
     console.log('Handling login success (from postMessage):', muid, sid);
-  
-    // Store the received credentials
-    localStorage.setItem('wallet_user_id', muid);
-    localStorage.setItem('wallet_auth_token', sid);
-  
+
+    // Store the received credentials in cookies
+    document.cookie = `wallet_user_id=${encodeURIComponent(muid)}; Max-Age=${7 * 24 * 60 * 60}; Secure; SameSite=Strict`;
+    document.cookie = `wallet_auth_token=${encodeURIComponent(sid)}; Max-Age=${7 * 24 * 60 * 60}; Secure; SameSite=Strict`;
+
     if (muid && SAMPLE_CUSTOMERS[muid]) {
       setEffectiveCustomerId(muid);
       setHasAccount(true);
@@ -150,7 +158,6 @@ const WalletPaymentForm = ({
       handleClose();
     }
   }, [handleClose]);
-  
 
   const handleConfirm = () => {
     console.log('Confirm clicked, hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);

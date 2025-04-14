@@ -2141,8 +2141,16 @@ var SAMPLE_CUSTOMERS = {
     passcode: 'admin123'
   }
 };
-var getStoredUserId = () => localStorage.getItem('wallet_user_id');
-var getStoredAuthToken = () => localStorage.getItem('wallet_auth_token');
+
+// Helper to get cookie by name
+var getCookie = name => {
+  var value = "; ".concat(document.cookie);
+  var parts = value.split("; ".concat(name, "="));
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+};
+var getStoredUserId = () => getCookie('wallet_user_id');
+var getStoredAuthToken = () => getCookie('wallet_auth_token');
 var generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName, merchantLogo) => ({
   type: type || 'Booking',
   id: transactionId,
@@ -2184,13 +2192,13 @@ var WalletPaymentForm = _ref => {
     onClose,
     onSuccess
   } = _ref;
-  var [popup, setPopup] = useState('transactionSummary');
+  var [popup, setPopup] = useState('loading'); // Start with loading state
   var [passcode, setPasscode] = useState('');
   var [hasAccount, setHasAccount] = useState(null);
   var [paymentStatus, setPaymentStatus] = useState('idle');
   var [showPasscode, setShowPasscode] = useState(false);
   var [transactionId] = useState("W-".concat(Math.floor(Math.random() * 1000000000)));
-  var [loading, setLoading] = useState(true);
+  var [loading, setLoading] = useState(true); // Always start loading
   var [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
   // Debounce onClose
@@ -2242,14 +2250,15 @@ var WalletPaymentForm = _ref => {
     }
   }), [propCustomerId]);
   useEffect(() => {
+    setLoading(true); // Ensure loading starts true
     checkConditions();
   }, [checkConditions]);
   var handleLoginSuccess = useCallback((muid, sid) => {
     console.log('Handling login success (from postMessage):', muid, sid);
 
-    // Store the received credentials
-    localStorage.setItem('wallet_user_id', muid);
-    localStorage.setItem('wallet_auth_token', sid);
+    // Store the received credentials in cookies
+    document.cookie = "wallet_user_id=".concat(encodeURIComponent(muid), "; Max-Age=").concat(7 * 24 * 60 * 60, "; Secure; SameSite=Strict");
+    document.cookie = "wallet_auth_token=".concat(encodeURIComponent(sid), "; Max-Age=").concat(7 * 24 * 60 * 60, "; Secure; SameSite=Strict");
     if (muid && SAMPLE_CUSTOMERS[muid]) {
       setEffectiveCustomerId(muid);
       setHasAccount(true);
