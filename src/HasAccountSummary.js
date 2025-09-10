@@ -38,7 +38,7 @@ const HasAccountSummary = ({ onLoginSuccess, onClose }) => {
 
   const handleSignIn = () => {
     const callbackUrl = `${window.location.origin}/wallet-callback`;
-    const loginUrl = `https://efs-gp9p6.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;
+    const loginUrl = `https://allan-sxqyu.ondigitalocean.app?redirect_uri=${encodeURIComponent(callbackUrl)}`;
     const popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
 
     if (!popup) {
