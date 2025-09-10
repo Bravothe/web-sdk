@@ -303,3 +303,4 @@ const WalletPaymentForm = ({
 };
 
 export default WalletPaymentForm;
+export { WalletPaymentForm };
