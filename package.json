@@ -1,6 +1,6 @@
 {
   "name": "evzone-pay-sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "EVzone Wallet payment form component for React",
   "type": "module",
   "main": "dist/WalletPaymentForm.umd.js",
@@ -11,14 +11,21 @@
       "require": "./dist/WalletPaymentForm.umd.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c --watch",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["wallet", "payment", "react", "evzone"],
+  "keywords": [
+    "wallet",
+    "payment",
+    "react",
+    "evzone"
+  ],
   "author": "Allan Bravo",
   "license": "MIT",
   "peerDependencies": {
