@@ -1,27 +1,30 @@
 {
-  "name": "web-ev-sdk3",
-  "version": "1.0.2",
-  "description": "A wallet payment form component with live API verification",
+  "name": "evzone-pay-sdk",
+  "version": "1.0.3",
+  "description": "EVzone Wallet payment form component for React",
+  "type": "module",
   "main": "dist/WalletPaymentForm.umd.js",
   "module": "dist/WalletPaymentForm.esm.js",
-  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/WalletPaymentForm.esm.js",
+      "require": "./dist/WalletPaymentForm.umd.js"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c --watch",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [
-    "wallet",
-    "payment",
-    "react"
-  ],
+  "keywords": ["wallet", "payment", "react", "evzone"],
   "author": "Allan Bravo",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.0.0",
-    "reactjs-popup": "^2.0.6"
+    "react": ">=18.0.0 <21",
+    "react-dom": ">=18.0.0 <21",
+    "react-icons": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
@@ -34,20 +37,21 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-url": "^8.0.2",
-    "cookie-parser": "^1.4.7",
     "core-js": "^3.41.0",
-    "express": "^5.1.0",
-    "rollup": "^4.9.6",
-    "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-css-only": "^4.5.2",
-    "rollup-plugin-node-polyfills": "^0.2.1"
+    "rollup": "^4.9.6"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bravothe/payment-library.git"
+    "url": "git+https://github.com/Bravothe/payment-library.git"
   },
-  "dependencies": {
-    "react-cookie": "^4.1.1",
-    "reactjs-popup": "^2.0.6"
+  "bugs": {
+    "url": "https://github.com/Bravothe/payment-library/issues"
+  },
+  "homepage": "https://github.com/Bravothe/payment-library#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

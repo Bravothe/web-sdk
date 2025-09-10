@@ -3151,7 +3151,7 @@ var EnterPasscode = _ref => {
     onClick: () => setShowPasscode(!showPasscode)
   }, showPasscode ? /*#__PURE__*/React.createElement(IoEye, null) : /*#__PURE__*/React.createElement(IoEyeOff, null)))), /*#__PURE__*/React.createElement("div", {
     className: "transaction-details"
-  }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", null, transactionDetails.merchantName), " and an amount of", /*#__PURE__*/React.createElement("strong", null, " ", transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2)), " will be deducted off your wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Tax:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "0.5% Wallet Fee:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("p", null, "You are making a payment to ", /*#__PURE__*/React.createElement("strong", null, transactionDetails.merchantName), " and an amount of", /*#__PURE__*/React.createElement("strong", null, " ", transactionDetails.billedCurrency, " ", transactionDetails.totalBilling.toFixed(2)), " will be deducted off your wallet, including:", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "2.5% Tax:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "1.5% Wallet Fee:"), " ", transactionDetails.billedCurrency, " ", (transactionDetails.totalBilling * 0.005).toFixed(2))), /*#__PURE__*/React.createElement("div", {
     className: "buttons-container"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: onSubmit,
@@ -3210,11 +3210,6 @@ var InsufficientFunds = _ref => {
   var {
     onClose
   } = _ref;
-  var handleAddFunds = () => {
-    // Placeholder: Add logic to redirect to a funding page or trigger a funding flow
-    console.log('Add Funds clicked');
-    onClose(); // For now, just close the popup as per current behavior
-  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "popup-content"
   }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
@@ -3224,7 +3219,7 @@ var InsufficientFunds = _ref => {
   }, /*#__PURE__*/React.createElement("span", {
     className: "x-mark"
   }, "\u2715")), /*#__PURE__*/React.createElement("h3", null, "Insufficient Funds"), /*#__PURE__*/React.createElement("p", null, "The account did not have sufficient funds to cover the transaction amount at the time of the transaction"), /*#__PURE__*/React.createElement("button", {
-    onClick: handleAddFunds,
+    onClick: onClose,
     className: "add-funds-button"
   }, "Add Funds"))), /*#__PURE__*/React.createElement("style", {
     jsx: true
