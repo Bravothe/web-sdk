@@ -2842,7 +2842,7 @@
       var timeout;
       var handleMessage = event => {
         // Restrict origin for security (update to your auth server's origin)
-        if (event.origin !== 'https://efs-gp9p6.ondigitalocean.app') {
+        if (event.origin !== 'https://allan-sxqyu.ondigitalocean.app') {
           console.log('Message from untrusted origin:', event.origin);
           return;
         }
