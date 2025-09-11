@@ -1,6 +1,8 @@
+// src/WalletPaymentForm.js
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Button, Typography, Descriptions, Input, Space, Avatar, Spin } from 'antd';
+import { Modal, Button, Typography, Input, Space, Avatar, Spin } from 'antd';
 
+import TransactionSummary from './TransactionSummary.js';
 import PaymentSuccessModal from './PaymentSuccessModal.js';
 import PaymentFailedModal from './PaymentFailedModal.js';
 import InsufficientFundsModal from './InsufficientFundsModal.js';
@@ -67,7 +69,7 @@ function WalletPaymentForm({
 
   const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
-  // 7s uniform loading (kept from your design)
+  // 7s uniform loading
   const boot = useCallback(async () => {
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     await wait(7000);
@@ -77,13 +79,14 @@ function WalletPaymentForm({
       return;
     }
 
-    const fallbackId = (propCustomerId && SAMPLE_CUSTOMERS[propCustomerId] && propCustomerId) || 'admin';
+    const fallbackId =
+      (propCustomerId && SAMPLE_CUSTOMERS[propCustomerId] && propCustomerId) || 'admin';
 
     if (skipAuth) {
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     } else {
-      // (When you reintroduce auth later, place cookie/customer checks here.)
+      // place cookie/customer checks here later
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     }
@@ -142,7 +145,7 @@ function WalletPaymentForm({
     onClose?.();
   };
 
-  // ----------- Render helpers (Ant Design) -----------
+  // ----------- Render helpers -----------
   const renderLoading = () => (
     <Modal open centered footer={null} closable={false} maskClosable={false} zIndex={zIndex}>
       <Space direction="vertical" align="center" style={{ width: '100%' }}>
@@ -163,51 +166,13 @@ function WalletPaymentForm({
     </Modal>
   );
 
+  // ⬇️ Use your TransactionSummary component here
   const renderSummary = () => (
-    <Modal
-      open
-      centered
-      zIndex={zIndex}
-      maskClosable={false}
-      title={
-        <Space align="center">
-          {details.merchantLogo ? (
-            <Avatar src={details.merchantLogo} />
-          ) : (
-            <Avatar>{(details.merchantName || 'E')[0]}</Avatar>
-          )}
-          <span>{details.merchantName}</span>
-        </Space>
-      }
+    <TransactionSummary
+      transactionDetails={details}
+      onConfirm={handleConfirm}
       onCancel={closeAndReset}
-      footer={
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Button onClick={closeAndReset}>Cancel</Button>
-          <Button type="primary" onClick={handleConfirm}>
-            Confirm
-          </Button>
-        </Space>
-      }
-    >
-      <Title level={4} style={{ marginTop: 8 }}>Total Billing</Title>
-      <Title level={2} style={{ marginTop: 0 }}>
-        {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}
-      </Title>
-
-      <Descriptions
-        bordered
-        size="small"
-        column={1}
-        items={[
-          { key: 'type', label: 'Type', children: details.type },
-          { key: 'to', label: 'To', children: details.id },
-          { key: 'particulars', label: 'Particulars', children: details.particulars },
-          { key: 'currency', label: 'Billed Currency', children: details.billedCurrency },
-          { key: 'amount', label: 'Billed Amount', children: `${details.billedCurrency} ${Number(details.billedAmount).toFixed(2)}` },
-          { key: 'total', label: 'Total Billing', children: `${details.billedCurrency} ${Number(details.totalBilling).toFixed(2)}` },
-        ]}
-      />
-    </Modal>
+    />
   );
 
   const renderPasscode = () => (
@@ -284,7 +249,7 @@ function WalletPaymentForm({
         zIndex={zIndex}
         onClose={() => {
           setView('summary');
-          onClose?.(); // optionally close the whole flow after success
+          onClose?.();
         }}
       />
     );
