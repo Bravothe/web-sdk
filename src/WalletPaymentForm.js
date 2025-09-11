@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, Button, Typography, Descriptions, Input, Space, Avatar, Spin } from 'antd';
 
-import PaymentSuccessModal from './PaymentSuccessModal';
-import PaymentFailedModal from './PaymentFailedModal';
-import InsufficientFundsModal from './InsufficientFundsModal';
+import PaymentSuccessModal from './PaymentSuccessModal.js';
+import PaymentFailedModal from './PaymentFailedModal.js';
+import InsufficientFundsModal from './InsufficientFundsModal.js';
 
 const { Title, Text } = Typography;
 
@@ -39,7 +39,7 @@ function buildTxnDetails(amount, id, type, particulars, currency, merchantName, 
  * Ant Design edition — login skipped for now (controlled by skipAuth, default true).
  *
  * Props:
- *  - skipAuth?: boolean (default true)  -> when false, you can re-wire your original auth flow
+ *  - skipAuth?: boolean (default true)
  *  - zIndex?: number (default 2000)
  *  - customerId?: string
  *  - amount (number), type, particulars, currency, merchantName, merchantLogo
@@ -275,7 +275,6 @@ function WalletPaymentForm({
   if (view === 'summary') return renderSummary();
   if (view === 'passcode') return renderPasscode();
 
-  // Result screens (kept as separate components, still part of the flow)
   if (view === 'success') {
     return (
       <PaymentSuccessModal

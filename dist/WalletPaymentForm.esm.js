@@ -34727,6 +34727,89 @@ if (process.env.NODE_ENV !== 'production') {
   RefIcon.displayName = 'ExclamationCircleTwoTone';
 }
 
+function PaymentSuccessModal(_ref) {
+  var {
+    open = true,
+    amount,
+    currency = 'UGX',
+    onClose,
+    zIndex = 2000
+  } = _ref;
+  return /*#__PURE__*/React__default.createElement(Modal, {
+    open: open,
+    centered: true,
+    footer: null,
+    onCancel: onClose,
+    zIndex: zIndex,
+    maskClosable: false
+  }, /*#__PURE__*/React__default.createElement(Result, {
+    status: "success",
+    icon: /*#__PURE__*/React__default.createElement(RefIcon$2, {
+      twoToneColor: "#52c41a"
+    }),
+    title: "Payment Successful",
+    subTitle: "Your payment of ".concat(currency, " ").concat(Number(amount).toFixed(2), " was processed."),
+    extra: /*#__PURE__*/React__default.createElement(Button, {
+      type: "primary",
+      onClick: onClose
+    }, "Close")
+  }));
+}
+
+function PaymentFailedModal(_ref) {
+  var {
+    open = true,
+    onClose,
+    zIndex = 2000
+  } = _ref;
+  return /*#__PURE__*/React__default.createElement(Modal, {
+    open: open,
+    centered: true,
+    footer: null,
+    onCancel: onClose,
+    zIndex: zIndex,
+    maskClosable: false
+  }, /*#__PURE__*/React__default.createElement(Result, {
+    status: "error",
+    icon: /*#__PURE__*/React__default.createElement(RefIcon$1, {
+      twoToneColor: "#ff4d4f"
+    }),
+    title: "Payment Failed",
+    subTitle: "Please check your wallet for details.",
+    extra: /*#__PURE__*/React__default.createElement(Button, {
+      type: "primary",
+      onClick: onClose
+    }, "Details")
+  }));
+}
+
+function InsufficientFundsModal(_ref) {
+  var {
+    open = true,
+    onClose,
+    zIndex = 2000
+  } = _ref;
+  return /*#__PURE__*/React__default.createElement(Modal, {
+    open: open,
+    centered: true,
+    footer: null,
+    onCancel: onClose,
+    zIndex: zIndex,
+    maskClosable: false
+  }, /*#__PURE__*/React__default.createElement(Result, {
+    status: "warning",
+    icon: /*#__PURE__*/React__default.createElement(RefIcon, {
+      twoToneColor: "#faad14"
+    }),
+    title: "Insufficient Funds",
+    subTitle: "The account doesn\u2019t have enough balance for this transaction.",
+    extra: /*#__PURE__*/React__default.createElement(Button, {
+      type: "primary",
+      onClick: onClose
+    }, "Add Funds")
+  }));
+}
+
 var {
   Title,
   Text
@@ -34786,7 +34869,7 @@ function buildTxnDetails(amount, id, type, particulars, currency, merchantName, 
  * Ant Design edition — login skipped for now (controlled by skipAuth, default true).
  *
  * Props:
- *  - skipAuth?: boolean (default true)  -> when false, you can re-wire your original auth flow
+ *  - skipAuth?: boolean (default true)
  *  - zIndex?: number (default 2000)
  *  - customerId?: string
  *  - amount (number), type, particulars, currency, merchantName, merchantLogo
@@ -34804,7 +34887,7 @@ function WalletPaymentForm(_ref) {
     currency,
     merchantName,
     merchantLogo,
-    onClose,
+    onClose: _onClose,
     onSuccess
   } = _ref;
   var [view, setView] = useState('loading'); // 'loading' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient' | 'invalid'
@@ -34827,8 +34910,7 @@ function WalletPaymentForm(_ref) {
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     } else {
-      // (When you reintroduce auth later, place cookie/customer checks here,
-      // set view to 'summary' once authenticated, or to 'login' if you add that view back.)
+      // (When you reintroduce auth later, place cookie/customer checks here.)
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     }
@@ -34881,7 +34963,7 @@ function WalletPaymentForm(_ref) {
   var closeAndReset = () => {
     setPasscode('');
     setView('summary');
-    onClose === null || onClose === void 0 ? void 0 : onClose();
+    _onClose === null || _onClose === void 0 ? void 0 : _onClose();
   };
 
   // ----------- Render helpers (Ant Design) -----------
@@ -34916,15 +34998,23 @@ function WalletPaymentForm(_ref) {
     onCancel: closeAndReset,
     zIndex: zIndex,
     maskClosable: false
-  }, /*#__PURE__*/React__default.createElement(Result, {
-    status: "error",
-    title: "Invalid Amount",
-    subTitle: "The transaction amount is missing or invalid.",
-    extra: /*#__PURE__*/React__default.createElement(Button, {
-      type: "primary",
-      onClick: closeAndReset
-    }, "Close")
-  }));
+  }, /*#__PURE__*/React__default.createElement(Space, {
+    direction: "vertical",
+    align: "center",
+    style: {
+      width: '100%'
+    }
+  }, /*#__PURE__*/React__default.createElement(Title, {
+    level: 4,
+    style: {
+      margin: 0
+    }
+  }, "Invalid Amount"), /*#__PURE__*/React__default.createElement(Text, {
+    type: "secondary"
+  }, "The transaction amount is missing or invalid."), /*#__PURE__*/React__default.createElement(Button, {
+    type: "primary",
+    onClick: closeAndReset
+  }, "Close")));
   var renderSummary = () => /*#__PURE__*/React__default.createElement(Modal, {
     open: true,
     centered: true,
@@ -35049,72 +35139,38 @@ function WalletPaymentForm(_ref) {
   }, details.merchantName), ". Amount to be deducted:", /*#__PURE__*/React__default.createElement(Text, {
     strong: true
   }, " ", details.billedCurrency, " ", Number(details.totalBilling).toFixed(2)), ", including:"), /*#__PURE__*/React__default.createElement("br", null), /*#__PURE__*/React__default.createElement(Text, null, "2.5% Tax: ", details.billedCurrency, " ", (details.totalBilling * 0.025).toFixed(2)), /*#__PURE__*/React__default.createElement("br", null), /*#__PURE__*/React__default.createElement(Text, null, "1.5% Wallet Fee: ", details.billedCurrency, " ", (details.totalBilling * 0.015).toFixed(2)))));
-  var renderSuccess = () => /*#__PURE__*/React__default.createElement(Modal, {
-    open: true,
-    centered: true,
-    footer: null,
-    onCancel: closeAndReset,
-    zIndex: zIndex,
-    maskClosable: false
-  }, /*#__PURE__*/React__default.createElement(Result, {
-    status: "success",
-    icon: /*#__PURE__*/React__default.createElement(RefIcon$2, {
-      twoToneColor: "#52c41a"
-    }),
-    title: "Payment Successful",
-    subTitle: "Your payment of ".concat(details.billedCurrency, " ").concat(Number(amount).toFixed(2), " was processed."),
-    extra: /*#__PURE__*/React__default.createElement(Button, {
-      type: "primary",
-      onClick: closeAndReset
-    }, "Close")
-  }));
-  var renderFailed = () => /*#__PURE__*/React__default.createElement(Modal, {
-    open: true,
-    centered: true,
-    footer: null,
-    onCancel: () => setView('summary'),
-    zIndex: zIndex,
-    maskClosable: false
-  }, /*#__PURE__*/React__default.createElement(Result, {
-    status: "error",
-    icon: /*#__PURE__*/React__default.createElement(RefIcon$1, {
-      twoToneColor: "#ff4d4f"
-    }),
-    title: "Payment Failed",
-    subTitle: "Please check your wallet for details.",
-    extra: /*#__PURE__*/React__default.createElement(Button, {
-      type: "primary",
-      onClick: () => setView('summary')
-    }, "Details")
-  }));
-  var renderInsufficient = () => /*#__PURE__*/React__default.createElement(Modal, {
-    open: true,
-    centered: true,
-    footer: null,
-    onCancel: () => setView('summary'),
-    zIndex: zIndex,
-    maskClosable: false
-  }, /*#__PURE__*/React__default.createElement(Result, {
-    status: "warning",
-    icon: /*#__PURE__*/React__default.createElement(RefIcon, {
-      twoToneColor: "#faad14"
-    }),
-    title: "Insufficient Funds",
-    subTitle: "The account doesn\u2019t have enough balance for this transaction.",
-    extra: /*#__PURE__*/React__default.createElement(Button, {
-      type: "primary",
-      onClick: () => setView('summary')
-    }, "Add Funds")
-  }));
 
   // ---------- Router ----------
   if (view === 'loading') return renderLoading();
   if (view === 'invalid') return renderInvalid();
   if (view === 'summary') return renderSummary();
   if (view === 'passcode') return renderPasscode();
-  if (view === 'success') return renderSuccess();
-  if (view === 'failed') return renderFailed();
-  if (view === 'insufficient') return renderInsufficient();
+  if (view === 'success') {
+    return /*#__PURE__*/React__default.createElement(PaymentSuccessModal, {
+      open: true,
+      amount: amount,
+      currency: details.billedCurrency,
+      zIndex: zIndex,
+      onClose: () => {
+        setView('summary');
+        _onClose === null || _onClose === void 0 ? void 0 : _onClose(); // optionally close the whole flow after success
+      }
+    });
+  }
+  if (view === 'failed') {
+    return /*#__PURE__*/React__default.createElement(PaymentFailedModal, {
+      open: true,
+      zIndex: zIndex,
+      onClose: () => setView('summary')
+    });
+  }
+  if (view === 'insufficient') {
+    return /*#__PURE__*/React__default.createElement(InsufficientFundsModal, {
+      open: true,
+      zIndex: zIndex,
+      onClose: () => setView('summary')
+    });
+  }
   return null;
 }
 
