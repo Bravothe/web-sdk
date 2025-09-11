@@ -61,5 +61,5 @@ export default {
       buffer: true,
     }),
   ],
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'antd', '@ant-design/icons'],
 };
