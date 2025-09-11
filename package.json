@@ -1,6 +1,6 @@
 {
   "name": "evzone-pay-sd",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "EVzone Wallet payment form component for React",
   "type": "module",
   "main": "dist/WalletPaymentForm.umd.js",
