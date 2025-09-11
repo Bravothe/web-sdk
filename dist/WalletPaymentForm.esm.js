@@ -3359,6 +3359,7 @@ var WalletPaymentForm = _ref => {
     onClick: handleClose
   }), renderPopup())), /*#__PURE__*/React.createElement("style", null, "\n        .wallet-payment-form {\n          position: fixed;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          z-index: 1000;\n        }\n        .overlay {\n          position: absolute;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          background: rgba(0, 0, 0, 0.5);\n          z-index: 999;\n          pointer-events: auto;\n        }\n      "));
 };
+ // add this line
 
-export { WalletPaymentForm as default };
+export { WalletPaymentForm, WalletPaymentForm as default };
 //# sourceMappingURL=WalletPaymentForm.esm.js.map

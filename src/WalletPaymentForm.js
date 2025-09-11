@@ -1,47 +1,51 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// Auth/login intentionally removed for now
-import TransactionDetailsSummary from './TransactionSummary';
-import EnterPasscode from './EnterPasscode';
-import PaymentSuccess from './PaymentSuccess';
-import PaymentFailed from './PaymentFailed';
-import InsufficientFunds from './InsufficientFunds';
-import LoadingOverlay from './LoadingOverlay';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Modal, Button, Typography, Descriptions, Input, Space, Avatar, Result, Spin } from 'antd';
+import { CheckCircleTwoTone, CloseCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 
-// Sample customers for testing
+const { Title, Text } = Typography;
+
+// Demo customers (unchanged)
 const SAMPLE_CUSTOMERS = {
   customer123: { name: 'John Doe', balance: 1000, passcode: '123456' },
   customer456: { name: 'Jane Smith', balance: 500, passcode: '567856' },
   customer789: { name: 'Alice Brown', balance: 50, passcode: '901256' },
-  admin: { name: 'Admin User', balance: 2000, passcode: '234567' },
+  admin:       { name: 'Admin User', balance: 2000, passcode: '234567' },
 };
 
-const generateTransactionDetails = (
-  amount,
-  transactionId,
-  type,
-  particulars,
-  currency,
-  merchantName,
-  merchantLogo
-) => ({
-  type: type || 'Booking',
-  id: transactionId,
-  particulars: particulars || 'Hotel Booking',
-  billedCurrency: currency || 'UGX',
-  billedAmount: amount,
-  totalBilling: amount,
-  merchantName: merchantName || 'Unknown Merchant',
-  merchantLogo: merchantLogo || '',
-});
-
-const validatePasscode = (customerId, passcode) => {
+function validatePasscode(customerId, passcode) {
   const customer = SAMPLE_CUSTOMERS[customerId];
   if (!customer) return { success: false, reason: 'no_account' };
   if (customer.passcode !== passcode) return { success: false, reason: 'invalid_passcode' };
   return { success: true };
-};
+}
 
-const WalletPaymentForm = ({
+function buildTxnDetails(amount, id, type, particulars, currency, merchantName, merchantLogo) {
+  return {
+    type: type || 'Booking',
+    id,
+    particulars: particulars || 'Hotel Booking',
+    billedCurrency: currency || 'UGX',
+    billedAmount: amount,
+    totalBilling: amount,
+    merchantName: merchantName || 'Unknown Merchant',
+    merchantLogo: merchantLogo || '',
+  };
+}
+
+/**
+ * Ant Design edition — login skipped for now (controlled by skipAuth, default true).
+ *
+ * Props:
+ *  - skipAuth?: boolean (default true)  -> when false, you can re-wire your original auth flow
+ *  - zIndex?: number (default 2000)
+ *  - customerId?: string
+ *  - amount (number), type, particulars, currency, merchantName, merchantLogo
+ *  - onClose?: () => void
+ *  - onSuccess?: (receipt) => void
+ */
+function WalletPaymentForm({
+  skipAuth = true,
+  zIndex = 2000,
   customerId: propCustomerId,
   amount,
   type,
@@ -51,185 +55,266 @@ const WalletPaymentForm = ({
   merchantLogo,
   onClose,
   onSuccess,
-}) => {
-  const [popup, setPopup] = useState('loading'); // Start with loading state
+}) {
+  const [view, setView] = useState('loading'); // 'loading' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient' | 'invalid'
   const [passcode, setPasscode] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('idle');
-  const [showPasscode, setShowPasscode] = useState(false);
-  const [transactionId] = useState(`W-${Math.floor(Math.random() * 1000000000)}`);
-  const [loading, setLoading] = useState(true); // Always start loading
+  const [submitting, setSubmitting] = useState(false);
+  const [txnId] = useState(() => `W-${Math.floor(Math.random() * 1_000_000_000)}`);
   const [effectiveCustomerId, setEffectiveCustomerId] = useState(propCustomerId);
 
-  // Debounce onClose
-  const debounceOnClose = useCallback(() => {
-    let timeout;
-    return () => {
-      if (!timeout) {
-        timeout = setTimeout(() => {
-          onClose && onClose();
-          timeout = null;
-        }, 300);
-      }
-    };
-  }, [onClose]);
+  const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
-  const handleClose = debounceOnClose();
+  // 7s uniform loading (kept from your design)
+  const boot = useCallback(async () => {
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    await wait(7000);
 
-  // 🔹 Skip cookie/auth checks entirely. After 7s overlay, go straight to summary.
-  const checkConditions = useCallback(async () => {
-    console.log('[EVZ] Skipping auth/cookie checks and proceeding to transaction summary.');
-    const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 7000));
+    if (!amountValid) {
+      setView('invalid');
+      return;
+    }
 
-    // Prefer a valid passed-in customerId; otherwise fall back to 'admin'
-    const fallbackId =
-      (propCustomerId && SAMPLE_CUSTOMERS[propCustomerId] && propCustomerId) || 'admin';
+    const fallbackId = (propCustomerId && SAMPLE_CUSTOMERS[propCustomerId] && propCustomerId) || 'admin';
 
-    await minLoadingTime;
-    setEffectiveCustomerId(fallbackId);
-    setPopup('transactionSummary');
-    setLoading(false);
-  }, [propCustomerId]);
+    if (skipAuth) {
+      setEffectiveCustomerId(fallbackId);
+      setView('summary');
+    } else {
+      // (When you reintroduce auth later, place cookie/customer checks here,
+      // set view to 'summary' once authenticated, or to 'login' if you add that view back.)
+      setEffectiveCustomerId(fallbackId);
+      setView('summary');
+    }
+  }, [propCustomerId, skipAuth, amountValid]);
 
   useEffect(() => {
-    setLoading(true);
-    checkConditions();
-  }, [checkConditions]);
+    setView('loading');
+    boot();
+  }, [boot]);
+
+  const details = useMemo(
+    () => buildTxnDetails(amount, txnId, type, particulars, currency, merchantName, merchantLogo),
+    [amount, txnId, type, particulars, currency, merchantName, merchantLogo]
+  );
 
   const handleConfirm = () => {
-    console.log('Confirm clicked, effectiveCustomerId:', effectiveCustomerId);
     const customer = SAMPLE_CUSTOMERS[effectiveCustomerId];
     if (customer && customer.balance < amount) {
-      console.log('Insufficient funds, balance:', customer.balance, 'amount:', amount);
-      setPopup('insufficientFunds');
+      setView('insufficient');
     } else {
-      console.log('Sufficient funds, proceeding to enterPasscode');
-      setPopup('enterPasscode');
+      setView('passcode');
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setPaymentStatus('pending');
-    const idToValidate = effectiveCustomerId;
-    const result = await validatePasscode(idToValidate, passcode);
-    setPaymentStatus(result.success ? 'success' : 'failed');
-
-    if (result.success) {
-      // Deduct balance after successful passcode validation (demo-only behavior)
-      SAMPLE_CUSTOMERS[idToValidate].balance -= amount;
-      setPopup('paymentSuccess');
-      if (onSuccess) {
-        onSuccess({
-          transactionId,
+  const handleSubmit = async () => {
+    if (passcode.length !== 6) return;
+    setSubmitting(true);
+    try {
+      const result = validatePasscode(effectiveCustomerId, passcode);
+      if (result.success) {
+        SAMPLE_CUSTOMERS[effectiveCustomerId].balance -= amount; // demo-only
+        setView('success');
+        onSuccess?.({
+          transactionId: txnId,
           amount,
-          currency: currency || 'UGX',
-          type: type || 'Booking',
-          particulars: particulars || 'Hotel Booking',
-          customerId: idToValidate,
+          currency: details.billedCurrency,
+          type: details.type,
+          particulars: details.particulars,
+          customerId: effectiveCustomerId,
         });
+      } else {
+        setView('failed');
+        setTimeout(() => {
+          setView('summary');
+          setPasscode('');
+        }, 3000);
       }
-    } else {
-      setPopup('paymentFailed');
-      setTimeout(() => {
-        setPopup('transactionSummary');
-        setPasscode('');
-        setPaymentStatus('idle');
-        handleClose();
-      }, 5000);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleSuccessClose = () => {
-    setPopup('transactionSummary');
+  const closeAndReset = () => {
     setPasscode('');
-    setPaymentStatus('idle');
-    handleClose();
+    setView('summary');
+    onClose?.();
   };
 
-  const handleInsufficientFundsClose = () => {
-    setPopup('transactionSummary');
-  };
-
-  const transactionDetails = generateTransactionDetails(
-    amount,
-    transactionId,
-    type,
-    particulars,
-    currency,
-    merchantName,
-    merchantLogo
+  // ----------- Render helpers (Ant Design) -----------
+  const renderLoading = () => (
+    <Modal open centered footer={null} closable={false} maskClosable={false} zIndex={zIndex}>
+      <Space direction="vertical" align="center" style={{ width: '100%' }}>
+        <Avatar src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg" size={96} />
+        <Title level={3} style={{ margin: 0 }}>EVzone Pay</Title>
+        <Spin tip="Preparing secure checkout…" />
+      </Space>
+    </Modal>
   );
 
-  const renderPopup = () => {
-    switch (popup) {
-      case 'transactionSummary':
-        return (
-          <TransactionDetailsSummary
-            transactionDetails={transactionDetails}
-            onConfirm={handleConfirm}
-          />
-        );
-      case 'enterPasscode':
-        return (
-          <EnterPasscode
-            passcode={passcode}
-            setPasscode={setPasscode}
-            showPasscode={showPasscode}
-            setShowPasscode={setShowPasscode}
-            transactionDetails={transactionDetails}
-            onSubmit={handleSubmit}
-            onBack={() => setPopup('transactionSummary')}
-          />
-        );
-      case 'paymentSuccess':
-        return <PaymentSuccess amount={amount} onClose={handleSuccessClose} />;
-      case 'paymentFailed':
-        return <PaymentFailed onClose={handleClose} />;
-      case 'insufficientFunds':
-        return <InsufficientFunds onClose={handleInsufficientFundsClose} />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <>
-      <div className="wallet-payment-form">
-        {loading ? (
-          <LoadingOverlay />
-        ) : (
-          <>
-            <div className="overlay" onClick={handleClose} />
-            {renderPopup()}
-          </>
-        )}
-      </div>
-      <style>{`
-        .wallet-payment-form {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-        }
-        .overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5);
-          z-index: 999;
-          pointer-events: auto;
-        }
-      `}</style>
-    </>
+  const renderInvalid = () => (
+    <Modal open centered footer={null} onCancel={closeAndReset} zIndex={zIndex} maskClosable={false}>
+      <Result
+        status="error"
+        title="Invalid Amount"
+        subTitle="The transaction amount is missing or invalid."
+        extra={<Button type="primary" onClick={closeAndReset}>Close</Button>}
+      />
+    </Modal>
   );
-};
+
+  const renderSummary = () => (
+    <Modal
+      open
+      centered
+      zIndex={zIndex}
+      maskClosable={false}
+      title={
+        <Space align="center">
+          {details.merchantLogo ? (
+            <Avatar src={details.merchantLogo} />
+          ) : (
+            <Avatar>{(details.merchantName || 'E')[0]}</Avatar>
+          )}
+          <span>{details.merchantName}</span>
+        </Space>
+      }
+      onCancel={closeAndReset}
+      footer={
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Button onClick={closeAndReset}>Cancel</Button>
+          <Button type="primary" onClick={handleConfirm}>
+            Confirm
+          </Button>
+        </Space>
+      }
+    >
+      <Title level={4} style={{ marginTop: 8 }}>Total Billing</Title>
+      <Title level={2} style={{ marginTop: 0 }}>
+        {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}
+      </Title>
+
+      <Descriptions
+        bordered
+        size="small"
+        column={1}
+        items={[
+          { key: 'type', label: 'Type', children: details.type },
+          { key: 'to', label: 'To', children: details.id },
+          { key: 'particulars', label: 'Particulars', children: details.particulars },
+          { key: 'currency', label: 'Billed Currency', children: details.billedCurrency },
+          { key: 'amount', label: 'Billed Amount', children: `${details.billedCurrency} ${Number(details.billedAmount).toFixed(2)}` },
+          { key: 'total', label: 'Total Billing', children: `${details.billedCurrency} ${Number(details.totalBilling).toFixed(2)}` },
+        ]}
+      />
+    </Modal>
+  );
+
+  const renderPasscode = () => (
+    <Modal
+      open
+      centered
+      zIndex={zIndex}
+      maskClosable={false}
+      title="Enter Passcode"
+      onCancel={() => setView('summary')}
+      footer={
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Button onClick={() => setView('summary')}>Back</Button>
+          <Button
+            type="primary"
+            disabled={passcode.length !== 6}
+            onClick={handleSubmit}
+            loading={submitting}
+          >
+            Confirm
+          </Button>
+        </Space>
+      }
+    >
+      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+        <Space align="center" style={{ width: '100%', justifyContent: 'space-between' }}>
+          <div>
+            <Text type="secondary">Merchant</Text>
+            <div><Text strong>{details.merchantName}</Text></div>
+            <div><Text type="secondary">{details.id}</Text></div>
+          </div>
+          <Title level={4} style={{ margin: 0 }}>
+            {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}
+          </Title>
+        </Space>
+
+        <Input.Password
+          value={passcode}
+          onChange={(e) => setPasscode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          onPressEnter={() => passcode.length === 6 && !submitting && handleSubmit()}
+          placeholder="6-digit passcode"
+          maxLength={6}
+          inputMode="numeric"
+          autoComplete="one-time-code"
+        />
+
+        <div style={{ background: '#e6f4ff', padding: 12, borderRadius: 8 }}>
+          <Text>
+            You are paying <Text strong>{details.merchantName}</Text>. Amount to be deducted:
+            <Text strong> {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}</Text>
+            , including:
+          </Text>
+          <br />
+          <Text>2.5% Tax: {details.billedCurrency} {(details.totalBilling * 0.025).toFixed(2)}</Text>
+          <br />
+          <Text>1.5% Wallet Fee: {details.billedCurrency} {(details.totalBilling * 0.015).toFixed(2)}</Text>
+        </div>
+      </Space>
+    </Modal>
+  );
+
+  const renderSuccess = () => (
+    <Modal open centered footer={null} onCancel={closeAndReset} zIndex={zIndex} maskClosable={false}>
+      <Result
+        status="success"
+        icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+        title="Payment Successful"
+        subTitle={`Your payment of ${details.billedCurrency} ${Number(amount).toFixed(2)} was processed.`}
+        extra={<Button type="primary" onClick={closeAndReset}>Close</Button>}
+      />
+    </Modal>
+  );
+
+  const renderFailed = () => (
+    <Modal open centered footer={null} onCancel={() => setView('summary')} zIndex={zIndex} maskClosable={false}>
+      <Result
+        status="error"
+        icon={<CloseCircleTwoTone twoToneColor="#ff4d4f" />}
+        title="Payment Failed"
+        subTitle="Please check your wallet for details."
+        extra={<Button type="primary" onClick={() => setView('summary')}>Details</Button>}
+      />
+    </Modal>
+  );
+
+  const renderInsufficient = () => (
+    <Modal open centered footer={null} onCancel={() => setView('summary')} zIndex={zIndex} maskClosable={false}>
+      <Result
+        status="warning"
+        icon={<ExclamationCircleTwoTone twoToneColor="#faad14" />}
+        title="Insufficient Funds"
+        subTitle="The account doesn’t have enough balance for this transaction."
+        extra={<Button type="primary" onClick={() => setView('summary')}>Add Funds</Button>}
+      />
+    </Modal>
+  );
+
+  // ---------- Router ----------
+  if (view === 'loading') return renderLoading();
+  if (view === 'invalid') return renderInvalid();
+  if (view === 'summary') return renderSummary();
+  if (view === 'passcode') return renderPasscode();
+  if (view === 'success') return renderSuccess();
+  if (view === 'failed') return renderFailed();
+  if (view === 'insufficient') return renderInsufficient();
+  return null;
+}
+
 export default WalletPaymentForm;
-export { WalletPaymentForm }; // add this line
-
+// allow named import as well:
+export { WalletPaymentForm };

@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react')) :
-  typeof define === 'function' && define.amd ? define(['react'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.WalletPaymentForm = factory(global.React));
-})(this, (function (React) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.WalletPaymentForm = {}, global.React));
+})(this, (function (exports, React) { 'use strict';
 
   function asyncGeneratorStep(n, t, e, r, o, a, c) {
     try {
@@ -3363,8 +3363,12 @@
       onClick: handleClose
     }), renderPopup())), /*#__PURE__*/React.createElement("style", null, "\n        .wallet-payment-form {\n          position: fixed;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          z-index: 1000;\n        }\n        .overlay {\n          position: absolute;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          background: rgba(0, 0, 0, 0.5);\n          z-index: 999;\n          pointer-events: auto;\n        }\n      "));
   };
+   // add this line
 
-  return WalletPaymentForm;
+  exports.WalletPaymentForm = WalletPaymentForm;
+  exports.default = WalletPaymentForm;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
 //# sourceMappingURL=WalletPaymentForm.umd.js.map
