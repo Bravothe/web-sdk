@@ -230,5 +230,6 @@ const WalletPaymentForm = ({
     </>
   );
 };
-
 export default WalletPaymentForm;
+export { WalletPaymentForm }; // add this line
+

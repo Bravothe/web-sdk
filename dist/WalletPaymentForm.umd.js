@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.WalletPaymentForm = {}, global.React));
-})(this, (function (exports, React) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react')) :
+  typeof define === 'function' && define.amd ? define(['react'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.WalletPaymentForm = factory(global.React));
+})(this, (function (React) { 'use strict';
 
   function asyncGeneratorStep(n, t, e, r, o, a, c) {
     try {
@@ -2742,175 +2742,6 @@
 
   handlePrototype(DOMTokenListPrototype, 'DOMTokenList');
 
-  var DefaultContext = {
-    color: undefined,
-    size: undefined,
-    className: undefined,
-    style: undefined,
-    attr: undefined
-  };
-  var IconContext = React.createContext && /*#__PURE__*/React.createContext(DefaultContext);
-
-  var _excluded = ["attr", "size", "title"];
-  function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-  function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } } return target; }
-  function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-  function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-  function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), true).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-  function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function Tree2Element(tree) {
-    return tree && tree.map((node, i) => /*#__PURE__*/React.createElement(node.tag, _objectSpread({
-      key: i
-    }, node.attr), Tree2Element(node.child)));
-  }
-  function GenIcon(data) {
-    return props => /*#__PURE__*/React.createElement(IconBase, _extends({
-      attr: _objectSpread({}, data.attr)
-    }, props), Tree2Element(data.child));
-  }
-  function IconBase(props) {
-    var elem = conf => {
-      var {
-          attr,
-          size,
-          title
-        } = props,
-        svgProps = _objectWithoutProperties(props, _excluded);
-      var computedSize = size || conf.size || "1em";
-      var className;
-      if (conf.className) className = conf.className;
-      if (props.className) className = (className ? className + " " : "") + props.className;
-      return /*#__PURE__*/React.createElement("svg", _extends({
-        stroke: "currentColor",
-        fill: "currentColor",
-        strokeWidth: "0"
-      }, conf.attr, attr, svgProps, {
-        className: className,
-        style: _objectSpread(_objectSpread({
-          color: props.color || conf.color
-        }, conf.style), props.style),
-        height: computedSize,
-        width: computedSize,
-        xmlns: "http://www.w3.org/2000/svg"
-      }), title && /*#__PURE__*/React.createElement("title", null, title), props.children);
-    };
-    return IconContext !== undefined ? /*#__PURE__*/React.createElement(IconContext.Consumer, null, conf => elem(conf)) : elem(DefaultContext);
-  }
-
-  // THIS FILE IS AUTO GENERATED
-  function IoClose (props) {
-    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"m289.94 256 95-95A24 24 0 0 0 351 127l-95 95-95-95a24 24 0 0 0-34 34l95 95-95 95a24 24 0 1 0 34 34l95-95 95 95a24 24 0 0 0 34-34z"},"child":[]}]})(props);
-  }function IoEyeOff (props) {
-    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M432 448a15.92 15.92 0 0 1-11.31-4.69l-352-352a16 16 0 0 1 22.62-22.62l352 352A16 16 0 0 1 432 448zM248 315.85l-51.79-51.79a2 2 0 0 0-3.39 1.69 64.11 64.11 0 0 0 53.49 53.49 2 2 0 0 0 1.69-3.39zm16-119.7L315.87 248a2 2 0 0 0 3.4-1.69 64.13 64.13 0 0 0-53.55-53.55 2 2 0 0 0-1.72 3.39z"},"child":[]},{"tag":"path","attr":{"d":"M491 273.36a32.2 32.2 0 0 0-.1-34.76c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.68 96a226.54 226.54 0 0 0-71.82 11.79 4 4 0 0 0-1.56 6.63l47.24 47.24a4 4 0 0 0 3.82 1.05 96 96 0 0 1 116 116 4 4 0 0 0 1.05 3.81l67.95 68a4 4 0 0 0 5.4.24 343.81 343.81 0 0 0 67.24-77.4zM256 352a96 96 0 0 1-93.3-118.63 4 4 0 0 0-1.05-3.81l-66.84-66.87a4 4 0 0 0-5.41-.23c-24.39 20.81-47 46.13-67.67 75.72a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.39 76.14 98.28 100.65C162.06 402 207.92 416 255.68 416a238.22 238.22 0 0 0 72.64-11.55 4 4 0 0 0 1.61-6.64l-47.47-47.46a4 4 0 0 0-3.81-1.05A96 96 0 0 1 256 352z"},"child":[]}]})(props);
-  }function IoEye (props) {
-    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"circle","attr":{"cx":"256","cy":"256","r":"64"},"child":[]},{"tag":"path","attr":{"d":"M490.84 238.6c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.66 96c-42.52 0-84.33 12.15-124.27 36.11-40.73 24.43-77.63 60.12-109.68 106.07a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.4 76.14 98.28 100.65C162 402 207.9 416 255.66 416c46.71 0 93.81-14.43 136.2-41.72 38.46-24.77 72.72-59.66 99.08-100.92a32.2 32.2 0 0 0-.1-34.76zM256 352a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"},"child":[]}]})(props);
-  }
-
-  var Header = _ref => {
-    var {
-      onClose
-    } = _ref;
-    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-      className: "popup-header"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "header-content"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "logo"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-      alt: "EVzone Logo",
-      className: "header-icon"
-    })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
-      className: "evzone"
-    }, "EVzone"), /*#__PURE__*/React.createElement("span", {
-      className: "pay"
-    }, " Pay"))), onClose && /*#__PURE__*/React.createElement("button", {
-      className: "close-btn",
-      onClick: onClose
-    }, /*#__PURE__*/React.createElement(IoClose, null))), /*#__PURE__*/React.createElement("style", null, "\n        .popup-header {\n          display: flex;\n          align-items: center;\n          justify-content: space-between;\n          margin-bottom: 15px;\n          width: 100%;\n          padding: 10px 15px;\n          border-bottom: 1px solid #ddd;\n        }\n\n        .header-content {\n          display: flex;\n          align-items: center;\n          justify-content: flex-start;\n          padding-left: 5px;\n        }\n\n        .logo {\n          width: 36px;\n          height: 36px;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          margin-right: 10px;\n          border-radius: 50%;\n          overflow: hidden;\n        }\n\n        .header-icon {\n          width: 100%;\n          height: auto;\n        }\n\n        .popup-header h2 {\n          font-size: 1.1em;\n          color: #080808;\n          margin: 0;\n          font-weight: 600;\n        }\n\n        .popup-header .evzone {\n          color: #0a0a0a;\n        }\n\n        .popup-header .pay {\n          color: #0a0a0a;\n        }\n\n        .close-btn {\n          background: none;\n          border: none;\n          padding: 0; /* Remove padding to keep it minimal */\n          cursor: pointer;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n        }\n\n        .close-btn svg {\n          font-size: 1.2em; /* Smaller icon size */\n          color: #ff5a5f; /* Same color as before */\n          transition: color 0.3s ease;\n        }\n\n        .close-btn:hover svg {\n          color: #e04f53; /* Slightly darker on hover */\n        }\n      "));
-  };
-
-  var HasAccountSummary = _ref => {
-    var {
-      onLoginSuccess,
-      onClose
-    } = _ref;
-    React.useEffect(() => {
-      var checkPopup;
-      var timeout;
-      var handleMessage = event => {
-        // Restrict origin for security (update to your auth server's origin)
-        if (event.origin !== 'https://allan-sxqyu.ondigitalocean.app') {
-          console.log('Message from untrusted origin:', event.origin);
-          return;
-        }
-        if (!event.data || typeof event.data !== 'object') {
-          console.log('Invalid event data');
-          return;
-        }
-        var {
-          user_id,
-          auth_token
-        } = event.data;
-        if (user_id && auth_token) {
-          console.log('Received user_id:', user_id, 'auth_token:', auth_token);
-          onLoginSuccess(user_id, auth_token);
-          window.removeEventListener('message', handleMessage);
-        }
-      };
-      window.addEventListener('message', handleMessage);
-      return () => {
-        clearInterval(checkPopup);
-        clearTimeout(timeout);
-        window.removeEventListener('message', handleMessage);
-        console.log('HasAccountSummary unmounted');
-      };
-    }, [onLoginSuccess]);
-    var handleSignIn = () => {
-      var callbackUrl = "".concat(window.location.origin, "/wallet-callback");
-      var loginUrl = "https://allan-sxqyu.ondigitalocean.app?redirect_uri=".concat(encodeURIComponent(callbackUrl));
-      var popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
-      if (!popup) {
-        console.error('Popup blocked');
-        alert('Popup blocked. Please allow popups for this site.');
-        return;
-      }
-      checkPopup = setInterval(() => {
-        if (popup.closed) {
-          console.log('Popup closed');
-          clearInterval(checkPopup);
-          onClose();
-        }
-      }, 500);
-      timeout = setTimeout(() => {
-        if (popup && !popup.closed) {
-          popup.close();
-        }
-        clearInterval(checkPopup);
-        onClose();
-        alert('Login timed out. Please try again.');
-      }, 60000);
-    };
-    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-      className: "popup-content"
-    }, /*#__PURE__*/React.createElement(Header, null), /*#__PURE__*/React.createElement("div", {
-      className: "error-content"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "message-container"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "info-icon"
-    }, "i"), /*#__PURE__*/React.createElement("div", {
-      className: "message-text"
-    }, /*#__PURE__*/React.createElement("h3", null, "EVzone requires you to sign in to proceed with this transaction"))), /*#__PURE__*/React.createElement("button", {
-      onClick: handleSignIn,
-      className: "submit-button"
-    }, "Sign in"))), /*#__PURE__*/React.createElement("style", {
-      jsx: true
-    }, "\n        .popup-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          background: white;\n          border-radius: 10px;\n          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);\n          max-width: 400px;\n          width: 90%;\n          text-align: center;\n          border: 1px solid #ddd;\n          font-family: Arial, sans-serif;\n          z-index: 1001;\n          position: relative;\n          pointer-events: auto;\n        }\n        .error-content {\n          display: flex;\n          flex-direction: column;\n          align-items: center;\n          padding: 20px;\n          background-color: #fff;\n          border-radius: 8px;\n        }\n        .message-container {\n          display: flex;\n          align-items: center;\n          width: 100%;\n          margin-bottom: 20px;\n          background-color: #e0f7fa;\n          border-radius: 10px;\n          padding: 10px 15px;\n        }\n        .info-icon {\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          width: 40px;\n          height: 40px;\n          background-color: #b3e5fc;\n          color: #0288d1;\n          border-radius: 50%;\n          font-size: 24px;\n          font-weight: bold;\n          margin-right: 15px;\n        }\n        .message-text {\n          flex: 1;\n        }\n        .message-text h3 {\n          font-size: 1.2em;\n          margin: 0;\n          color: #333;\n          font-weight: 500;\n        }\n        .submit-button {\n          background-color: #0288d1;\n          color: #fff;\n          border: none;\n          border-radius: 5px;\n          padding: 10px 20px;\n          font-size: 1em;\n          font-weight: 500;\n          cursor: pointer;\n          transition: background-color 0.3s ease;\n          width: 100%;\n          max-width: 200px;\n        }\n        .submit-button:hover {\n          background-color: #0277bd;\n        }\n      "));
-  };
-
   var uncurryThis$1 = functionUncurryThis;
 
   // `thisNumberValue` abstract operation
@@ -3073,6 +2904,96 @@
       } return result;
     }
   });
+
+  var DefaultContext = {
+    color: undefined,
+    size: undefined,
+    className: undefined,
+    style: undefined,
+    attr: undefined
+  };
+  var IconContext = React.createContext && /*#__PURE__*/React.createContext(DefaultContext);
+
+  var _excluded = ["attr", "size", "title"];
+  function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+  function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } } return target; }
+  function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+  function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+  function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), true).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+  function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function Tree2Element(tree) {
+    return tree && tree.map((node, i) => /*#__PURE__*/React.createElement(node.tag, _objectSpread({
+      key: i
+    }, node.attr), Tree2Element(node.child)));
+  }
+  function GenIcon(data) {
+    return props => /*#__PURE__*/React.createElement(IconBase, _extends({
+      attr: _objectSpread({}, data.attr)
+    }, props), Tree2Element(data.child));
+  }
+  function IconBase(props) {
+    var elem = conf => {
+      var {
+          attr,
+          size,
+          title
+        } = props,
+        svgProps = _objectWithoutProperties(props, _excluded);
+      var computedSize = size || conf.size || "1em";
+      var className;
+      if (conf.className) className = conf.className;
+      if (props.className) className = (className ? className + " " : "") + props.className;
+      return /*#__PURE__*/React.createElement("svg", _extends({
+        stroke: "currentColor",
+        fill: "currentColor",
+        strokeWidth: "0"
+      }, conf.attr, attr, svgProps, {
+        className: className,
+        style: _objectSpread(_objectSpread({
+          color: props.color || conf.color
+        }, conf.style), props.style),
+        height: computedSize,
+        width: computedSize,
+        xmlns: "http://www.w3.org/2000/svg"
+      }), title && /*#__PURE__*/React.createElement("title", null, title), props.children);
+    };
+    return IconContext !== undefined ? /*#__PURE__*/React.createElement(IconContext.Consumer, null, conf => elem(conf)) : elem(DefaultContext);
+  }
+
+  // THIS FILE IS AUTO GENERATED
+  function IoClose (props) {
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"m289.94 256 95-95A24 24 0 0 0 351 127l-95 95-95-95a24 24 0 0 0-34 34l95 95-95 95a24 24 0 1 0 34 34l95-95 95 95a24 24 0 0 0 34-34z"},"child":[]}]})(props);
+  }function IoEyeOff (props) {
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M432 448a15.92 15.92 0 0 1-11.31-4.69l-352-352a16 16 0 0 1 22.62-22.62l352 352A16 16 0 0 1 432 448zM248 315.85l-51.79-51.79a2 2 0 0 0-3.39 1.69 64.11 64.11 0 0 0 53.49 53.49 2 2 0 0 0 1.69-3.39zm16-119.7L315.87 248a2 2 0 0 0 3.4-1.69 64.13 64.13 0 0 0-53.55-53.55 2 2 0 0 0-1.72 3.39z"},"child":[]},{"tag":"path","attr":{"d":"M491 273.36a32.2 32.2 0 0 0-.1-34.76c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.68 96a226.54 226.54 0 0 0-71.82 11.79 4 4 0 0 0-1.56 6.63l47.24 47.24a4 4 0 0 0 3.82 1.05 96 96 0 0 1 116 116 4 4 0 0 0 1.05 3.81l67.95 68a4 4 0 0 0 5.4.24 343.81 343.81 0 0 0 67.24-77.4zM256 352a96 96 0 0 1-93.3-118.63 4 4 0 0 0-1.05-3.81l-66.84-66.87a4 4 0 0 0-5.41-.23c-24.39 20.81-47 46.13-67.67 75.72a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.39 76.14 98.28 100.65C162.06 402 207.92 416 255.68 416a238.22 238.22 0 0 0 72.64-11.55 4 4 0 0 0 1.61-6.64l-47.47-47.46a4 4 0 0 0-3.81-1.05A96 96 0 0 1 256 352z"},"child":[]}]})(props);
+  }function IoEye (props) {
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"circle","attr":{"cx":"256","cy":"256","r":"64"},"child":[]},{"tag":"path","attr":{"d":"M490.84 238.6c-26.46-40.92-60.79-75.68-99.27-100.53C349 110.55 302 96 255.66 96c-42.52 0-84.33 12.15-124.27 36.11-40.73 24.43-77.63 60.12-109.68 106.07a31.92 31.92 0 0 0-.64 35.54c26.41 41.33 60.4 76.14 98.28 100.65C162 402 207.9 416 255.66 416c46.71 0 93.81-14.43 136.2-41.72 38.46-24.77 72.72-59.66 99.08-100.92a32.2 32.2 0 0 0-.1-34.76zM256 352a96 96 0 1 1 96-96 96.11 96.11 0 0 1-96 96z"},"child":[]}]})(props);
+  }
+
+  var Header = _ref => {
+    var {
+      onClose
+    } = _ref;
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "popup-header"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "header-content"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "logo"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
+      alt: "EVzone Logo",
+      className: "header-icon"
+    })), /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("span", {
+      className: "evzone"
+    }, "EVzone"), /*#__PURE__*/React.createElement("span", {
+      className: "pay"
+    }, " Pay"))), onClose && /*#__PURE__*/React.createElement("button", {
+      className: "close-btn",
+      onClick: onClose
+    }, /*#__PURE__*/React.createElement(IoClose, null))), /*#__PURE__*/React.createElement("style", null, "\n        .popup-header {\n          display: flex;\n          align-items: center;\n          justify-content: space-between;\n          margin-bottom: 15px;\n          width: 100%;\n          padding: 10px 15px;\n          border-bottom: 1px solid #ddd;\n        }\n\n        .header-content {\n          display: flex;\n          align-items: center;\n          justify-content: flex-start;\n          padding-left: 5px;\n        }\n\n        .logo {\n          width: 36px;\n          height: 36px;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          margin-right: 10px;\n          border-radius: 50%;\n          overflow: hidden;\n        }\n\n        .header-icon {\n          width: 100%;\n          height: auto;\n        }\n\n        .popup-header h2 {\n          font-size: 1.1em;\n          color: #080808;\n          margin: 0;\n          font-weight: 600;\n        }\n\n        .popup-header .evzone {\n          color: #0a0a0a;\n        }\n\n        .popup-header .pay {\n          color: #0a0a0a;\n        }\n\n        .close-btn {\n          background: none;\n          border: none;\n          padding: 0; /* Remove padding to keep it minimal */\n          cursor: pointer;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n        }\n\n        .close-btn svg {\n          font-size: 1.2em; /* Smaller icon size */\n          color: #ff5a5f; /* Same color as before */\n          transition: color 0.3s ease;\n        }\n\n        .close-btn:hover svg {\n          color: #e04f53; /* Slightly darker on hover */\n        }\n      "));
+  };
 
   var TransactionSummary = _ref => {
     var {
@@ -3271,16 +3192,6 @@
       passcode: '234567'
     }
   };
-
-  // Helper to get cookie by name
-  var getCookie = name => {
-    var value = "; ".concat(document.cookie);
-    var parts = value.split("; ".concat(name, "="));
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-  };
-  var getStoredUserId = () => getCookie('wallet_user_id');
-  var getStoredAuthToken = () => getCookie('wallet_auth_token');
   var generateTransactionDetails = (amount, transactionId, type, particulars, currency, merchantName, merchantLogo) => ({
     type: type || 'Booking',
     id: transactionId,
@@ -3319,7 +3230,6 @@
     } = _ref;
     var [popup, setPopup] = React.useState('loading'); // Start with loading state
     var [passcode, setPasscode] = React.useState('');
-    var [hasAccount, setHasAccount] = React.useState(null);
     var [paymentStatus, setPaymentStatus] = React.useState('idle');
     var [showPasscode, setShowPasscode] = React.useState(false);
     var [transactionId] = React.useState("W-".concat(Math.floor(Math.random() * 1000000000)));
@@ -3332,111 +3242,62 @@
       return () => {
         if (!timeout) {
           timeout = setTimeout(() => {
-            console.log('Executing debounced onClose');
-            onClose();
+            onClose && onClose();
             timeout = null;
           }, 300);
         }
       };
     }, [onClose]);
     var handleClose = debounceOnClose();
-    var checkConditions = React.useCallback(/*#__PURE__*/_asyncToGenerator(function* () {
-      console.log('Checking conditions, propCustomerId:', propCustomerId);
-      var customerIdToUse = propCustomerId;
 
-      // Ensure minimum loading time of 7 seconds
+    // 🔹 Skip cookie/auth checks entirely. After 7s overlay, go straight to summary.
+    var checkConditions = React.useCallback(/*#__PURE__*/_asyncToGenerator(function* () {
+      console.log('[EVZ] Skipping auth/cookie checks and proceeding to transaction summary.');
       var minLoadingTime = new Promise(resolve => setTimeout(resolve, 7000));
-      if (!customerIdToUse || !SAMPLE_CUSTOMERS[customerIdToUse]) {
-        var attempts = 0;
-        var maxAttempts = 5;
-        var _tryCredentials = /*#__PURE__*/function () {
-          var _ref3 = _asyncToGenerator(function* () {
-            attempts++;
-            var storedUserId = getStoredUserId();
-            var storedAuthToken = getStoredAuthToken();
-            console.log("Initial check, attempt ".concat(attempts, ", user_id:"), storedUserId, 'auth_token:', storedAuthToken);
-            if (storedUserId && SAMPLE_CUSTOMERS[storedUserId]) {
-              customerIdToUse = storedUserId;
-              yield minLoadingTime; // Wait for 7 seconds
-              setHasAccount(true);
-              setEffectiveCustomerId(customerIdToUse);
-              setPopup('transactionSummary');
-              setLoading(false);
-            } else if (attempts < maxAttempts) {
-              setTimeout(_tryCredentials, 2000);
-            } else {
-              yield minLoadingTime; // Wait for 7 seconds
-              setHasAccount(false);
-              setEffectiveCustomerId(null);
-              setPopup('hasAccountSummary');
-              setLoading(false);
-            }
-          });
-          return function tryCredentials() {
-            return _ref3.apply(this, arguments);
-          };
-        }();
-        _tryCredentials();
-      } else {
-        yield minLoadingTime; // Wait for 7 seconds
-        setHasAccount(true);
-        setEffectiveCustomerId(customerIdToUse);
-        setPopup('transactionSummary');
-        setLoading(false);
-      }
+
+      // Prefer a valid passed-in customerId; otherwise fall back to 'admin'
+      var fallbackId = propCustomerId && SAMPLE_CUSTOMERS[propCustomerId] && propCustomerId || 'admin';
+      yield minLoadingTime;
+      setEffectiveCustomerId(fallbackId);
+      setPopup('transactionSummary');
+      setLoading(false);
     }), [propCustomerId]);
     React.useEffect(() => {
-      setLoading(true); // Ensure loading starts true
+      setLoading(true);
       checkConditions();
     }, [checkConditions]);
-    var handleLoginSuccess = React.useCallback((muid, sid) => {
-      console.log('Handling login success (from postMessage):', muid, sid);
-
-      // Store the received credentials in cookies
-      document.cookie = "wallet_user_id=".concat(encodeURIComponent(muid), "; Max-Age=").concat(7 * 24 * 60 * 60, "; Secure; SameSite=Strict");
-      document.cookie = "wallet_auth_token=".concat(encodeURIComponent(sid), "; Max-Age=").concat(7 * 24 * 60 * 60, "; Secure; SameSite=Strict");
-      if (muid && SAMPLE_CUSTOMERS[muid]) {
-        setEffectiveCustomerId(muid);
-        setHasAccount(true);
-        setPopup('transactionSummary');
-        setLoading(false);
-        console.log('Transitioned to transactionSummary, customerId:', muid);
-      } else {
-        console.error('Invalid MUID or no test user found');
-        setHasAccount(false);
-        setPopup('hasAccountSummary');
-        setLoading(false);
-        alert('Login failed. Please try again.');
-        handleClose();
-      }
-    }, [handleClose]);
     var handleConfirm = () => {
-      console.log('Confirm clicked, hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
-      if (hasAccount && effectiveCustomerId) {
-        var customer = SAMPLE_CUSTOMERS[effectiveCustomerId];
-        if (customer && customer.balance < amount) {
-          console.log('Insufficient funds, balance:', customer.balance, 'amount:', amount);
-          setPopup('insufficientFunds');
-        } else {
-          console.log('Sufficient funds, proceeding to enterPasscode');
-          setPopup('enterPasscode');
-        }
+      console.log('Confirm clicked, effectiveCustomerId:', effectiveCustomerId);
+      var customer = SAMPLE_CUSTOMERS[effectiveCustomerId];
+      if (customer && customer.balance < amount) {
+        console.log('Insufficient funds, balance:', customer.balance, 'amount:', amount);
+        setPopup('insufficientFunds');
+      } else {
+        console.log('Sufficient funds, proceeding to enterPasscode');
+        setPopup('enterPasscode');
       }
     };
     var handleSubmit = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator(function* (e) {
+      var _ref3 = _asyncToGenerator(function* (e) {
         e.preventDefault();
-        console.log('Submitting passcode:', passcode);
         setPaymentStatus('pending');
         var idToValidate = effectiveCustomerId;
         var result = yield validatePasscode(idToValidate, passcode);
-        console.log('Validation result:', result);
         setPaymentStatus(result.success ? 'success' : 'failed');
         if (result.success) {
-          // Deduct balance after successful passcode validation
+          // Deduct balance after successful passcode validation (demo-only behavior)
           SAMPLE_CUSTOMERS[idToValidate].balance -= amount;
           setPopup('paymentSuccess');
-          if (onSuccess) onSuccess();
+          if (onSuccess) {
+            onSuccess({
+              transactionId,
+              amount,
+              currency: currency || 'UGX',
+              type: type || 'Booking',
+              particulars: particulars || 'Hotel Booking',
+              customerId: idToValidate
+            });
+          }
         } else {
           setPopup('paymentFailed');
           setTimeout(() => {
@@ -3448,36 +3309,22 @@
         }
       });
       return function handleSubmit(_x) {
-        return _ref4.apply(this, arguments);
+        return _ref3.apply(this, arguments);
       };
     }();
     var handleSuccessClose = () => {
-      console.log('Success close clicked');
       setPopup('transactionSummary');
       setPasscode('');
       setPaymentStatus('idle');
       handleClose();
     };
     var handleInsufficientFundsClose = () => {
-      console.log('Insufficient funds close clicked');
       setPopup('transactionSummary');
     };
     var transactionDetails = generateTransactionDetails(amount, transactionId, type, particulars, currency, merchantName, merchantLogo);
     var renderPopup = () => {
-      console.log('Rendering popup:', popup, 'hasAccount:', hasAccount, 'effectiveCustomerId:', effectiveCustomerId);
       switch (popup) {
-        case 'hasAccountSummary':
-          return /*#__PURE__*/React.createElement(HasAccountSummary, {
-            onClose: handleClose,
-            onLoginSuccess: handleLoginSuccess
-          });
         case 'transactionSummary':
-          if (hasAccount === false || !effectiveCustomerId) {
-            return /*#__PURE__*/React.createElement(HasAccountSummary, {
-              onClose: handleClose,
-              onLoginSuccess: handleLoginSuccess
-            });
-          }
           return /*#__PURE__*/React.createElement(TransactionSummary, {
             transactionDetails: transactionDetails,
             onConfirm: handleConfirm
@@ -3514,15 +3361,10 @@
     }, loading ? /*#__PURE__*/React.createElement(LoadingOverlay, null) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "overlay",
       onClick: handleClose
-    }), renderPopup())), /*#__PURE__*/React.createElement("style", {
-      jsx: true
-    }, "\n        .wallet-payment-form {\n          position: fixed;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          z-index: 1000;\n        }\n        .overlay {\n          position: absolute;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          background: rgba(0, 0, 0, 0.5);\n          z-index: 999;\n          pointer-events: auto;\n        }\n      "));
+    }), renderPopup())), /*#__PURE__*/React.createElement("style", null, "\n        .wallet-payment-form {\n          position: fixed;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          display: flex;\n          justify-content: center;\n          align-items: center;\n          z-index: 1000;\n        }\n        .overlay {\n          position: absolute;\n          top: 0;\n          left: 0;\n          width: 100%;\n          height: 100%;\n          background: rgba(0, 0, 0, 0.5);\n          z-index: 999;\n          pointer-events: auto;\n        }\n      "));
   };
 
-  exports.WalletPaymentForm = WalletPaymentForm;
-  exports.default = WalletPaymentForm;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
+  return WalletPaymentForm;
 
 }));
 //# sourceMappingURL=WalletPaymentForm.umd.js.map
