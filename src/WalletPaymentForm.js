@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Button, Typography, Descriptions, Input, Space, Avatar, Result, Spin } from 'antd';
-import { CheckCircleTwoTone, CloseCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
+import { Modal, Button, Typography, Descriptions, Input, Space, Avatar, Spin } from 'antd';
+
+import PaymentSuccessModal from './PaymentSuccessModal';
+import PaymentFailedModal from './PaymentFailedModal';
+import InsufficientFundsModal from './InsufficientFundsModal';
 
 const { Title, Text } = Typography;
 
@@ -80,8 +83,7 @@ function WalletPaymentForm({
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     } else {
-      // (When you reintroduce auth later, place cookie/customer checks here,
-      // set view to 'summary' once authenticated, or to 'login' if you add that view back.)
+      // (When you reintroduce auth later, place cookie/customer checks here.)
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     }
@@ -153,12 +155,11 @@ function WalletPaymentForm({
 
   const renderInvalid = () => (
     <Modal open centered footer={null} onCancel={closeAndReset} zIndex={zIndex} maskClosable={false}>
-      <Result
-        status="error"
-        title="Invalid Amount"
-        subTitle="The transaction amount is missing or invalid."
-        extra={<Button type="primary" onClick={closeAndReset}>Close</Button>}
-      />
+      <Space direction="vertical" align="center" style={{ width: '100%' }}>
+        <Title level={4} style={{ margin: 0 }}>Invalid Amount</Title>
+        <Text type="secondary">The transaction amount is missing or invalid.</Text>
+        <Button type="primary" onClick={closeAndReset}>Close</Button>
+      </Space>
     </Modal>
   );
 
@@ -268,53 +269,50 @@ function WalletPaymentForm({
     </Modal>
   );
 
-  const renderSuccess = () => (
-    <Modal open centered footer={null} onCancel={closeAndReset} zIndex={zIndex} maskClosable={false}>
-      <Result
-        status="success"
-        icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
-        title="Payment Successful"
-        subTitle={`Your payment of ${details.billedCurrency} ${Number(amount).toFixed(2)} was processed.`}
-        extra={<Button type="primary" onClick={closeAndReset}>Close</Button>}
-      />
-    </Modal>
-  );
-
-  const renderFailed = () => (
-    <Modal open centered footer={null} onCancel={() => setView('summary')} zIndex={zIndex} maskClosable={false}>
-      <Result
-        status="error"
-        icon={<CloseCircleTwoTone twoToneColor="#ff4d4f" />}
-        title="Payment Failed"
-        subTitle="Please check your wallet for details."
-        extra={<Button type="primary" onClick={() => setView('summary')}>Details</Button>}
-      />
-    </Modal>
-  );
-
-  const renderInsufficient = () => (
-    <Modal open centered footer={null} onCancel={() => setView('summary')} zIndex={zIndex} maskClosable={false}>
-      <Result
-        status="warning"
-        icon={<ExclamationCircleTwoTone twoToneColor="#faad14" />}
-        title="Insufficient Funds"
-        subTitle="The account doesn’t have enough balance for this transaction."
-        extra={<Button type="primary" onClick={() => setView('summary')}>Add Funds</Button>}
-      />
-    </Modal>
-  );
-
   // ---------- Router ----------
   if (view === 'loading') return renderLoading();
   if (view === 'invalid') return renderInvalid();
   if (view === 'summary') return renderSummary();
   if (view === 'passcode') return renderPasscode();
-  if (view === 'success') return renderSuccess();
-  if (view === 'failed') return renderFailed();
-  if (view === 'insufficient') return renderInsufficient();
+
+  // Result screens (kept as separate components, still part of the flow)
+  if (view === 'success') {
+    return (
+      <PaymentSuccessModal
+        open
+        amount={amount}
+        currency={details.billedCurrency}
+        zIndex={zIndex}
+        onClose={() => {
+          setView('summary');
+          onClose?.(); // optionally close the whole flow after success
+        }}
+      />
+    );
+  }
+
+  if (view === 'failed') {
+    return (
+      <PaymentFailedModal
+        open
+        zIndex={zIndex}
+        onClose={() => setView('summary')}
+      />
+    );
+  }
+
+  if (view === 'insufficient') {
+    return (
+      <InsufficientFundsModal
+        open
+        zIndex={zIndex}
+        onClose={() => setView('summary')}
+      />
+    );
+  }
+
   return null;
 }
 
 export default WalletPaymentForm;
-// allow named import as well:
 export { WalletPaymentForm };
