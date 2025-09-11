@@ -2870,7 +2870,7 @@
     }, [onLoginSuccess]);
     var handleSignIn = () => {
       var callbackUrl = "".concat(window.location.origin, "/wallet-callback");
-      var loginUrl = "https://efs-gp9p6.ondigitalocean.app?redirect_uri=".concat(encodeURIComponent(callbackUrl));
+      var loginUrl = "https://allan-sxqyu.ondigitalocean.app?redirect_uri=".concat(encodeURIComponent(callbackUrl));
       var popup = window.open(loginUrl, 'Sign In', 'width=500,height=600');
       if (!popup) {
         console.error('Popup blocked');
