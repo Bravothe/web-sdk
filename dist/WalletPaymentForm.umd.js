@@ -29,6 +29,15 @@
       });
     };
   }
+  function _extends() {
+    return _extends = Object.assign ? Object.assign.bind() : function (n) {
+      for (var e = 1; e < arguments.length; e++) {
+        var t = arguments[e];
+        for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+      }
+      return n;
+    }, _extends.apply(null, arguments);
+  }
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1503,212 +1512,10 @@
     defineProperty$1(values, 'name', { value: 'values' });
   } catch (error) { /* empty */ }
 
-  var uncurryThis$9 = functionUncurryThis;
-
-  // `thisNumberValue` abstract operation
-  // https://tc39.es/ecma262/#sec-thisnumbervalue
-  var thisNumberValue$1 = uncurryThis$9(1.0.valueOf);
-
-  var wellKnownSymbol$a = wellKnownSymbol$g;
-
-  var TO_STRING_TAG$1 = wellKnownSymbol$a('toStringTag');
-  var test = {};
-
-  test[TO_STRING_TAG$1] = 'z';
-
-  var toStringTagSupport = String(test) === '[object z]';
-
-  var TO_STRING_TAG_SUPPORT = toStringTagSupport;
-  var isCallable$7 = isCallable$l;
-  var classofRaw$1 = classofRaw$2;
-  var wellKnownSymbol$9 = wellKnownSymbol$g;
-
-  var TO_STRING_TAG = wellKnownSymbol$9('toStringTag');
-  var $Object = Object;
-
-  // ES3 wrong here
-  var CORRECT_ARGUMENTS = classofRaw$1(function () { return arguments; }()) === 'Arguments';
-
-  // fallback for IE11 Script Access Denied error
-  var tryGet = function (it, key) {
-    try {
-      return it[key];
-    } catch (error) { /* empty */ }
-  };
-
-  // getting tag from ES6+ `Object.prototype.toString`
-  var classof$5 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
-    var O, tag, result;
-    return it === undefined ? 'Undefined' : it === null ? 'Null'
-      // @@toStringTag case
-      : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == 'string' ? tag
-      // builtinTag case
-      : CORRECT_ARGUMENTS ? classofRaw$1(O)
-      // ES3 arguments fallback
-      : (result = classofRaw$1(O)) === 'Object' && isCallable$7(O.callee) ? 'Arguments' : result;
-  };
-
-  var classof$4 = classof$5;
-
-  var $String$1 = String;
-
-  var toString$4 = function (argument) {
-    if (classof$4(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
-    return $String$1(argument);
-  };
-
-  var toIntegerOrInfinity$3 = toIntegerOrInfinity$6;
-  var toString$3 = toString$4;
-  var requireObjectCoercible$2 = requireObjectCoercible$6;
-
-  var $RangeError$1 = RangeError;
-
-  // `String.prototype.repeat` method implementation
-  // https://tc39.es/ecma262/#sec-string.prototype.repeat
-  var stringRepeat = function repeat(count) {
-    var str = toString$3(requireObjectCoercible$2(this));
-    var result = '';
-    var n = toIntegerOrInfinity$3(count);
-    if (n < 0 || n === Infinity) throw new $RangeError$1('Wrong number of repetitions');
-    for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) result += str;
-    return result;
-  };
-
-  var $$7 = _export;
-  var uncurryThis$8 = functionUncurryThis;
-  var toIntegerOrInfinity$2 = toIntegerOrInfinity$6;
-  var thisNumberValue = thisNumberValue$1;
-  var $repeat = stringRepeat;
-  var fails$7 = fails$i;
-
-  var $RangeError = RangeError;
-  var $String = String;
-  var floor$1 = Math.floor;
-  var repeat = uncurryThis$8($repeat);
-  var stringSlice$4 = uncurryThis$8(''.slice);
-  var nativeToFixed = uncurryThis$8(1.0.toFixed);
-
-  var pow = function (x, n, acc) {
-    return n === 0 ? acc : n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc);
-  };
-
-  var log = function (x) {
-    var n = 0;
-    var x2 = x;
-    while (x2 >= 4096) {
-      n += 12;
-      x2 /= 4096;
-    }
-    while (x2 >= 2) {
-      n += 1;
-      x2 /= 2;
-    } return n;
-  };
-
-  var multiply = function (data, n, c) {
-    var index = -1;
-    var c2 = c;
-    while (++index < 6) {
-      c2 += n * data[index];
-      data[index] = c2 % 1e7;
-      c2 = floor$1(c2 / 1e7);
-    }
-  };
-
-  var divide = function (data, n) {
-    var index = 6;
-    var c = 0;
-    while (--index >= 0) {
-      c += data[index];
-      data[index] = floor$1(c / n);
-      c = (c % n) * 1e7;
-    }
-  };
-
-  var dataToString = function (data) {
-    var index = 6;
-    var s = '';
-    while (--index >= 0) {
-      if (s !== '' || index === 0 || data[index] !== 0) {
-        var t = $String(data[index]);
-        s = s === '' ? t : s + repeat('0', 7 - t.length) + t;
-      }
-    } return s;
-  };
-
-  var FORCED = fails$7(function () {
-    return nativeToFixed(0.00008, 3) !== '0.000' ||
-      nativeToFixed(0.9, 0) !== '1' ||
-      nativeToFixed(1.255, 2) !== '1.25' ||
-      nativeToFixed(1000000000000000128.0, 0) !== '1000000000000000128';
-  }) || !fails$7(function () {
-    // V8 ~ Android 4.3-
-    nativeToFixed({});
-  });
-
-  // `Number.prototype.toFixed` method
-  // https://tc39.es/ecma262/#sec-number.prototype.tofixed
-  $$7({ target: 'Number', proto: true, forced: FORCED }, {
-    toFixed: function toFixed(fractionDigits) {
-      var number = thisNumberValue(this);
-      var fractDigits = toIntegerOrInfinity$2(fractionDigits);
-      var data = [0, 0, 0, 0, 0, 0];
-      var sign = '';
-      var result = '0';
-      var e, z, j, k;
-
-      // TODO: ES2018 increased the maximum number of fraction digits to 100, need to improve the implementation
-      if (fractDigits < 0 || fractDigits > 20) throw new $RangeError('Incorrect fraction digits');
-      // eslint-disable-next-line no-self-compare -- NaN check
-      if (number !== number) return 'NaN';
-      if (number <= -1e21 || number >= 1e21) return $String(number);
-      if (number < 0) {
-        sign = '-';
-        number = -number;
-      }
-      if (number > 1e-21) {
-        e = log(number * pow(2, 69, 1)) - 69;
-        z = e < 0 ? number * pow(2, -e, 1) : number / pow(2, e, 1);
-        z *= 0x10000000000000;
-        e = 52 - e;
-        if (e > 0) {
-          multiply(data, 0, z);
-          j = fractDigits;
-          while (j >= 7) {
-            multiply(data, 1e7, 0);
-            j -= 7;
-          }
-          multiply(data, pow(10, j, 1), 0);
-          j = e - 1;
-          while (j >= 23) {
-            divide(data, 1 << 23);
-            j -= 23;
-          }
-          divide(data, 1 << j);
-          multiply(data, 1, 1);
-          divide(data, 2);
-          result = dataToString(data);
-        } else {
-          multiply(data, 0, z);
-          multiply(data, 1 << -e, 0);
-          result = dataToString(data) + repeat('0', fractDigits);
-        }
-      }
-      if (fractDigits > 0) {
-        k = result.length;
-        result = sign + (k <= fractDigits
-          ? '0.' + repeat('0', fractDigits - k) + result
-          : stringSlice$4(result, 0, k - fractDigits) + '.' + stringSlice$4(result, k - fractDigits));
-      } else {
-        result = sign + result;
-      } return result;
-    }
-  });
-
   /* global Bun, Deno -- detection */
   var globalThis$b = globalThis_1;
   var userAgent$3 = environmentUserAgent;
-  var classof$3 = classofRaw$2;
+  var classof$5 = classofRaw$2;
 
   var userAgentStartsWith = function (string) {
     return userAgent$3.slice(0, string.length) === string;
@@ -1721,7 +1528,7 @@
     if (userAgentStartsWith('Node.js/')) return 'NODE';
     if (globalThis$b.Bun && typeof Bun.version == 'string') return 'BUN';
     if (globalThis$b.Deno && typeof Deno.version == 'object') return 'DENO';
-    if (classof$3(globalThis$b.process) === 'process') return 'NODE';
+    if (classof$5(globalThis$b.process) === 'process') return 'NODE';
     if (globalThis$b.window && globalThis$b.document) return 'BROWSER';
     return 'REST';
   })();
@@ -1741,10 +1548,10 @@
 
   var getBuiltIn$3 = getBuiltIn$7;
   var defineBuiltInAccessor = defineBuiltInAccessor$1;
-  var wellKnownSymbol$8 = wellKnownSymbol$g;
+  var wellKnownSymbol$a = wellKnownSymbol$g;
   var DESCRIPTORS$1 = descriptors;
 
-  var SPECIES$3 = wellKnownSymbol$8('species');
+  var SPECIES$3 = wellKnownSymbol$a('species');
 
   var setSpecies$1 = function (CONSTRUCTOR_NAME) {
     var Constructor = getBuiltIn$3(CONSTRUCTOR_NAME);
@@ -1766,17 +1573,56 @@
     throw new $TypeError$6('Incorrect invocation');
   };
 
-  var uncurryThis$7 = functionUncurryThis;
-  var fails$6 = fails$i;
+  var wellKnownSymbol$9 = wellKnownSymbol$g;
+
+  var TO_STRING_TAG$1 = wellKnownSymbol$9('toStringTag');
+  var test = {};
+
+  test[TO_STRING_TAG$1] = 'z';
+
+  var toStringTagSupport = String(test) === '[object z]';
+
+  var TO_STRING_TAG_SUPPORT = toStringTagSupport;
+  var isCallable$7 = isCallable$l;
+  var classofRaw$1 = classofRaw$2;
+  var wellKnownSymbol$8 = wellKnownSymbol$g;
+
+  var TO_STRING_TAG = wellKnownSymbol$8('toStringTag');
+  var $Object = Object;
+
+  // ES3 wrong here
+  var CORRECT_ARGUMENTS = classofRaw$1(function () { return arguments; }()) === 'Arguments';
+
+  // fallback for IE11 Script Access Denied error
+  var tryGet = function (it, key) {
+    try {
+      return it[key];
+    } catch (error) { /* empty */ }
+  };
+
+  // getting tag from ES6+ `Object.prototype.toString`
+  var classof$4 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
+    var O, tag, result;
+    return it === undefined ? 'Undefined' : it === null ? 'Null'
+      // @@toStringTag case
+      : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == 'string' ? tag
+      // builtinTag case
+      : CORRECT_ARGUMENTS ? classofRaw$1(O)
+      // ES3 arguments fallback
+      : (result = classofRaw$1(O)) === 'Object' && isCallable$7(O.callee) ? 'Arguments' : result;
+  };
+
+  var uncurryThis$9 = functionUncurryThis;
+  var fails$7 = fails$i;
   var isCallable$6 = isCallable$l;
-  var classof$2 = classof$5;
+  var classof$3 = classof$4;
   var getBuiltIn$2 = getBuiltIn$7;
   var inspectSource$1 = inspectSource$3;
 
   var noop = function () { /* empty */ };
   var construct = getBuiltIn$2('Reflect', 'construct');
   var constructorRegExp = /^\s*(?:class|function)\b/;
-  var exec$1 = uncurryThis$7(constructorRegExp.exec);
+  var exec$1 = uncurryThis$9(constructorRegExp.exec);
   var INCORRECT_TO_STRING = !constructorRegExp.test(noop);
 
   var isConstructorModern = function isConstructor(argument) {
@@ -1791,7 +1637,7 @@
 
   var isConstructorLegacy = function isConstructor(argument) {
     if (!isCallable$6(argument)) return false;
-    switch (classof$2(argument)) {
+    switch (classof$3(argument)) {
       case 'AsyncFunction':
       case 'GeneratorFunction':
       case 'AsyncGeneratorFunction': return false;
@@ -1810,7 +1656,7 @@
 
   // `IsConstructor` abstract operation
   // https://tc39.es/ecma262/#sec-isconstructor
-  var isConstructor$1 = !construct || fails$6(function () {
+  var isConstructor$1 = !construct || fails$7(function () {
     var called;
     return isConstructorModern(isConstructorModern.call)
       || !isConstructorModern(Object)
@@ -1856,20 +1702,20 @@
   });
 
   var classofRaw = classofRaw$2;
-  var uncurryThis$6 = functionUncurryThis;
+  var uncurryThis$8 = functionUncurryThis;
 
   var functionUncurryThisClause = function (fn) {
     // Nashorn bug:
     //   https://github.com/zloirock/core-js/issues/1128
     //   https://github.com/zloirock/core-js/issues/1130
-    if (classofRaw(fn) === 'Function') return uncurryThis$6(fn);
+    if (classofRaw(fn) === 'Function') return uncurryThis$8(fn);
   };
 
-  var uncurryThis$5 = functionUncurryThisClause;
+  var uncurryThis$7 = functionUncurryThisClause;
   var aCallable$5 = aCallable$8;
   var NATIVE_BIND = functionBindNative;
 
-  var bind$4 = uncurryThis$5(uncurryThis$5.bind);
+  var bind$4 = uncurryThis$7(uncurryThis$7.bind);
 
   // optional / simple context binding
   var functionBindContext = function (fn, that) {
@@ -1879,9 +1725,9 @@
     };
   };
 
-  var uncurryThis$4 = functionUncurryThis;
+  var uncurryThis$6 = functionUncurryThis;
 
-  var arraySlice$1 = uncurryThis$4([].slice);
+  var arraySlice$1 = uncurryThis$6([].slice);
 
   var $TypeError$4 = TypeError;
 
@@ -1900,7 +1746,7 @@
   var bind$3 = functionBindContext;
   var isCallable$5 = isCallable$l;
   var hasOwn = hasOwnProperty_1;
-  var fails$5 = fails$i;
+  var fails$6 = fails$i;
   var html = html$2;
   var arraySlice = arraySlice$1;
   var createElement = documentCreateElement$2;
@@ -1920,7 +1766,7 @@
   var ONREADYSTATECHANGE = 'onreadystatechange';
   var $location, defer, channel, port;
 
-  fails$5(function () {
+  fails$6(function () {
     // Deno throws a ReferenceError on `location` access without `--location` flag
     $location = globalThis$a.location;
   });
@@ -1987,7 +1833,7 @@
       isCallable$5(globalThis$a.postMessage) &&
       !globalThis$a.importScripts &&
       $location && $location.protocol !== 'file:' &&
-      !fails$5(globalPostMessageDefer)
+      !fails$6(globalPostMessageDefer)
     ) {
       defer = globalPostMessageDefer;
       globalThis$a.addEventListener('message', eventListener, false);
@@ -2221,7 +2067,7 @@
     return new PromiseCapability(C);
   };
 
-  var $$6 = _export;
+  var $$7 = _export;
   var IS_NODE = environmentIsNode;
   var globalThis$5 = globalThis_1;
   var call$9 = functionCall;
@@ -2503,7 +2349,7 @@
 
   // `Promise` constructor
   // https://tc39.es/ecma262/#sec-promise-executor
-  $$6({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
+  $$7({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
     Promise: PromiseConstructor
   });
 
@@ -2521,7 +2367,7 @@
     return it !== undefined && (Iterators$1.Array === it || ArrayPrototype[ITERATOR$3] === it);
   };
 
-  var classof$1 = classof$5;
+  var classof$2 = classof$4;
   var getMethod$2 = getMethod$4;
   var isNullOrUndefined$1 = isNullOrUndefined$5;
   var Iterators = iterators;
@@ -2532,7 +2378,7 @@
   var getIteratorMethod$2 = function (it) {
     if (!isNullOrUndefined$1(it)) return getMethod$2(it, ITERATOR$2)
       || getMethod$2(it, '@@iterator')
-      || Iterators[classof$1(it)];
+      || Iterators[classof$2(it)];
   };
 
   var call$8 = functionCall;
@@ -2691,7 +2537,7 @@
     NativePromiseConstructor$1.all(iterable).then(undefined, function () { /* empty */ });
   });
 
-  var $$5 = _export;
+  var $$6 = _export;
   var call$5 = functionCall;
   var aCallable$1 = aCallable$8;
   var newPromiseCapabilityModule$2 = newPromiseCapability$2;
@@ -2701,7 +2547,7 @@
 
   // `Promise.all` method
   // https://tc39.es/ecma262/#sec-promise.all
-  $$5({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
+  $$6({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
     all: function all(iterable) {
       var C = this;
       var capability = newPromiseCapabilityModule$2.f(C);
@@ -2730,7 +2576,7 @@
     }
   });
 
-  var $$4 = _export;
+  var $$5 = _export;
   var FORCED_PROMISE_CONSTRUCTOR$2 = promiseConstructorDetection.CONSTRUCTOR;
   var NativePromiseConstructor = promiseNativeConstructor;
   var getBuiltIn$1 = getBuiltIn$7;
@@ -2741,7 +2587,7 @@
 
   // `Promise.prototype.catch` method
   // https://tc39.es/ecma262/#sec-promise.prototype.catch
-  $$4({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
+  $$5({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
     'catch': function (onRejected) {
       return this.then(undefined, onRejected);
     }
@@ -2755,7 +2601,7 @@
     }
   }
 
-  var $$3 = _export;
+  var $$4 = _export;
   var call$4 = functionCall;
   var aCallable = aCallable$8;
   var newPromiseCapabilityModule$1 = newPromiseCapability$2;
@@ -2765,7 +2611,7 @@
 
   // `Promise.race` method
   // https://tc39.es/ecma262/#sec-promise.race
-  $$3({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
+  $$4({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
     race: function race(iterable) {
       var C = this;
       var capability = newPromiseCapabilityModule$1.f(C);
@@ -2781,13 +2627,13 @@
     }
   });
 
-  var $$2 = _export;
+  var $$3 = _export;
   var newPromiseCapabilityModule = newPromiseCapability$2;
   var FORCED_PROMISE_CONSTRUCTOR$1 = promiseConstructorDetection.CONSTRUCTOR;
 
   // `Promise.reject` method
   // https://tc39.es/ecma262/#sec-promise.reject
-  $$2({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
+  $$3({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
     reject: function reject(r) {
       var capability = newPromiseCapabilityModule.f(this);
       var capabilityReject = capability.reject;
@@ -2809,7 +2655,7 @@
     return promiseCapability.promise;
   };
 
-  var $$1 = _export;
+  var $$2 = _export;
   var getBuiltIn = getBuiltIn$7;
   var FORCED_PROMISE_CONSTRUCTOR = promiseConstructorDetection.CONSTRUCTOR;
   var promiseResolve = promiseResolve$1;
@@ -2818,9 +2664,425 @@
 
   // `Promise.resolve` method
   // https://tc39.es/ecma262/#sec-promise.resolve
-  $$1({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
+  $$2({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
     resolve: function resolve(x) {
       return promiseResolve(this, x);
+    }
+  });
+
+  // iterable DOM collections
+  // flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
+  var domIterables = {
+    CSSRuleList: 0,
+    CSSStyleDeclaration: 0,
+    CSSValueList: 0,
+    ClientRectList: 0,
+    DOMRectList: 0,
+    DOMStringList: 0,
+    DOMTokenList: 1,
+    DataTransferItemList: 0,
+    FileList: 0,
+    HTMLAllCollection: 0,
+    HTMLCollection: 0,
+    HTMLFormElement: 0,
+    HTMLSelectElement: 0,
+    MediaList: 0,
+    MimeTypeArray: 0,
+    NamedNodeMap: 0,
+    NodeList: 1,
+    PaintRequestList: 0,
+    Plugin: 0,
+    PluginArray: 0,
+    SVGLengthList: 0,
+    SVGNumberList: 0,
+    SVGPathSegList: 0,
+    SVGPointList: 0,
+    SVGStringList: 0,
+    SVGTransformList: 0,
+    SourceBufferList: 0,
+    StyleSheetList: 0,
+    TextTrackCueList: 0,
+    TextTrackList: 0,
+    TouchList: 0
+  };
+
+  // in old WebKit versions, `element.classList` is not an instance of global `DOMTokenList`
+  var documentCreateElement = documentCreateElement$2;
+
+  var classList = documentCreateElement('span').classList;
+  var DOMTokenListPrototype$1 = classList && classList.constructor && classList.constructor.prototype;
+
+  var domTokenListPrototype = DOMTokenListPrototype$1 === Object.prototype ? undefined : DOMTokenListPrototype$1;
+
+  var globalThis$4 = globalThis_1;
+  var DOMIterables = domIterables;
+  var DOMTokenListPrototype = domTokenListPrototype;
+  var ArrayIteratorMethods = es_array_iterator;
+  var createNonEnumerableProperty$1 = createNonEnumerableProperty$5;
+  var setToStringTag = setToStringTag$4;
+  var wellKnownSymbol$2 = wellKnownSymbol$g;
+
+  var ITERATOR = wellKnownSymbol$2('iterator');
+  var ArrayValues = ArrayIteratorMethods.values;
+
+  var handlePrototype = function (CollectionPrototype, COLLECTION_NAME) {
+    if (CollectionPrototype) {
+      // some Chrome versions have non-configurable methods on DOMTokenList
+      if (CollectionPrototype[ITERATOR] !== ArrayValues) try {
+        createNonEnumerableProperty$1(CollectionPrototype, ITERATOR, ArrayValues);
+      } catch (error) {
+        CollectionPrototype[ITERATOR] = ArrayValues;
+      }
+      setToStringTag(CollectionPrototype, COLLECTION_NAME, true);
+      if (DOMIterables[COLLECTION_NAME]) for (var METHOD_NAME in ArrayIteratorMethods) {
+        // some Chrome versions have non-configurable methods on DOMTokenList
+        if (CollectionPrototype[METHOD_NAME] !== ArrayIteratorMethods[METHOD_NAME]) try {
+          createNonEnumerableProperty$1(CollectionPrototype, METHOD_NAME, ArrayIteratorMethods[METHOD_NAME]);
+        } catch (error) {
+          CollectionPrototype[METHOD_NAME] = ArrayIteratorMethods[METHOD_NAME];
+        }
+      }
+    }
+  };
+
+  for (var COLLECTION_NAME in DOMIterables) {
+    handlePrototype(globalThis$4[COLLECTION_NAME] && globalThis$4[COLLECTION_NAME].prototype, COLLECTION_NAME);
+  }
+
+  handlePrototype(DOMTokenListPrototype, 'DOMTokenList');
+
+  var {
+    Title: Title$6,
+    Text: Text$5
+  } = antd.Typography;
+  var BRAND_LOGO$3 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+  var BRAND_GREEN$1 = '#02CD8D'; // EVzone green
+
+  /**
+   * Props:
+   *  - transactionDetails: {
+   *      merchantName, merchantLogo, billedCurrency, totalBilling, billedAmount, type, id, particulars
+   *    }
+   *  - onConfirm: () => void
+   *  - onCancel?: () => void
+   *  - width?: number (default 520)
+   */
+  function TransactionSummary(_ref) {
+    var _ref2, _d$totalBilling, _d$billedAmount;
+    var {
+      transactionDetails,
+      onConfirm,
+      onCancel,
+      width = 520
+    } = _ref;
+    var d = transactionDetails || {};
+    var currency = d.billedCurrency || 'UGX';
+    var total = (_ref2 = (_d$totalBilling = d.totalBilling) !== null && _d$totalBilling !== void 0 ? _d$totalBilling : d.billedAmount) !== null && _ref2 !== void 0 ? _ref2 : 0;
+    var amountStr = v => Number(v || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+    return /*#__PURE__*/React.createElement(antd.Modal, {
+      open: true,
+      centered: true,
+      width: width,
+      title: null // custom header below
+      ,
+      footer: null // custom footer (full-width button)
+      ,
+      onCancel: onCancel,
+      maskClosable: false,
+      bodyStyle: {
+        padding: 20
+      },
+      closeIcon: /*#__PURE__*/React.createElement("span", {
+        style: {
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: '#ff4d4f',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+        }
+      }, /*#__PURE__*/React.createElement(icons.CloseOutlined, null))
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: BRAND_LOGO$3,
+      size: 28
+    }), /*#__PURE__*/React.createElement(Text$5, {
+      strong: true,
+      style: {
+        fontSize: 16
+      }
+    }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/React.createElement(antd.Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%',
+        marginBottom: 8
+      }
+    }, d.merchantLogo ? /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: d.merchantLogo,
+      size: 56
+    }) : /*#__PURE__*/React.createElement(antd.Avatar, {
+      size: 56
+    }, (d.merchantName || 'E')[0]), /*#__PURE__*/React.createElement(Title$6, {
+      level: 4,
+      style: {
+        margin: 0
+      }
+    }, d.merchantName || 'Unknown Merchant'), /*#__PURE__*/React.createElement(Text$5, {
+      type: "secondary",
+      style: {
+        marginTop: -4
+      }
+    }, "Total Billing"), /*#__PURE__*/React.createElement(Title$6, {
+      level: 3,
+      style: {
+        margin: 0,
+        color: BRAND_GREEN$1
+      }
+    }, currency, " ", amountStr(total))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 8
+      }
+    }, /*#__PURE__*/React.createElement(Title$6, {
+      level: 5,
+      style: {
+        marginBottom: 8
+      }
+    }, "Transaction Details"), /*#__PURE__*/React.createElement(KV, {
+      label: "Type",
+      value: d.type || 'Booking'
+    }), /*#__PURE__*/React.createElement(KV, {
+      label: "To",
+      value: d.id
+    }), /*#__PURE__*/React.createElement(KV, {
+      label: "Particulars",
+      value: d.particulars || 'Hotel Booking'
+    }), /*#__PURE__*/React.createElement(KV, {
+      label: "Billed Currency",
+      value: currency
+    }), /*#__PURE__*/React.createElement(KV, {
+      label: "Billed Amount",
+      value: "".concat(currency, " ").concat(amountStr((_d$billedAmount = d.billedAmount) !== null && _d$billedAmount !== void 0 ? _d$billedAmount : total))
+    }), /*#__PURE__*/React.createElement(KV, {
+      label: /*#__PURE__*/React.createElement("strong", null, "Total Billing"),
+      value: /*#__PURE__*/React.createElement("strong", {
+        style: {
+          color: BRAND_GREEN$1
+        }
+      }, currency, " ", amountStr(total)),
+      withTopBorder: true
+    })), /*#__PURE__*/React.createElement(antd.Button, {
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      style: {
+        marginTop: 16
+      },
+      onClick: onConfirm
+    }, "Confirm"));
+  }
+
+  /** Left/right row used above */
+  function KV(_ref3) {
+    var {
+      label,
+      value,
+      withTopBorder = false
+    } = _ref3;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        gap: 12,
+        padding: '8px 4px',
+        borderTop: withTopBorder ? '1px solid #eee' : undefined
+      }
+    }, /*#__PURE__*/React.createElement(Text$5, {
+      type: "secondary"
+    }, label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement(Text$5, null, value)));
+  }
+
+  var uncurryThis$5 = functionUncurryThis;
+
+  // `thisNumberValue` abstract operation
+  // https://tc39.es/ecma262/#sec-thisnumbervalue
+  var thisNumberValue$1 = uncurryThis$5(1.0.valueOf);
+
+  var classof$1 = classof$4;
+
+  var $String$1 = String;
+
+  var toString$4 = function (argument) {
+    if (classof$1(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
+    return $String$1(argument);
+  };
+
+  var toIntegerOrInfinity$3 = toIntegerOrInfinity$6;
+  var toString$3 = toString$4;
+  var requireObjectCoercible$2 = requireObjectCoercible$6;
+
+  var $RangeError$1 = RangeError;
+
+  // `String.prototype.repeat` method implementation
+  // https://tc39.es/ecma262/#sec-string.prototype.repeat
+  var stringRepeat = function repeat(count) {
+    var str = toString$3(requireObjectCoercible$2(this));
+    var result = '';
+    var n = toIntegerOrInfinity$3(count);
+    if (n < 0 || n === Infinity) throw new $RangeError$1('Wrong number of repetitions');
+    for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) result += str;
+    return result;
+  };
+
+  var $$1 = _export;
+  var uncurryThis$4 = functionUncurryThis;
+  var toIntegerOrInfinity$2 = toIntegerOrInfinity$6;
+  var thisNumberValue = thisNumberValue$1;
+  var $repeat = stringRepeat;
+  var fails$5 = fails$i;
+
+  var $RangeError = RangeError;
+  var $String = String;
+  var floor$1 = Math.floor;
+  var repeat = uncurryThis$4($repeat);
+  var stringSlice$4 = uncurryThis$4(''.slice);
+  var nativeToFixed = uncurryThis$4(1.0.toFixed);
+
+  var pow = function (x, n, acc) {
+    return n === 0 ? acc : n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc);
+  };
+
+  var log = function (x) {
+    var n = 0;
+    var x2 = x;
+    while (x2 >= 4096) {
+      n += 12;
+      x2 /= 4096;
+    }
+    while (x2 >= 2) {
+      n += 1;
+      x2 /= 2;
+    } return n;
+  };
+
+  var multiply = function (data, n, c) {
+    var index = -1;
+    var c2 = c;
+    while (++index < 6) {
+      c2 += n * data[index];
+      data[index] = c2 % 1e7;
+      c2 = floor$1(c2 / 1e7);
+    }
+  };
+
+  var divide = function (data, n) {
+    var index = 6;
+    var c = 0;
+    while (--index >= 0) {
+      c += data[index];
+      data[index] = floor$1(c / n);
+      c = (c % n) * 1e7;
+    }
+  };
+
+  var dataToString = function (data) {
+    var index = 6;
+    var s = '';
+    while (--index >= 0) {
+      if (s !== '' || index === 0 || data[index] !== 0) {
+        var t = $String(data[index]);
+        s = s === '' ? t : s + repeat('0', 7 - t.length) + t;
+      }
+    } return s;
+  };
+
+  var FORCED = fails$5(function () {
+    return nativeToFixed(0.00008, 3) !== '0.000' ||
+      nativeToFixed(0.9, 0) !== '1' ||
+      nativeToFixed(1.255, 2) !== '1.25' ||
+      nativeToFixed(1000000000000000128.0, 0) !== '1000000000000000128';
+  }) || !fails$5(function () {
+    // V8 ~ Android 4.3-
+    nativeToFixed({});
+  });
+
+  // `Number.prototype.toFixed` method
+  // https://tc39.es/ecma262/#sec-number.prototype.tofixed
+  $$1({ target: 'Number', proto: true, forced: FORCED }, {
+    toFixed: function toFixed(fractionDigits) {
+      var number = thisNumberValue(this);
+      var fractDigits = toIntegerOrInfinity$2(fractionDigits);
+      var data = [0, 0, 0, 0, 0, 0];
+      var sign = '';
+      var result = '0';
+      var e, z, j, k;
+
+      // TODO: ES2018 increased the maximum number of fraction digits to 100, need to improve the implementation
+      if (fractDigits < 0 || fractDigits > 20) throw new $RangeError('Incorrect fraction digits');
+      // eslint-disable-next-line no-self-compare -- NaN check
+      if (number !== number) return 'NaN';
+      if (number <= -1e21 || number >= 1e21) return $String(number);
+      if (number < 0) {
+        sign = '-';
+        number = -number;
+      }
+      if (number > 1e-21) {
+        e = log(number * pow(2, 69, 1)) - 69;
+        z = e < 0 ? number * pow(2, -e, 1) : number / pow(2, e, 1);
+        z *= 0x10000000000000;
+        e = 52 - e;
+        if (e > 0) {
+          multiply(data, 0, z);
+          j = fractDigits;
+          while (j >= 7) {
+            multiply(data, 1e7, 0);
+            j -= 7;
+          }
+          multiply(data, pow(10, j, 1), 0);
+          j = e - 1;
+          while (j >= 23) {
+            divide(data, 1 << 23);
+            j -= 23;
+          }
+          divide(data, 1 << j);
+          multiply(data, 1, 1);
+          divide(data, 2);
+          result = dataToString(data);
+        } else {
+          multiply(data, 0, z);
+          multiply(data, 1 << -e, 0);
+          result = dataToString(data) + repeat('0', fractDigits);
+        }
+      }
+      if (fractDigits > 0) {
+        k = result.length;
+        result = sign + (k <= fractDigits
+          ? '0.' + repeat('0', fractDigits - k) + result
+          : stringSlice$4(result, 0, k - fractDigits) + '.' + stringSlice$4(result, k - fractDigits));
+      } else {
+        result = sign + result;
+      } return result;
     }
   });
 
@@ -2843,10 +3105,10 @@
   };
 
   var fails$4 = fails$i;
-  var globalThis$4 = globalThis_1;
+  var globalThis$3 = globalThis_1;
 
   // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
-  var $RegExp$2 = globalThis$4.RegExp;
+  var $RegExp$2 = globalThis$3.RegExp;
 
   var UNSUPPORTED_Y$1 = fails$4(function () {
     var re = $RegExp$2('a', 'y');
@@ -2871,10 +3133,10 @@
     BROKEN_CARET: BROKEN_CARET};
 
   var fails$3 = fails$i;
-  var globalThis$3 = globalThis_1;
+  var globalThis$2 = globalThis_1;
 
   // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
-  var $RegExp$1 = globalThis$3.RegExp;
+  var $RegExp$1 = globalThis$2.RegExp;
 
   var regexpUnsupportedDotAll = fails$3(function () {
     var re = $RegExp$1('.', 's');
@@ -2882,10 +3144,10 @@
   });
 
   var fails$2 = fails$i;
-  var globalThis$2 = globalThis_1;
+  var globalThis$1 = globalThis_1;
 
   // babel-minify and Closure Compiler transpiles RegExp('(?<a>b)', 'g') -> /(?<a>b)/g and it causes SyntaxError
-  var $RegExp = globalThis$2.RegExp;
+  var $RegExp = globalThis$1.RegExp;
 
   var regexpUnsupportedNcg = fails$2(function () {
     var re = $RegExp('(?<a>b)', 'g');
@@ -3025,14 +3287,14 @@
   var defineBuiltIn = defineBuiltIn$6;
   var regexpExec$1 = regexpExec$2;
   var fails$1 = fails$i;
-  var wellKnownSymbol$2 = wellKnownSymbol$g;
-  var createNonEnumerableProperty$1 = createNonEnumerableProperty$5;
+  var wellKnownSymbol$1 = wellKnownSymbol$g;
+  var createNonEnumerableProperty = createNonEnumerableProperty$5;
 
-  var SPECIES = wellKnownSymbol$2('species');
+  var SPECIES = wellKnownSymbol$1('species');
   var RegExpPrototype = RegExp.prototype;
 
   var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
-    var SYMBOL = wellKnownSymbol$2(KEY);
+    var SYMBOL = wellKnownSymbol$1(KEY);
 
     var DELEGATES_TO_SYMBOL = !fails$1(function () {
       // String methods call symbol-named RegExp methods
@@ -3092,7 +3354,7 @@
       defineBuiltIn(RegExpPrototype, SYMBOL, methods[1]);
     }
 
-    if (SHAM) createNonEnumerableProperty$1(RegExpPrototype[SYMBOL], 'sham', true);
+    if (SHAM) createNonEnumerableProperty(RegExpPrototype[SYMBOL], 'sham', true);
   };
 
   var uncurryThis$2 = functionUncurryThis;
@@ -3220,9 +3482,9 @@
   var getMethod = getMethod$4;
   var getSubstitution = getSubstitution$1;
   var regExpExec = regexpExecAbstract;
-  var wellKnownSymbol$1 = wellKnownSymbol$g;
+  var wellKnownSymbol = wellKnownSymbol$g;
 
-  var REPLACE = wellKnownSymbol$1('replace');
+  var REPLACE = wellKnownSymbol('replace');
   var max = Math.max;
   var min = Math.min;
   var concat = uncurryThis([].concat);
@@ -3346,169 +3608,536 @@
     ];
   }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
-  // iterable DOM collections
-  // flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
-  var domIterables = {
-    CSSRuleList: 0,
-    CSSStyleDeclaration: 0,
-    CSSValueList: 0,
-    ClientRectList: 0,
-    DOMRectList: 0,
-    DOMStringList: 0,
-    DOMTokenList: 1,
-    DataTransferItemList: 0,
-    FileList: 0,
-    HTMLAllCollection: 0,
-    HTMLCollection: 0,
-    HTMLFormElement: 0,
-    HTMLSelectElement: 0,
-    MediaList: 0,
-    MimeTypeArray: 0,
-    NamedNodeMap: 0,
-    NodeList: 1,
-    PaintRequestList: 0,
-    Plugin: 0,
-    PluginArray: 0,
-    SVGLengthList: 0,
-    SVGNumberList: 0,
-    SVGPathSegList: 0,
-    SVGPointList: 0,
-    SVGStringList: 0,
-    SVGTransformList: 0,
-    SourceBufferList: 0,
-    StyleSheetList: 0,
-    TextTrackCueList: 0,
-    TextTrackList: 0,
-    TouchList: 0
-  };
+  var {
+    Title: Title$5,
+    Text: Text$4
+  } = antd.Typography;
+  var BRAND_LOGO$2 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+  var BRAND_GREEN = '#02CD8D';
 
-  // in old WebKit versions, `element.classList` is not an instance of global `DOMTokenList`
-  var documentCreateElement = documentCreateElement$2;
+  // tweak if needed to match copy in the mock
+  var TAX_RATE = 0.005; // 0.5%
+  var FEE_RATE = 0.005; // 0.5%
 
-  var classList = documentCreateElement('span').classList;
-  var DOMTokenListPrototype$1 = classList && classList.constructor && classList.constructor.prototype;
-
-  var domTokenListPrototype = DOMTokenListPrototype$1 === Object.prototype ? undefined : DOMTokenListPrototype$1;
-
-  var globalThis$1 = globalThis_1;
-  var DOMIterables = domIterables;
-  var DOMTokenListPrototype = domTokenListPrototype;
-  var ArrayIteratorMethods = es_array_iterator;
-  var createNonEnumerableProperty = createNonEnumerableProperty$5;
-  var setToStringTag = setToStringTag$4;
-  var wellKnownSymbol = wellKnownSymbol$g;
-
-  var ITERATOR = wellKnownSymbol('iterator');
-  var ArrayValues = ArrayIteratorMethods.values;
-
-  var handlePrototype = function (CollectionPrototype, COLLECTION_NAME) {
-    if (CollectionPrototype) {
-      // some Chrome versions have non-configurable methods on DOMTokenList
-      if (CollectionPrototype[ITERATOR] !== ArrayValues) try {
-        createNonEnumerableProperty(CollectionPrototype, ITERATOR, ArrayValues);
-      } catch (error) {
-        CollectionPrototype[ITERATOR] = ArrayValues;
-      }
-      setToStringTag(CollectionPrototype, COLLECTION_NAME, true);
-      if (DOMIterables[COLLECTION_NAME]) for (var METHOD_NAME in ArrayIteratorMethods) {
-        // some Chrome versions have non-configurable methods on DOMTokenList
-        if (CollectionPrototype[METHOD_NAME] !== ArrayIteratorMethods[METHOD_NAME]) try {
-          createNonEnumerableProperty(CollectionPrototype, METHOD_NAME, ArrayIteratorMethods[METHOD_NAME]);
-        } catch (error) {
-          CollectionPrototype[METHOD_NAME] = ArrayIteratorMethods[METHOD_NAME];
+  /**
+   * Props:
+   *  - passcode: string
+   *  - setPasscode: (s: string) => void
+   *  - transactionDetails: { merchantName, merchantLogo, id, billedCurrency, totalBilling }
+   *  - onSubmit: () => void
+   *  - onBack: () => void
+   *  - width?: number (default 520)
+   */
+  function EnterPasscode(_ref) {
+    var _d$totalBilling;
+    var {
+      passcode,
+      setPasscode,
+      transactionDetails,
+      onSubmit,
+      onBack,
+      width = 520
+    } = _ref;
+    var d = transactionDetails || {};
+    var currency = d.billedCurrency || 'UGX';
+    var total = Number((_d$totalBilling = d.totalBilling) !== null && _d$totalBilling !== void 0 ? _d$totalBilling : 0);
+    var tax = total * TAX_RATE;
+    var fee = total * FEE_RATE;
+    var onChange = e => {
+      var digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 6);
+      setPasscode(digitsOnly);
+    };
+    return /*#__PURE__*/React.createElement(antd.Modal, {
+      open: true,
+      centered: true,
+      width: width,
+      title: null,
+      footer: null,
+      onCancel: onBack,
+      maskClosable: false,
+      bodyStyle: {
+        padding: 20
+      },
+      closeIcon: /*#__PURE__*/React.createElement("span", {
+        style: {
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: '#ff4d4f',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
         }
+      }, /*#__PURE__*/React.createElement(icons.CloseOutlined, null))
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
       }
-    }
-  };
-
-  for (var COLLECTION_NAME in DOMIterables) {
-    handlePrototype(globalThis$1[COLLECTION_NAME] && globalThis$1[COLLECTION_NAME].prototype, COLLECTION_NAME);
+    }, /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: BRAND_LOGO$2,
+      size: 28
+    }), /*#__PURE__*/React.createElement(Text$4, {
+      strong: true,
+      style: {
+        fontSize: 16
+      }
+    }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/React.createElement(Title$5, {
+      level: 4,
+      style: {
+        marginTop: 0,
+        color: BRAND_GREEN
+      }
+    }, "Merchant Info :"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement(antd.Space, {
+      align: "center"
+    }, d.merchantLogo ? /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: d.merchantLogo,
+      size: 40
+    }) : /*#__PURE__*/React.createElement(antd.Avatar, {
+      size: 40
+    }, (d.merchantName || 'E')[0]), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 600
+      }
+    }, d.merchantName || 'Unknown Merchant'), /*#__PURE__*/React.createElement(Text$4, {
+      type: "secondary",
+      style: {
+        fontSize: 12
+      }
+    }, d.id))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement(Text$4, {
+      type: "secondary",
+      style: {
+        display: 'block',
+        fontSize: 12
+      }
+    }, "Amount"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700
+      }
+    }, currency, " ", total.toLocaleString()))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        margin: '6px 0 6px'
+      }
+    }, /*#__PURE__*/React.createElement(Text$4, null, "Enter Passcode")), /*#__PURE__*/React.createElement(antd.Input.Password, {
+      value: passcode,
+      onChange: onChange,
+      placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022",
+      maxLength: 6,
+      inputMode: "numeric",
+      autoComplete: "one-time-code",
+      iconRender: visible => visible ? /*#__PURE__*/React.createElement(icons.EyeTwoTone, null) : /*#__PURE__*/React.createElement(icons.EyeInvisibleOutlined, null),
+      style: {
+        height: 40,
+        letterSpacing: 4,
+        fontWeight: 600
+      },
+      onPressEnter: () => passcode.length === 6 && onSubmit()
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: '#e6f4ff',
+        borderRadius: 8,
+        padding: 12,
+        marginTop: 12,
+        display: 'grid',
+        gridTemplateColumns: '20px 1fr',
+        alignItems: 'flex-start',
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement(icons.InfoCircleFilled, {
+      style: {
+        color: '#1677ff',
+        fontSize: 18,
+        lineHeight: '20px'
+      }
+    }), /*#__PURE__*/React.createElement(Text$4, {
+      style: {
+        color: '#1f1f1f'
+      }
+    }, "You are making a payment to ", /*#__PURE__*/React.createElement("b", null, d.merchantName || 'Unknown Merchant'), " and amount", ' ', /*#__PURE__*/React.createElement("b", null, currency, " ", total.toLocaleString()), " will be deducted off your wallet, including", ' ', /*#__PURE__*/React.createElement("b", null, (TAX_RATE * 100).toFixed(1), "% tax"), " (", currency, " ", tax.toFixed(0), ") and", ' ', /*#__PURE__*/React.createElement("b", null, (FEE_RATE * 100).toFixed(1), "% wallet fee"), " (", currency, " ", fee.toFixed(0), ").")), /*#__PURE__*/React.createElement(antd.Button, {
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      style: {
+        marginTop: 14
+      },
+      disabled: passcode.length !== 6,
+      onClick: onSubmit
+    }, "Confirm"), /*#__PURE__*/React.createElement(antd.Button, {
+      size: "large",
+      shape: "round",
+      block: true,
+      danger: true,
+      ghost: true,
+      style: {
+        marginTop: 10
+      },
+      onClick: onBack
+    }, "Back"));
   }
 
-  handlePrototype(DOMTokenListPrototype, 'DOMTokenList');
-
+  // src/PaymentSuccessModal.js
+  var {
+    Title: Title$4
+  } = antd.Typography;
   function PaymentSuccessModal(_ref) {
     var {
       open = true,
-      amount,
-      currency = 'UGX',
       onClose,
-      zIndex = 2000
+      amount,
+      // optional
+      currency = 'UGX',
+      // optional
+      zIndex = 2000,
+      width = 480,
+      showAmount = false // set true if you want to display the amount
     } = _ref;
     return /*#__PURE__*/React.createElement(antd.Modal, {
       open: open,
       centered: true,
+      width: width,
       footer: null,
       onCancel: onClose,
       zIndex: zIndex,
-      maskClosable: false
-    }, /*#__PURE__*/React.createElement(antd.Result, {
-      status: "success",
-      icon: /*#__PURE__*/React.createElement(icons.CheckCircleTwoTone, {
-        twoToneColor: "#52c41a"
-      }),
-      title: "Payment Successful",
-      subTitle: "Your payment of ".concat(currency, " ").concat(Number(amount).toFixed(2), " was processed."),
-      extra: /*#__PURE__*/React.createElement(antd.Button, {
-        type: "primary",
-        onClick: onClose
-      }, "Close")
-    }));
+      maskClosable: false,
+      title: null,
+      bodyStyle: {
+        padding: 24,
+        textAlign: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "evz-success-circle",
+      "aria-hidden": true
+    }, /*#__PURE__*/React.createElement("svg", {
+      viewBox: "0 0 24 24",
+      width: "34",
+      height: "34",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M20 6L9 17l-5-5",
+      stroke: "#fff",
+      strokeWidth: "3",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))), /*#__PURE__*/React.createElement(Title$4, {
+      level: 4,
+      style: {
+        marginTop: 12,
+        marginBottom: 16
+      }
+    }, "Payment Successful"), showAmount && typeof amount === 'number' && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 12,
+        color: '#667085'
+      }
+    }, currency, " ", Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 0
+    })), /*#__PURE__*/React.createElement(antd.Button, {
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      onClick: onClose,
+      style: {
+        fontWeight: 600
+      }
+    }, "Done"), /*#__PURE__*/React.createElement("style", null, "\n        .evz-success-circle {\n          margin: 4px auto 8px;\n          width: 84px;\n          height: 84px;\n          border-radius: 50%;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          background: linear-gradient(180deg, #2F80ED 0%, #56CCF2 100%);\n          box-shadow: 0 8px 30px rgba(47,128,237,0.35);\n          animation: evzPop .28s ease-out;\n        }\n        @keyframes evzPop {\n          0% { transform: scale(.9); opacity: .6; }\n          100% { transform: scale(1); opacity: 1; }\n        }\n      "));
   }
 
+  // src/PaymentFailedModal.js
+  var {
+    Title: Title$3,
+    Paragraph: Paragraph$1,
+    Text: Text$3
+  } = antd.Typography;
+  var BRAND_LOGO$1 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+  var BRAND_RED$1 = '#ff4d4f';
   function PaymentFailedModal(_ref) {
     var {
       open = true,
       onClose,
-      zIndex = 2000
+      onDetails,
+      // optional: custom handler for the "Details" button
+      zIndex = 2000,
+      width = 460
     } = _ref;
     return /*#__PURE__*/React.createElement(antd.Modal, {
       open: open,
       centered: true,
+      width: width,
       footer: null,
       onCancel: onClose,
       zIndex: zIndex,
-      maskClosable: false
-    }, /*#__PURE__*/React.createElement(antd.Result, {
-      status: "error",
-      icon: /*#__PURE__*/React.createElement(icons.CloseCircleTwoTone, {
-        twoToneColor: "#ff4d4f"
-      }),
-      title: "Payment Failed",
-      subTitle: "Please check your wallet for details.",
-      extra: /*#__PURE__*/React.createElement(antd.Button, {
-        type: "primary",
-        onClick: onClose
-      }, "Details")
-    }));
+      maskClosable: false,
+      title: null,
+      bodyStyle: {
+        padding: 20
+      },
+      closeIcon: /*#__PURE__*/React.createElement("span", {
+        style: {
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: BRAND_RED$1,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+        }
+      }, /*#__PURE__*/React.createElement(icons.CloseOutlined, null))
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: BRAND_LOGO$1,
+      size: 28
+    }), /*#__PURE__*/React.createElement(Text$3, {
+      strong: true,
+      style: {
+        fontSize: 16
+      }
+    }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 60,
+        height: 60,
+        borderRadius: '50%',
+        background: BRAND_RED$1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 12px',
+        boxShadow: '0 6px 16px rgba(255,77,79,0.28)'
+      }
+    }, /*#__PURE__*/React.createElement(icons.CloseOutlined, {
+      style: {
+        color: '#fff',
+        fontSize: 34,
+        fontWeight: 700
+      }
+    })), /*#__PURE__*/React.createElement(antd.Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement(Title$3, {
+      level: 4,
+      style: {
+        margin: 0,
+        color: BRAND_RED$1
+      }
+    }, "Transaction Failed"), /*#__PURE__*/React.createElement(Paragraph$1, {
+      style: {
+        marginTop: 8,
+        textAlign: 'center',
+        color: '#444'
+      }
+    }, "We couldn\u2019t complete the payment. Please check your wallet for more details and try again."), /*#__PURE__*/React.createElement(antd.Button, {
+      type: "primary",
+      danger: true,
+      shape: "round",
+      size: "middle",
+      onClick: onDetails || onClose,
+      style: {
+        width: 140
+      }
+    }, "Details")));
   }
+
+  // src/InsufficientFundsModal.js
+  var {
+    Title: Title$2,
+    Paragraph,
+    Text: Text$2
+  } = antd.Typography;
+  var BRAND_LOGO = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+  var BRAND_ORANGE = '#FF9800'; // icon + heading
+  var BRAND_RED = '#ff4d4f'; // top-right close
 
   function InsufficientFundsModal(_ref) {
     var {
       open = true,
       onClose,
-      zIndex = 2000
+      onAddFunds,
+      // optional custom handler; falls back to onClose
+      zIndex = 2000,
+      width = 460
     } = _ref;
     return /*#__PURE__*/React.createElement(antd.Modal, {
       open: open,
       centered: true,
+      width: width,
       footer: null,
       onCancel: onClose,
       zIndex: zIndex,
-      maskClosable: false
-    }, /*#__PURE__*/React.createElement(antd.Result, {
-      status: "warning",
-      icon: /*#__PURE__*/React.createElement(icons.ExclamationCircleTwoTone, {
-        twoToneColor: "#faad14"
-      }),
-      title: "Insufficient Funds",
-      subTitle: "The account doesn\u2019t have enough balance for this transaction.",
-      extra: /*#__PURE__*/React.createElement(antd.Button, {
-        type: "primary",
-        onClick: onClose
-      }, "Add Funds")
-    }));
+      maskClosable: false,
+      title: null,
+      bodyStyle: {
+        padding: 20
+      },
+      closeIcon: /*#__PURE__*/React.createElement("span", {
+        style: {
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: BRAND_RED,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+        }
+      }, /*#__PURE__*/React.createElement(icons.CloseOutlined, null))
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: BRAND_LOGO,
+      size: 28
+    }), /*#__PURE__*/React.createElement(Text$2, {
+      strong: true,
+      style: {
+        fontSize: 16
+      }
+    }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 60,
+        height: 60,
+        borderRadius: '50%',
+        background: BRAND_ORANGE,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 12px',
+        boxShadow: '0 6px 16px rgba(255,152,0,0.28)'
+      }
+    }, /*#__PURE__*/React.createElement(icons.CloseOutlined, {
+      style: {
+        color: '#fff',
+        fontSize: 34,
+        fontWeight: 700
+      }
+    })), /*#__PURE__*/React.createElement(antd.Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement(Title$2, {
+      level: 3,
+      style: {
+        margin: 0,
+        color: BRAND_ORANGE
+      }
+    }, "Insufficient Funds"), /*#__PURE__*/React.createElement(Paragraph, {
+      style: {
+        marginTop: 8,
+        textAlign: 'center',
+        color: '#444'
+      }
+    }, "The account did not have sufficient funds to cover the transaction amount at the time of the transaction"), /*#__PURE__*/React.createElement(antd.Button, {
+      type: "primary",
+      shape: "round",
+      size: "middle",
+      onClick: onAddFunds || onClose,
+      style: {
+        width: 160
+      }
+    }, "Add Funds")));
   }
+
+  var {
+    Title: Title$1,
+    Text: Text$1
+  } = antd.Typography;
+  var LoadingOverlay = _ref => {
+    var {
+      open = true,
+      tip = 'Preparing secure checkout…',
+      logoSrc = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png',
+      brand = 'EVzone Pay',
+      zIndex = 2000,
+      width = 420
+    } = _ref;
+    return /*#__PURE__*/React.createElement(antd.Modal, {
+      open: open,
+      footer: null,
+      closable: false,
+      maskClosable: false,
+      centered: true,
+      zIndex: zIndex,
+      width: width,
+      title: null,
+      bodyStyle: {
+        padding: 24,
+        textAlign: 'center'
+      }
+    }, /*#__PURE__*/React.createElement(antd.Space, {
+      direction: "vertical",
+      align: "center",
+      size: "large",
+      style: {
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "evz-pulse"
+    }, /*#__PURE__*/React.createElement(antd.Avatar, {
+      src: logoSrc,
+      size: 96,
+      style: {
+        background: '#fff'
+      }
+    })), /*#__PURE__*/React.createElement(Title$1, {
+      level: 3,
+      style: {
+        margin: '6px 0 0',
+        fontWeight: 800,
+        letterSpacing: '.2px',
+        color: 'darkorange',
+        textShadow: '0 2px 12px rgba(217,119,6,.35)',
+        animation: 'evzBlink 1.6s ease-in-out infinite'
+      }
+    }, brand), tip ? /*#__PURE__*/React.createElement(Text$1, {
+      className: "evz-tip"
+    }, tip) : null), /*#__PURE__*/React.createElement("style", null, "\n        @keyframes evzBlink {\n          0%,100% { opacity: 1; filter: drop-shadow(0 0 0 rgba(217,119,6,0)); }\n          50%     { opacity: .72; filter: drop-shadow(0 0 6px rgba(217,119,6,.45)); }\n        }\n\n        .evz-pulse {\n          display: inline-flex;\n          padding: 6px;\n          border-radius: 50%;\n          background: radial-gradient(65% 65% at 50% 50%, rgba(2,205,141,.18), rgba(2,205,141,0) 70%);\n          position: relative;\n        }\n        .evz-pulse::before {\n          content: '';\n          position: absolute;\n          inset: -8px;\n          border-radius: 50%;\n          border: 2px solid rgba(2,205,141,.35);\n          animation: evzPulse 1.8s ease-out infinite;\n        }\n        @keyframes evzPulse {\n          0%   { transform: scale(.85); opacity: .6; }\n          70%  { transform: scale(1.15); opacity: 0; }\n          100% { transform: scale(1.15); opacity: 0; }\n        }\n\n        .evz-tip {\n          display: block;\n          margin-top: 2px;\n          font-size: 13px;\n          letter-spacing: .2px;\n          background: linear-gradient(90deg,#9aa6af 0%,#ccd3d8 50%,#9aa6af 100%);\n          -webkit-background-clip: text;\n          background-clip: text;\n          color: transparent;\n          background-size: 200% 100%;\n          animation: evzShimmer 2.2s linear infinite;\n        }\n        @keyframes evzShimmer {\n          0% { background-position: 200% 0; }\n          100% { background-position: -200% 0; }\n        }\n      "));
+  };
 
   var {
     Title,
@@ -3566,8 +4195,6 @@
   }
 
   /**
-   * Ant Design edition — login skipped for now (controlled by skipAuth, default true).
-   *
    * Props:
    *  - skipAuth?: boolean (default true)
    *  - zIndex?: number (default 2000)
@@ -3597,7 +4224,15 @@
     var [effectiveCustomerId, setEffectiveCustomerId] = React.useState(propCustomerId);
     var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
-    // 7s uniform loading (kept from your design)
+    // Reusable motion props for ALL AntD modals (smooth, subtle)
+    var modalMotion = {
+      transitionName: 'evz-zoom',
+      maskTransitionName: 'evz-fade',
+      destroyOnClose: true,
+      zIndex
+    };
+
+    // 7s uniform loading (kept for parity with your flow)
     var boot = React.useCallback(/*#__PURE__*/_asyncToGenerator(function* () {
       var wait = ms => new Promise(r => setTimeout(r, ms));
       yield wait(7000);
@@ -3610,7 +4245,6 @@
         setEffectiveCustomerId(fallbackId);
         setView('summary');
       } else {
-        // (When you reintroduce auth later, place cookie/customer checks here.)
         setEffectiveCustomerId(fallbackId);
         setView('summary');
       }
@@ -3666,39 +4300,20 @@
       _onClose === null || _onClose === void 0 ? void 0 : _onClose();
     };
 
-    // ----------- Render helpers (Ant Design) -----------
-    var renderLoading = () => /*#__PURE__*/React.createElement(antd.Modal, {
+    // ----------- Render helpers -----------
+    var renderLoading = () => /*#__PURE__*/React.createElement(LoadingOverlay, {
       open: true,
-      centered: true,
-      footer: null,
-      closable: false,
-      maskClosable: false,
-      zIndex: zIndex
-    }, /*#__PURE__*/React.createElement(antd.Space, {
-      direction: "vertical",
-      align: "center",
-      style: {
-        width: '100%'
-      }
-    }, /*#__PURE__*/React.createElement(antd.Avatar, {
-      src: "https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg",
-      size: 96
-    }), /*#__PURE__*/React.createElement(Title, {
-      level: 3,
-      style: {
-        margin: 0
-      }
-    }, "EVzone Pay"), /*#__PURE__*/React.createElement(antd.Spin, {
+      zIndex: zIndex,
+      brand: "EVzone Pay",
       tip: "Preparing secure checkout\u2026"
-    })));
-    var renderInvalid = () => /*#__PURE__*/React.createElement(antd.Modal, {
+    });
+    var renderInvalid = () => /*#__PURE__*/React.createElement(antd.Modal, _extends({
       open: true,
       centered: true,
       footer: null,
       onCancel: closeAndReset,
-      zIndex: zIndex,
       maskClosable: false
-    }, /*#__PURE__*/React.createElement(antd.Space, {
+    }, modalMotion), /*#__PURE__*/React.createElement(antd.Space, {
       direction: "vertical",
       align: "center",
       style: {
@@ -3715,130 +4330,29 @@
       type: "primary",
       onClick: closeAndReset
     }, "Close")));
-    var renderSummary = () => /*#__PURE__*/React.createElement(antd.Modal, {
-      open: true,
-      centered: true,
-      zIndex: zIndex,
-      maskClosable: false,
-      title: /*#__PURE__*/React.createElement(antd.Space, {
-        align: "center"
-      }, details.merchantLogo ? /*#__PURE__*/React.createElement(antd.Avatar, {
-        src: details.merchantLogo
-      }) : /*#__PURE__*/React.createElement(antd.Avatar, null, (details.merchantName || 'E')[0]), /*#__PURE__*/React.createElement("span", null, details.merchantName)),
-      onCancel: closeAndReset,
-      footer: /*#__PURE__*/React.createElement(antd.Space, {
-        style: {
-          width: '100%',
-          justifyContent: 'flex-end'
-        }
-      }, /*#__PURE__*/React.createElement(antd.Button, {
-        onClick: closeAndReset
-      }, "Cancel"), /*#__PURE__*/React.createElement(antd.Button, {
-        type: "primary",
-        onClick: handleConfirm
-      }, "Confirm"))
-    }, /*#__PURE__*/React.createElement(Title, {
-      level: 4,
-      style: {
-        marginTop: 8
-      }
-    }, "Total Billing"), /*#__PURE__*/React.createElement(Title, {
-      level: 2,
-      style: {
-        marginTop: 0
-      }
-    }, details.billedCurrency, " ", Number(details.totalBilling).toFixed(2)), /*#__PURE__*/React.createElement(antd.Descriptions, {
-      bordered: true,
-      size: "small",
-      column: 1,
-      items: [{
-        key: 'type',
-        label: 'Type',
-        children: details.type
-      }, {
-        key: 'to',
-        label: 'To',
-        children: details.id
-      }, {
-        key: 'particulars',
-        label: 'Particulars',
-        children: details.particulars
-      }, {
-        key: 'currency',
-        label: 'Billed Currency',
-        children: details.billedCurrency
-      }, {
-        key: 'amount',
-        label: 'Billed Amount',
-        children: "".concat(details.billedCurrency, " ").concat(Number(details.billedAmount).toFixed(2))
-      }, {
-        key: 'total',
-        label: 'Total Billing',
-        children: "".concat(details.billedCurrency, " ").concat(Number(details.totalBilling).toFixed(2))
-      }]
-    }));
-    var renderPasscode = () => /*#__PURE__*/React.createElement(antd.Modal, {
-      open: true,
-      centered: true,
-      zIndex: zIndex,
-      maskClosable: false,
-      title: "Enter Passcode",
-      onCancel: () => setView('summary'),
-      footer: /*#__PURE__*/React.createElement(antd.Space, {
-        style: {
-          width: '100%',
-          justifyContent: 'flex-end'
-        }
-      }, /*#__PURE__*/React.createElement(antd.Button, {
-        onClick: () => setView('summary')
-      }, "Back"), /*#__PURE__*/React.createElement(antd.Button, {
-        type: "primary",
-        disabled: passcode.length !== 6,
-        onClick: handleSubmit,
-        loading: submitting
-      }, "Confirm"))
-    }, /*#__PURE__*/React.createElement(antd.Space, {
-      direction: "vertical",
-      size: "middle",
-      style: {
-        width: '100%'
-      }
-    }, /*#__PURE__*/React.createElement(antd.Space, {
-      align: "center",
-      style: {
-        width: '100%',
-        justifyContent: 'space-between'
-      }
-    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Text, {
-      type: "secondary"
-    }, "Merchant"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Text, {
-      strong: true
-    }, details.merchantName)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Text, {
-      type: "secondary"
-    }, details.id))), /*#__PURE__*/React.createElement(Title, {
-      level: 4,
-      style: {
-        margin: 0
-      }
-    }, details.billedCurrency, " ", Number(details.totalBilling).toFixed(2))), /*#__PURE__*/React.createElement(antd.Input.Password, {
-      value: passcode,
-      onChange: e => setPasscode(e.target.value.replace(/\D/g, '').slice(0, 6)),
-      onPressEnter: () => passcode.length === 6 && !submitting && handleSubmit(),
-      placeholder: "6-digit passcode",
-      maxLength: 6,
-      inputMode: "numeric",
-      autoComplete: "one-time-code"
-    }), /*#__PURE__*/React.createElement("div", {
-      style: {
-        background: '#e6f4ff',
-        padding: 12,
-        borderRadius: 8
-      }
-    }, /*#__PURE__*/React.createElement(Text, null, "You are paying ", /*#__PURE__*/React.createElement(Text, {
-      strong: true
-    }, details.merchantName), ". Amount to be deducted:", /*#__PURE__*/React.createElement(Text, {
-      strong: true
-    }, " ", details.billedCurrency, " ", Number(details.totalBilling).toFixed(2)), ", including:"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Text, null, "2.5% Tax: ", details.billedCurrency, " ", (details.totalBilling * 0.025).toFixed(2)), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Text, null, "1.5% Wallet Fee: ", details.billedCurrency, " ", (details.totalBilling * 0.015).toFixed(2)))));
+
+    // ⬇️ Transaction summary
+    var renderSummary = () => /*#__PURE__*/React.createElement(TransactionSummary, {
+      transactionDetails: details,
+      onConfirm: handleConfirm,
+      onCancel: closeAndReset
+      // if your component supports it, spread to its underlying <Modal />
+      ,
+      modalProps: modalMotion
+    });
+
+    // ⬇️ Enter passcode
+    var renderPasscode = () => /*#__PURE__*/React.createElement(EnterPasscode, {
+      passcode: passcode,
+      setPasscode: setPasscode,
+      transactionDetails: details,
+      onSubmit: handleSubmit,
+      onBack: () => setView('summary')
+      // forward motion props if supported
+      ,
+      modalProps: modalMotion,
+      submitting: submitting
+    });
 
     // ---------- Router ----------
     if (view === 'loading') return renderLoading();
@@ -3846,33 +4360,32 @@
     if (view === 'summary') return renderSummary();
     if (view === 'passcode') return renderPasscode();
     if (view === 'success') {
-      return /*#__PURE__*/React.createElement(PaymentSuccessModal, {
+      return /*#__PURE__*/React.createElement(PaymentSuccessModal, _extends({
         open: true,
         amount: amount,
         currency: details.billedCurrency,
-        zIndex: zIndex,
         onClose: () => {
           setView('summary');
-          _onClose === null || _onClose === void 0 ? void 0 : _onClose(); // optionally close the whole flow after success
+          _onClose === null || _onClose === void 0 ? void 0 : _onClose();
         }
-      });
+      }, modalMotion));
     }
     if (view === 'failed') {
-      return /*#__PURE__*/React.createElement(PaymentFailedModal, {
+      return /*#__PURE__*/React.createElement(PaymentFailedModal, _extends({
         open: true,
-        zIndex: zIndex,
         onClose: () => setView('summary')
-      });
+      }, modalMotion));
     }
     if (view === 'insufficient') {
-      return /*#__PURE__*/React.createElement(InsufficientFundsModal, {
+      return /*#__PURE__*/React.createElement(InsufficientFundsModal, _extends({
         open: true,
-        zIndex: zIndex,
         onClose: () => setView('summary')
-      });
+      }, modalMotion));
     }
     return null;
   }
+
+  /* -------- Global smooth motion (scoped to this file) -------- */
 
   exports.WalletPaymentForm = WalletPaymentForm;
   exports.default = WalletPaymentForm;

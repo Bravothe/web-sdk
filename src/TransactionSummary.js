@@ -11,7 +11,7 @@ import { CloseOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
 
 const BRAND_LOGO =
-  'https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg';
+  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 const BRAND_GREEN = '#02CD8D'; // EVzone green
 
 /**

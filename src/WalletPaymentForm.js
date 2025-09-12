@@ -1,11 +1,13 @@
 // src/WalletPaymentForm.js
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Modal, Button, Typography, Input, Space, Avatar, Spin } from 'antd';
+import { Modal, Button, Typography, Space } from 'antd';
 
 import TransactionSummary from './TransactionSummary.js';
+import EnterPasscode from './EnterPasscode.js';
 import PaymentSuccessModal from './PaymentSuccessModal.js';
 import PaymentFailedModal from './PaymentFailedModal.js';
 import InsufficientFundsModal from './InsufficientFundsModal.js';
+import LoadingOverlay from './LoadingOverlay.js'; // ✅ use the custom overlay
 
 const { Title, Text } = Typography;
 
@@ -38,8 +40,6 @@ function buildTxnDetails(amount, id, type, particulars, currency, merchantName, 
 }
 
 /**
- * Ant Design edition — login skipped for now (controlled by skipAuth, default true).
- *
  * Props:
  *  - skipAuth?: boolean (default true)
  *  - zIndex?: number (default 2000)
@@ -69,7 +69,7 @@ function WalletPaymentForm({
 
   const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
-  // 7s uniform loading
+  // 7s uniform loading (kept for parity with your flow)
   const boot = useCallback(async () => {
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     await wait(7000);
@@ -86,7 +86,7 @@ function WalletPaymentForm({
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     } else {
-      // place cookie/customer checks here later
+      // (hook auth/cookie checks here later)
       setEffectiveCustomerId(fallbackId);
       setView('summary');
     }
@@ -146,14 +146,14 @@ function WalletPaymentForm({
   };
 
   // ----------- Render helpers -----------
+  // ✅ Use the premium LoadingOverlay instead of Ant Design <Spin/>
   const renderLoading = () => (
-    <Modal open centered footer={null} closable={false} maskClosable={false} zIndex={zIndex}>
-      <Space direction="vertical" align="center" style={{ width: '100%' }}>
-        <Avatar src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg" size={96} />
-        <Title level={3} style={{ margin: 0 }}>EVzone Pay</Title>
-        <Spin tip="Preparing secure checkout…" />
-      </Space>
-    </Modal>
+    <LoadingOverlay
+      open
+      zIndex={zIndex}
+      brand="EVzone Pay"
+      tip="Preparing secure checkout…"
+    />
   );
 
   const renderInvalid = () => (
@@ -166,7 +166,7 @@ function WalletPaymentForm({
     </Modal>
   );
 
-  // ⬇️ Use your TransactionSummary component here
+  // ⬇️ Transaction summary
   const renderSummary = () => (
     <TransactionSummary
       transactionDetails={details}
@@ -175,63 +175,15 @@ function WalletPaymentForm({
     />
   );
 
+  // ⬇️ Enter passcode
   const renderPasscode = () => (
-    <Modal
-      open
-      centered
-      zIndex={zIndex}
-      maskClosable={false}
-      title="Enter Passcode"
-      onCancel={() => setView('summary')}
-      footer={
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Button onClick={() => setView('summary')}>Back</Button>
-          <Button
-            type="primary"
-            disabled={passcode.length !== 6}
-            onClick={handleSubmit}
-            loading={submitting}
-          >
-            Confirm
-          </Button>
-        </Space>
-      }
-    >
-      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-        <Space align="center" style={{ width: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <Text type="secondary">Merchant</Text>
-            <div><Text strong>{details.merchantName}</Text></div>
-            <div><Text type="secondary">{details.id}</Text></div>
-          </div>
-          <Title level={4} style={{ margin: 0 }}>
-            {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}
-          </Title>
-        </Space>
-
-        <Input.Password
-          value={passcode}
-          onChange={(e) => setPasscode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-          onPressEnter={() => passcode.length === 6 && !submitting && handleSubmit()}
-          placeholder="6-digit passcode"
-          maxLength={6}
-          inputMode="numeric"
-          autoComplete="one-time-code"
-        />
-
-        <div style={{ background: '#e6f4ff', padding: 12, borderRadius: 8 }}>
-          <Text>
-            You are paying <Text strong>{details.merchantName}</Text>. Amount to be deducted:
-            <Text strong> {details.billedCurrency} {Number(details.totalBilling).toFixed(2)}</Text>
-            , including:
-          </Text>
-          <br />
-          <Text>2.5% Tax: {details.billedCurrency} {(details.totalBilling * 0.025).toFixed(2)}</Text>
-          <br />
-          <Text>1.5% Wallet Fee: {details.billedCurrency} {(details.totalBilling * 0.015).toFixed(2)}</Text>
-        </div>
-      </Space>
-    </Modal>
+    <EnterPasscode
+      passcode={passcode}
+      setPasscode={setPasscode}
+      transactionDetails={details}
+      onSubmit={handleSubmit}
+      onBack={() => setView('summary')}
+    />
   );
 
   // ---------- Router ----------
@@ -253,7 +205,7 @@ function WalletPaymentForm({
         }}
       />
     );
-  }
+    }
 
   if (view === 'failed') {
     return (

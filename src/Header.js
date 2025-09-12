@@ -8,7 +8,7 @@ const Header = ({ onClose }) => {
         <div className="header-content">
           <div className="logo">
             <img
-              src="https://res.cloudinary.com/dlfa42ans/image/upload/v1741686201/logo_n7vrsf.jpg"
+              src="https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png"
               alt="EVzone Logo"
               className="header-icon"
             />
