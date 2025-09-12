@@ -1,60 +1,60 @@
+// src/sdk/paykitClient.js
 // Lightweight client for your Paykit SDK API.
-// Works in browser or Node (fetch is required in env).
+// Uses a single, central API base from src/sdk/constants.js
+// Works in browser or Node (fetch must be available).
 
-/**
- * @typedef {Object} PaykitClientOptions
- * @property {string} baseURL              Base URL for your server, e.g. "http://localhost:4000"
- * @property {string} publishableKey       Public key (sent on init)
- * @property {number} [timeoutMs=12000]    Request timeout in ms
- * @property {typeof fetch} [fetchImpl]    Custom fetch (optional)
- */
+import { API_BASE_URL, DEFAULT_TIMEOUT_MS } from './constants.js';
 
 /**
  * Create a Paykit API client.
  * Usage:
- *   const api = createPaykitClient({ baseURL, publishableKey });
+ *   const api = createPaykitClient({ publishableKey: 'pk_test_123' });
  *   const sess = await api.initSession({ enterpriseWalletNo, userWalletId });
  */
 export default function createPaykitClient({
-  baseURL,
   publishableKey,
-  timeoutMs = 12000,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
   fetchImpl,
 } = {}) {
-  if (!baseURL) throw new Error('paykitClient: baseURL is required');
+  if (!API_BASE_URL) throw new Error('paykitClient: API_BASE_URL is not set');
   if (!publishableKey) throw new Error('paykitClient: publishableKey is required');
 
-  const _fetch = fetchImpl || (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
+  const _fetch =
+    fetchImpl || (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
   if (!_fetch) throw new Error('paykitClient: fetch is not available in this environment');
 
   const jsonHeaders = { 'Content-Type': 'application/json' };
 
-  async function request(path, { method = 'GET', headers = {}, body, idempotencyKey } = {}) {
-    const url = joinUrl(baseURL, path);
+  async function request(
+    path,
+    { method = 'POST', headers = {}, body, idempotencyKey } = {}
+  ) {
+    const url = joinUrl(API_BASE_URL, path);
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
 
-    const res = await _fetch(url, {
-      method,
-      headers: {
-        ...jsonHeaders,
-        ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : null),
-        ...headers,
-      },
-      body: body ? JSON.stringify(body) : undefined,
-      signal: ctrl.signal,
-    }).catch((err) => {
+    let res;
+    try {
+      res = await _fetch(url, {
+        method,
+        headers: {
+          ...jsonHeaders,
+          ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : null),
+          ...headers,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+        signal: ctrl.signal,
+      });
+    } catch (err) {
       clearTimeout(timer);
       throw decorateError(err, { code: 'NETWORK_ERROR', url: path });
-    });
-
+    }
     clearTimeout(timer);
 
     let data;
     try {
       data = await res.json();
-    } catch (e) {
-      // non-JSON response
+    } catch {
       throw decorateError(new Error('Invalid JSON response'), {
         code: 'BAD_RESPONSE',
         status: res.status,
@@ -63,7 +63,6 @@ export default function createPaykitClient({
     }
 
     if (!res.ok || data?.ok === false) {
-      // prefer server’s code/message when present
       const code = data?.code || `HTTP_${res.status}`;
       const msg = data?.message || 'Request failed';
       throw decorateError(new Error(msg), { code, status: res.status, url: path, data });
@@ -89,7 +88,6 @@ export default function createPaykitClient({
    */
   async function initSession(p) {
     return request('/api/v1/paykit/sdk/session/init', {
-      method: 'POST',
       body: {
         publishableKey,
         enterpriseWalletNo: p.enterpriseWalletNo,
@@ -105,7 +103,6 @@ export default function createPaykitClient({
    */
   async function quote(p) {
     return request('/api/v1/paykit/sdk/tx/quote', {
-      method: 'POST',
       body: { sessionId: p.sessionId, amount: p.amount },
     });
   }
@@ -117,7 +114,6 @@ export default function createPaykitClient({
    */
   async function charge(p) {
     return request('/api/v1/paykit/sdk/tx/charge', {
-      method: 'POST',
       idempotencyKey: p.idempotencyKey || genIdempotencyKey(),
       body: {
         sessionId: p.sessionId,
@@ -131,7 +127,6 @@ export default function createPaykitClient({
     initSession,
     quote,
     charge,
-    // small helpers exposed (optional)
     genIdempotencyKey,
   };
 }
@@ -144,7 +139,6 @@ function joinUrl(base, path) {
 }
 
 function genIdempotencyKey() {
-  // simple, readable idem key: idmp_<timestamp>_<rand>
   const r = Math.random().toString(36).slice(2, 8);
   return `idmp_${Date.now()}_${r}`;
 }

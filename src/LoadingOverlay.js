@@ -1,13 +1,27 @@
+// src/LoadingOverlay.jsx
 import React from 'react';
 import { Modal, Space, Avatar, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
+/**
+ * Props:
+ * - open?: boolean        (default: true)
+ * - tip?: string          (default: 'Preparing secure checkout…')
+ * - logoSrc?: string
+ * - brand?: string        (default: 'EVzone Pay')
+ * - brandColor?: string   (default: 'darkorange')
+ * - blinkMs?: number      (default: 1600)  // brand text blink speed
+ * - zIndex?: number       (default: 2000)
+ * - width?: number        (default: 420)
+ */
 const LoadingOverlay = ({
   open = true,
   tip = 'Preparing secure checkout…',
   logoSrc = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png',
   brand = 'EVzone Pay',
+  brandColor = 'darkorange',
+  blinkMs = 1600,
   zIndex = 2000,
   width = 420,
 }) => {
@@ -22,6 +36,7 @@ const LoadingOverlay = ({
       width={width}
       title={null}
       bodyStyle={{ padding: 24, textAlign: 'center' }}
+      className="evz-modal" // plays nicely if you have global modal animations
     >
       <Space direction="vertical" align="center" size="large" style={{ width: '100%' }}>
         {/* pulsing logo */}
@@ -29,16 +44,16 @@ const LoadingOverlay = ({
           <Avatar src={logoSrc} size={96} style={{ background: '#fff' }} />
         </div>
 
-        {/* brand: dark orange + smooth blink (INLINE style to win over Ant) */}
+        {/* brand: dark orange + smooth blink (inline to win over Ant styles) */}
         <Title
           level={3}
           style={{
             margin: '6px 0 0',
             fontWeight: 800,
             letterSpacing: '.2px',
-            color: 'darkorange',
+            color: brandColor,
             textShadow: '0 2px 12px rgba(217,119,6,.35)',
-            animation: 'evzBlink 1.6s ease-in-out infinite',
+            animation: `evzBlink ${blinkMs}ms ease-in-out infinite`,
           }}
         >
           {brand}
@@ -84,12 +99,19 @@ const LoadingOverlay = ({
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
+          -webkit-text-fill-color: transparent; /* WebKit fix */
           background-size: 200% 100%;
           animation: evzShimmer 2.2s linear infinite;
         }
         @keyframes evzShimmer {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
+        }
+
+        /* Respect users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .evz-tip { animation: none; }
+          .evz-pulse::before { animation: none; }
         }
       `}</style>
     </Modal>

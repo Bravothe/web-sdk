@@ -12,7 +12,8 @@ const BRAND_RED = '#ff4d4f';
 export default function PaymentFailedModal({
   open = true,
   onClose,
-  onDetails,          // optional: custom handler for the "Details" button
+  onDetails,            // optional: custom handler for the "Details" button
+  reason,               // optional: server/client error summary to display
   zIndex = 2000,
   width = 460,
 }) {
@@ -27,6 +28,7 @@ export default function PaymentFailedModal({
       maskClosable={false}
       title={null}
       bodyStyle={{ padding: 20 }}
+      className="evz-modal"   // ✅ enables smooth pop-in/out (global CSS you added)
       closeIcon={
         <span
           style={{
@@ -40,6 +42,7 @@ export default function PaymentFailedModal({
             color: '#fff',
             boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
           }}
+          aria-label="Close"
         >
           <CloseOutlined />
         </span>
@@ -72,17 +75,27 @@ export default function PaymentFailedModal({
           margin: '0 auto 12px',
           boxShadow: '0 6px 16px rgba(255,77,79,0.28)',
         }}
+        aria-hidden
       >
         <CloseOutlined style={{ color: '#fff', fontSize: 34, fontWeight: 700 }} />
       </div>
 
       <Space direction="vertical" align="center" style={{ width: '100%' }}>
-        <Title level={4} style={{ margin: 0, color: BRAND_RED }}>
-          Transaction Failed
+        <Title level={3} style={{ margin: 0, color: BRAND_RED }}>
+          Payment Failed
         </Title>
+
         <Paragraph style={{ marginTop: 8, textAlign: 'center', color: '#444' }}>
           We couldn’t complete the payment. Please check your wallet for more details
           and try again.
+          {reason ? (
+            <>
+              <br />
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Reason: {reason}
+              </Text>
+            </>
+          ) : null}
         </Paragraph>
 
         <Button

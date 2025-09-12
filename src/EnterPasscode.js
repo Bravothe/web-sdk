@@ -14,9 +14,9 @@ const BRAND_LOGO =
   'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 const BRAND_GREEN = '#02CD8D';
 
-// tweak if needed to match copy in the mock
-const TAX_RATE = 0.005;  // 0.5%
-const FEE_RATE = 0.005;  // 0.5%
+// Fallback rates only used when no server quote is provided
+const FALLBACK_TAX_PCT = 0.025;    // 2.5%
+const FALLBACK_FEE_PCT = 0.015;    // 1.5%
 
 /**
  * Props:
@@ -25,6 +25,8 @@ const FEE_RATE = 0.005;  // 0.5%
  *  - transactionDetails: { merchantName, merchantLogo, id, billedCurrency, totalBilling }
  *  - onSubmit: () => void
  *  - onBack: () => void
+ *  - submitting?: boolean
+ *  - quote?: { amount, tax, fee, total, currency, quoteId }
  *  - width?: number (default 520)
  */
 export default function EnterPasscode({
@@ -33,19 +35,48 @@ export default function EnterPasscode({
   transactionDetails,
   onSubmit,
   onBack,
+  submitting = false,
+  quote,
   width = 520,
 }) {
   const d = transactionDetails || {};
-  const currency = d.billedCurrency || 'UGX';
-  const total = Number(d.totalBilling ?? 0);
 
-  const tax = total * TAX_RATE;
-  const fee = total * FEE_RATE;
+  // Prefer server quote values when present
+  const currency = quote?.currency || d.billedCurrency || 'UGX';
+  const base = typeof quote?.amount === 'number'
+    ? quote.amount
+    : Number(d.totalBilling ?? 0);
+
+  const tax =
+    typeof quote?.tax === 'number'
+      ? quote.tax
+      : base * FALLBACK_TAX_PCT;
+
+  const fee =
+    typeof quote?.fee === 'number'
+      ? quote.fee
+      : base * FALLBACK_FEE_PCT;
+
+  const total =
+    typeof quote?.total === 'number'
+      ? quote.total
+      : base + tax + fee;
 
   const onChange = (e) => {
     const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 6);
     setPasscode(digitsOnly);
   };
+
+  const fmt0 = (n) => Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
+  const pctText = (n) => `${(n * 100).toFixed(1)}%`;
+
+  const taxPctLabel = typeof quote?.tax === 'number' && typeof quote?.amount === 'number'
+    ? `${((quote.tax / (quote.amount || 1)) * 100).toFixed(1)}%`
+    : pctText(FALLBACK_TAX_PCT);
+
+  const feePctLabel = typeof quote?.fee === 'number' && typeof quote?.amount === 'number'
+    ? `${((quote.fee / (quote.amount || 1)) * 100).toFixed(1)}%`
+    : pctText(FALLBACK_FEE_PCT);
 
   return (
     <Modal
@@ -119,7 +150,7 @@ export default function EnterPasscode({
         <div style={{ textAlign: 'right' }}>
           <Text type="secondary" style={{ display: 'block', fontSize: 12 }}>Amount</Text>
           <div style={{ fontWeight: 700 }}>
-            {currency} {total.toLocaleString()}
+            {currency} {fmt0(total)}
           </div>
         </div>
       </div>
@@ -145,7 +176,7 @@ export default function EnterPasscode({
           letterSpacing: 4,
           fontWeight: 600,
         }}
-        onPressEnter={() => passcode.length === 6 && onSubmit()}
+        onPressEnter={() => passcode.length === 6 && !submitting && onSubmit()}
       />
 
       {/* Info box */}
@@ -163,10 +194,10 @@ export default function EnterPasscode({
       >
         <InfoCircleFilled style={{ color: '#1677ff', fontSize: 18, lineHeight: '20px' }} />
         <Text style={{ color: '#1f1f1f' }}>
-          You are making a payment to <b>{d.merchantName || 'Unknown Merchant'}</b> and amount{' '}
-          <b>{currency} {total.toLocaleString()}</b> will be deducted off your wallet, including{' '}
-          <b>{(TAX_RATE * 100).toFixed(1)}% tax</b> ({currency} {tax.toFixed(0)}) and{' '}
-          <b>{(FEE_RATE * 100).toFixed(1)}% wallet fee</b> ({currency} {fee.toFixed(0)}).
+          You are making a payment to <b>{d.merchantName || 'Unknown Merchant'}</b>. An amount of{' '}
+          <b>{currency} {fmt0(total)}</b> will be deducted from your wallet, including{' '}
+          <b>{taxPctLabel} tax</b> ({currency} {fmt0(tax)}) and{' '}
+          <b>{feePctLabel} wallet fee</b> ({currency} {fmt0(fee)}).
         </Text>
       </div>
 
@@ -177,7 +208,8 @@ export default function EnterPasscode({
         shape="round"
         block
         style={{ marginTop: 14 }}
-        disabled={passcode.length !== 6}
+        disabled={passcode.length !== 6 || submitting}
+        loading={submitting}
         onClick={onSubmit}
       >
         Confirm
@@ -191,6 +223,7 @@ export default function EnterPasscode({
         ghost
         style={{ marginTop: 10 }}
         onClick={onBack}
+        disabled={submitting}
       >
         Back
       </Button>

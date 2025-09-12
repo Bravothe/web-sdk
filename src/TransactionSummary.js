@@ -1,11 +1,6 @@
+// src/TransactionSummary.jsx
 import React from 'react';
-import {
-  Modal,
-  Typography,
-  Space,
-  Avatar,
-  Button,
-} from 'antd';
+import { Modal, Typography, Space, Avatar, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -22,18 +17,21 @@ const BRAND_GREEN = '#02CD8D'; // EVzone green
  *  - onConfirm: () => void
  *  - onCancel?: () => void
  *  - width?: number (default 520)
+ *  - confirmDisabled?: boolean  // NEW
+ *  - confirmLoading?: boolean   // NEW
  */
 export default function TransactionSummary({
   transactionDetails,
   onConfirm,
   onCancel,
   width = 520,
+  confirmDisabled = false,
+  confirmLoading = false,
 }) {
   const d = transactionDetails || {};
   const currency = d.billedCurrency || 'UGX';
 
-  const total =
-    d.totalBilling ?? d.billedAmount ?? 0;
+  const total = d.totalBilling ?? d.billedAmount ?? 0;
 
   const amountStr = (v) =>
     Number(v || 0).toLocaleString(undefined, {
@@ -100,10 +98,7 @@ export default function TransactionSummary({
         <Text type="secondary" style={{ marginTop: -4 }}>
           Total Billing
         </Text>
-        <Title
-          level={3}
-          style={{ margin: 0, color: BRAND_GREEN }}
-        >
+        <Title level={3} style={{ margin: 0, color: BRAND_GREEN }}>
           {currency} {amountStr(total)}
         </Title>
       </Space>
@@ -143,6 +138,8 @@ export default function TransactionSummary({
         block
         style={{ marginTop: 16 }}
         onClick={onConfirm}
+        disabled={confirmDisabled}
+        loading={confirmLoading}
       >
         Confirm
       </Button>
