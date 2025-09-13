@@ -8,10 +8,12 @@ import PaymentSuccessModal from './PaymentSuccessModal.js';
 import PaymentFailedModal from './PaymentFailedModal.js';
 import InsufficientFundsModal from './InsufficientFundsModal.js';
 import LoadingOverlay from './LoadingOverlay.js';
-
 import ProcessingModal from './ProcessingModal.js';
+
+import HasAccountSummary from './HasAccountSummary.js'; // ← NEW (sign-in modal)
+import { getUserNoFromCookie, setUserNoCookie } from './utils/cookie.js'; // ← NEW
+
 import createPaykitClient from './sdk/paykitClient.js';
-import { getUserNoFromCookie } from './utils/cookie.js'; // ← NEW
 
 const { Title, Text } = Typography;
 
@@ -50,7 +52,7 @@ function WalletPaymentForm({
   onSuccess,
 }) {
   // ---------- Server-driven state ----------
-  const [view, setView] = useState('loading'); // 'loading' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
+  const [view, setView] = useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
   const [errorMsg, setErrorMsg] = useState('');
   const [session, setSession] = useState(null);
   const [quote, setQuote] = useState(null);
@@ -100,13 +102,13 @@ function WalletPaymentForm({
         return;
       }
 
-      // Resolve user identifier: prefer prop userWalletId; else use cookie-based userNo
+      // Prefer explicit walletId from props; else try cookie userNo
       const cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
 
       if (!enterpriseWalletNo || (!userWalletId && !cookieUserNo)) {
         if (!signal?.aborted) {
-          setErrorMsg('Missing enterpriseWalletNo or signed-in wallet user.');
-          setView('invalid');
+          // Show sign-in modal instead of invalid
+          setView('signin');
         }
         return;
       }
@@ -121,7 +123,7 @@ function WalletPaymentForm({
       try {
         const initBody = {
           enterpriseWalletNo,
-          ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }), // ← ONLY CHANGE
+          ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }), // ← send userNo when walletId absent
         };
 
         const [initRes] = await Promise.all([
@@ -147,6 +149,14 @@ function WalletPaymentForm({
     boot(ctrl.signal);
     return () => ctrl.abort();
   }, [boot]);
+
+  // After popup login success: save cookie + reboot
+  const handleLoginSuccess = (userNo /*, authToken */) => {
+    try { if (userNo) setUserNoCookie(userNo); } catch {}
+    setView('loading');
+    const ctrl = new AbortController();
+    boot(ctrl.signal);
+  };
 
   // ---------- Details for display ----------
   const details = useMemo(() => {
@@ -241,7 +251,6 @@ function WalletPaymentForm({
     setPasscode('');
     setQuote(null);
     setView('summary');
-  // host handler still called, unchanged
     onClose?.();
   };
 
@@ -285,6 +294,14 @@ function WalletPaymentForm({
   // ---------- Decide which modal to show ----------
   let content = null;
   if (view === 'loading')       content = renderLoading();
+  else if (view === 'signin')   content = (
+    <HasAccountSummary
+      open
+      onLoginSuccess={handleLoginSuccess}
+      onClose={closeAndReset}
+      zIndex={zIndex}
+    />
+  );
   else if (view === 'invalid')  content = renderInvalid();
   else if (view === 'summary')  content = renderSummary();
   else if (view === 'passcode') content = renderPasscode();

@@ -3279,8 +3279,8 @@
 
   // src/TransactionSummary.jsx
   var {
-    Title: Title$7,
-    Text: Text$7
+    Title: Title$8,
+    Text: Text$8
   } = antd.Typography;
   var BRAND_GREEN$1 = '#02CD8D'; // EVzone green
 
@@ -3359,19 +3359,19 @@
         }) : /*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
           size: 56,
           children: (d.merchantName || 'E')[0]
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
           level: 4,
           style: {
             margin: 0
           },
           children: d.merchantName || 'Unknown Merchant'
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$8, {
           type: "secondary",
           style: {
             marginTop: -4
           },
           children: "Total Billing"
-        }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$7, {
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$8, {
           level: 3,
           style: {
             margin: 0,
@@ -3383,7 +3383,7 @@
         style: {
           marginTop: 8
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
           level: 5,
           style: {
             marginBottom: 8
@@ -3447,14 +3447,14 @@
         padding: '8px 4px',
         borderTop: withTopBorder ? '1px solid #eee' : undefined
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$8, {
         type: "secondary",
         children: label
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           textAlign: 'right'
         },
-        children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+        children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$8, {
           children: value
         })
       })]
@@ -4150,8 +4150,8 @@
   }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
   var {
-    Title: Title$6,
-    Text: Text$6
+    Title: Title$7,
+    Text: Text$7
   } = antd.Typography;
   var BRAND_GREEN = '#02CD8D';
 
@@ -4232,7 +4232,7 @@
           borderTop: '1px dashed #e5e7eb',
           margin: '12px -20px 16px'
         }
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
         level: 4,
         style: {
           marginTop: 0,
@@ -4261,7 +4261,7 @@
                 fontWeight: 600
               },
               children: d.merchantName || 'Unknown Merchant'
-            }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+            }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
               type: "secondary",
               style: {
                 fontSize: 12
@@ -4273,7 +4273,7 @@
           style: {
             textAlign: 'right'
           },
-          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
             type: "secondary",
             style: {
               display: 'block',
@@ -4291,7 +4291,7 @@
         style: {
           margin: '6px 0 6px'
         },
-        children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+        children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
           children: "Enter Passcode"
         })
       }), /*#__PURE__*/jsxRuntimeExports.jsx(antd.Input.Password, {
@@ -4325,7 +4325,7 @@
             fontSize: 18,
             lineHeight: '20px'
           }
-        }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$6, {
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$7, {
           style: {
             color: '#1f1f1f'
           },
@@ -4369,8 +4369,8 @@
 
   // src/PaymentSuccessModal.js
   var {
-    Title: Title$5,
-    Text: Text$5
+    Title: Title$6,
+    Text: Text$6
   } = antd.Typography;
 
   // Smooth blue palette (sampled from your reference)
@@ -4436,7 +4436,7 @@
             strokeLinejoin: "round"
           })
         })
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
         level: 3,
         style: {
           marginTop: 14,
@@ -4453,7 +4453,7 @@
           fontWeight: 600
         },
         children: fmtAmount(amount, currency)
-      }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
+      }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
         type: "secondary",
         style: {
           display: 'block',
@@ -4476,11 +4476,11 @@
 
   // src/PaymentFailedModal.js
   var {
-    Title: Title$4,
+    Title: Title$5,
     Paragraph: Paragraph$1,
-    Text: Text$4
+    Text: Text$5
   } = antd.Typography;
-  var BRAND_RED$1 = '#ff4d4f';
+  var BRAND_RED$2 = '#ff4d4f';
   function PaymentFailedModal(_ref) {
     var {
       open = true,
@@ -4510,7 +4510,7 @@
           width: 28,
           height: 28,
           borderRadius: '50%',
-          background: BRAND_RED$1,
+          background: BRAND_RED$2,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -4532,7 +4532,7 @@
           width: 60,
           height: 60,
           borderRadius: '50%',
-          background: BRAND_RED$1,
+          background: BRAND_RED$2,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -4553,11 +4553,11 @@
         style: {
           width: '100%'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
           level: 3,
           style: {
             margin: 0,
-            color: BRAND_RED$1
+            color: BRAND_RED$2
           },
           children: "Payment Failed"
         }), /*#__PURE__*/jsxRuntimeExports.jsxs(Paragraph$1, {
@@ -4567,7 +4567,7 @@
             color: '#444'
           },
           children: ["We couldn\u2019t complete the payment. Please check your wallet for more details and try again.", reason ? /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
-            children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$4, {
+            children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$5, {
               type: "secondary",
               style: {
                 fontSize: 12
@@ -4592,14 +4592,14 @@
 
   // src/InsufficientFundsModal.js
   var {
-    Title: Title$3,
+    Title: Title$4,
     Paragraph,
-    Text: Text$3
+    Text: Text$4
   } = antd.Typography;
 
   // Local colors for this modal
   var BRAND_ORANGE = '#FF9800';
-  var BRAND_RED = '#ff4d4f';
+  var BRAND_RED$1 = '#ff4d4f';
   var PRIMARY_BLUE = '#1677ff';
   var PRIMARY_BLUE_HOVER = '#0958d9';
   function InsufficientFundsModal(_ref) {
@@ -4637,7 +4637,7 @@
           width: 28,
           height: 28,
           borderRadius: '50%',
-          background: BRAND_RED,
+          background: BRAND_RED$1,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -4678,7 +4678,7 @@
         style: {
           width: '100%'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
           level: 3,
           style: {
             margin: 0,
@@ -4723,10 +4723,10 @@
                 marginTop: 6,
                 borderTop: '1px solid #fff0b3'
               },
-              children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+              children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
                 strong: true,
                 children: "Shortfall"
-              }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$3, {
+              }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$4, {
                 strong: true,
                 style: {
                   color: BRAND_ORANGE
@@ -4781,10 +4781,10 @@
         gap: 8,
         padding: '4px 0'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
         type: "secondary",
         children: label
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
         children: value
       })]
     });
@@ -4792,8 +4792,8 @@
 
   // src/LoadingOverlay.jsx
   var {
-    Title: Title$2,
-    Text: Text$2
+    Title: Title$3,
+    Text: Text$3
   } = antd.Typography;
 
   /**
@@ -4849,7 +4849,7 @@
               background: '#fff'
             }
           })
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
           level: 3,
           style: {
             margin: '6px 0 0',
@@ -4860,7 +4860,7 @@
             animation: "evzBlink ".concat(blinkMs, "ms ease-in-out infinite")
           },
           children: brand
-        }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
+        }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
           className: "evz-tip",
           children: tip
         }) : null]
@@ -4871,8 +4871,8 @@
   };
 
   var {
-    Title: Title$1,
-    Text: Text$1
+    Title: Title$2,
+    Text: Text$2
   } = antd.Typography;
   var BLUE_START = '#2EA1FF';
   var BLUE_END = '#1B8CFF';
@@ -4979,13 +4979,13 @@
         style: {
           padding: '0 16px 16px'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
           level: 5,
           style: {
             margin: '0 0 2px'
           },
           children: message
-        }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
           type: "secondary",
           style: {
             display: 'block',
@@ -4997,232 +4997,189 @@
     });
   }
 
-  var DESCRIPTORS$1 = descriptors;
-  var uncurryThis$3 = functionUncurryThis;
-  var call$2 = functionCall;
-  var fails$2 = fails$l;
-  var objectKeys = objectKeys$2;
-  var getOwnPropertySymbolsModule = objectGetOwnPropertySymbols;
-  var propertyIsEnumerableModule = objectPropertyIsEnumerable;
-  var toObject = toObject$4;
-  var IndexedObject = indexedObject;
-
-  // eslint-disable-next-line es/no-object-assign -- safe
-  var $assign = Object.assign;
-  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-  var defineProperty$1 = Object.defineProperty;
-  var concat = uncurryThis$3([].concat);
-
-  // `Object.assign` method
-  // https://tc39.es/ecma262/#sec-object.assign
-  var objectAssign = !$assign || fails$2(function () {
-    // should have correct order of operations (Edge bug)
-    if (DESCRIPTORS$1 && $assign({ b: 1 }, $assign(defineProperty$1({}, 'a', {
-      enumerable: true,
-      get: function () {
-        defineProperty$1(this, 'b', {
-          value: 3,
-          enumerable: false
-        });
+  // src/HasAccountSummary.js
+  var {
+    Title: Title$1,
+    Text: Text$1
+  } = antd.Typography;
+  var BRAND_RED = '#ff4d4f';
+  function HasAccountSummary(_ref) {
+    var {
+      open = true,
+      onLoginSuccess,
+      onClose,
+      zIndex = 2000,
+      width = 520,
+      authOrigin = 'https://allan-sxqyu.ondigitalocean.app',
+      authUrl = 'https://allan-sxqyu.ondigitalocean.app',
+      // keep header sizing consistent with ProcessingModal
+      brandMaxWidth = 240,
+      brandMaxHeight = 54
+    } = _ref;
+    var popupRef = require$$0.useRef(null);
+    var checkRef = require$$0.useRef(null);
+    var timeoutRef = require$$0.useRef(null);
+    require$$0.useEffect(() => {
+      function handleMessage(event) {
+        if (event.origin !== authOrigin) return;
+        var data = event.data || {};
+        var userNo = data.user_no || data.user_id; // accept either key
+        var authToken = data.auth_token;
+        if (userNo) {
+          try {
+            var _popupRef$current;
+            (_popupRef$current = popupRef.current) === null || _popupRef$current === void 0 ? void 0 : _popupRef$current.close();
+          } catch (_unused) {}
+          clearInterval(checkRef.current);
+          clearTimeout(timeoutRef.current);
+          onLoginSuccess === null || onLoginSuccess === void 0 ? void 0 : onLoginSuccess(userNo, authToken);
+        }
       }
-    }), { b: 2 })).b !== 1) return true;
-    // should work with symbols and should have deterministic property order (V8 bug)
-    var A = {};
-    var B = {};
-    // eslint-disable-next-line es/no-symbol -- safe
-    var symbol = Symbol('assign detection');
-    var alphabet = 'abcdefghijklmnopqrst';
-    A[symbol] = 7;
-    // eslint-disable-next-line es/no-array-prototype-foreach -- safe
-    alphabet.split('').forEach(function (chr) { B[chr] = chr; });
-    return $assign({}, A)[symbol] !== 7 || objectKeys($assign({}, B)).join('') !== alphabet;
-  }) ? function assign(target, source) { // eslint-disable-line no-unused-vars -- required for `.length`
-    var T = toObject(target);
-    var argumentsLength = arguments.length;
-    var index = 1;
-    var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
-    var propertyIsEnumerable = propertyIsEnumerableModule.f;
-    while (argumentsLength > index) {
-      var S = IndexedObject(arguments[index++]);
-      var keys = getOwnPropertySymbols ? concat(objectKeys(S), getOwnPropertySymbols(S)) : objectKeys(S);
-      var length = keys.length;
-      var j = 0;
-      var key;
-      while (length > j) {
-        key = keys[j++];
-        if (!DESCRIPTORS$1 || call$2(propertyIsEnumerable, S, key)) T[key] = S[key];
+      window.addEventListener('message', handleMessage);
+      return () => {
+        window.removeEventListener('message', handleMessage);
+        try {
+          var _popupRef$current2;
+          (_popupRef$current2 = popupRef.current) === null || _popupRef$current2 === void 0 ? void 0 : _popupRef$current2.close();
+        } catch (_unused2) {}
+        clearInterval(checkRef.current);
+        clearTimeout(timeoutRef.current);
+      };
+    }, [authOrigin, onLoginSuccess]);
+    var handleSignIn = () => {
+      var callbackUrl = "".concat(window.location.origin, "/wallet-callback");
+      var url = "".concat(authUrl, "?redirect_uri=").concat(encodeURIComponent(callbackUrl));
+      var win = window.open(url, 'EVzone Sign In', 'width=520,height=640');
+      if (!win) {
+        alert('Popup blocked. Please allow popups for this site.');
+        return;
       }
-    } return T;
-  } : $assign;
-
-  var $$3 = _export;
-  var assign = objectAssign;
-
-  // `Object.assign` method
-  // https://tc39.es/ecma262/#sec-object.assign
-  // eslint-disable-next-line es/no-object-assign -- required for testing
-  $$3({ target: 'Object', stat: true, arity: 2, forced: Object.assign !== assign }, {
-    assign: assign
-  });
-
-  var call$1 = functionCall;
-  var hasOwn$1 = hasOwnProperty_1;
-  var isPrototypeOf$1 = objectIsPrototypeOf;
-  var regExpFlags = regexpFlags$1;
-
-  var RegExpPrototype$2 = RegExp.prototype;
-
-  var regexpGetFlags = function (R) {
-    var flags = R.flags;
-    return flags === undefined && !('flags' in RegExpPrototype$2) && !hasOwn$1(R, 'flags') && isPrototypeOf$1(RegExpPrototype$2, R)
-      ? call$1(regExpFlags, R) : flags;
-  };
-
-  var PROPER_FUNCTION_NAME = functionName.PROPER;
-  var defineBuiltIn$1 = defineBuiltIn$8;
-  var anObject$1 = anObject$e;
-  var $toString = toString$8;
-  var fails$1 = fails$l;
-  var getRegExpFlags$1 = regexpGetFlags;
-
-  var TO_STRING = 'toString';
-  var RegExpPrototype$1 = RegExp.prototype;
-  var nativeToString = RegExpPrototype$1[TO_STRING];
-
-  var NOT_GENERIC = fails$1(function () { return nativeToString.call({ source: 'a', flags: 'b' }) !== '/a/b'; });
-  // FF44- RegExp#toString has a wrong name
-  var INCORRECT_NAME = PROPER_FUNCTION_NAME && nativeToString.name !== TO_STRING;
-
-  // `RegExp.prototype.toString` method
-  // https://tc39.es/ecma262/#sec-regexp.prototype.tostring
-  if (NOT_GENERIC || INCORRECT_NAME) {
-    defineBuiltIn$1(RegExpPrototype$1, TO_STRING, function toString() {
-      var R = anObject$1(this);
-      var pattern = $toString(R.source);
-      var flags = $toString(getRegExpFlags$1(R));
-      return '/' + pattern + '/' + flags;
-    }, { unsafe: true });
+      popupRef.current = win;
+      checkRef.current = setInterval(() => {
+        if (win.closed) {
+          clearInterval(checkRef.current);
+          clearTimeout(timeoutRef.current);
+          onClose === null || onClose === void 0 ? void 0 : onClose();
+        }
+      }, 500);
+      timeoutRef.current = setTimeout(() => {
+        if (!win.closed) win.close();
+        clearInterval(checkRef.current);
+        onClose === null || onClose === void 0 ? void 0 : onClose();
+        alert('Login timed out. Please try again.');
+      }, 60000);
+    };
+    return /*#__PURE__*/jsxRuntimeExports.jsxs(antd.Modal, {
+      open: open,
+      centered: true,
+      width: width,
+      footer: null,
+      onCancel: onClose,
+      zIndex: zIndex,
+      maskClosable: false,
+      title: null,
+      bodyStyle: {
+        padding: 0
+      } // match ProcessingModal
+      ,
+      closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
+        style: {
+          width: 28,
+          height: 28,
+          borderRadius: '50%',
+          background: BRAND_RED,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+        },
+        children: /*#__PURE__*/jsxRuntimeExports.jsx(icons.CloseOutlined, {})
+      }),
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx("div", {
+        style: {
+          padding: '10px 16px 0',
+          textAlign: 'left'
+        },
+        children: /*#__PURE__*/jsxRuntimeExports.jsx("img", {
+          src: BRAND_MARK,
+          alt: "",
+          style: {
+            display: 'block',
+            maxWidth: brandMaxWidth,
+            maxHeight: brandMaxHeight,
+            width: 'auto',
+            height: 'auto',
+            margin: 0,
+            objectFit: 'contain',
+            userSelect: 'none',
+            pointerEvents: 'none'
+          },
+          crossOrigin: "anonymous",
+          draggable: false
+        })
+      }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+        style: {
+          borderTop: '1px dashed #e5e7eb',
+          margin: '8px 16px 12px'
+        }
+      }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+        style: {
+          padding: '0 16px 16px'
+        },
+        children: /*#__PURE__*/jsxRuntimeExports.jsxs(antd.Space, {
+          direction: "vertical",
+          style: {
+            width: '100%'
+          },
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+            level: 4,
+            style: {
+              margin: 0
+            },
+            children: "Sign in required"
+          }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+            style: {
+              background: '#e6f4ff',
+              borderRadius: 8,
+              padding: 12,
+              display: 'grid',
+              gridTemplateColumns: '20px 1fr',
+              gap: 8
+            },
+            children: [/*#__PURE__*/jsxRuntimeExports.jsx(icons.InfoCircleFilled, {
+              style: {
+                color: '#1677ff',
+                fontSize: 18,
+                lineHeight: '20px'
+              }
+            }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+              children: "EVzone needs you to sign in to continue with this payment."
+            })]
+          }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+            style: {
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: 8
+            },
+            children: /*#__PURE__*/jsxRuntimeExports.jsx(antd.Button, {
+              type: "primary",
+              shape: "round",
+              size: "large",
+              onClick: handleSignIn,
+              style: {
+                width: 160
+              },
+              children: "Sign in"
+            })
+          })]
+        })
+      })]
+    });
   }
 
-  var isObject$1 = isObject$c;
-  var classof = classofRaw$2;
-  var wellKnownSymbol$2 = wellKnownSymbol$j;
-
-  var MATCH$2 = wellKnownSymbol$2('match');
-
-  // `IsRegExp` abstract operation
-  // https://tc39.es/ecma262/#sec-isregexp
-  var isRegexp = function (it) {
-    var isRegExp;
-    return isObject$1(it) && ((isRegExp = it[MATCH$2]) !== undefined ? !!isRegExp : classof(it) === 'RegExp');
-  };
-
-  var isRegExp$1 = isRegexp;
-
-  var $TypeError = TypeError;
-
-  var notARegexp = function (it) {
-    if (isRegExp$1(it)) {
-      throw new $TypeError("The method doesn't accept regular expressions");
-    } return it;
-  };
-
-  var wellKnownSymbol$1 = wellKnownSymbol$j;
-
-  var MATCH$1 = wellKnownSymbol$1('match');
-
-  var correctIsRegexpLogic = function (METHOD_NAME) {
-    var regexp = /./;
-    try {
-      '/./'[METHOD_NAME](regexp);
-    } catch (error1) {
-      try {
-        regexp[MATCH$1] = false;
-        return '/./'[METHOD_NAME](regexp);
-      } catch (error2) { /* empty */ }
-    } return false;
-  };
-
-  var $$2 = _export;
-  var uncurryThis$2 = functionUncurryThisClause;
-  var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
-  var toLength$2 = toLength$5;
-  var toString$3 = toString$8;
-  var notARegExp$1 = notARegexp;
-  var requireObjectCoercible$2 = requireObjectCoercible$9;
-  var correctIsRegExpLogic$1 = correctIsRegexpLogic;
-
-  var slice = uncurryThis$2(''.slice);
-  var min$1 = Math.min;
-
-  var CORRECT_IS_REGEXP_LOGIC$1 = correctIsRegExpLogic$1('endsWith');
-  // https://github.com/zloirock/core-js/pull/702
-  var MDN_POLYFILL_BUG$1 = !CORRECT_IS_REGEXP_LOGIC$1 && !!function () {
-    var descriptor = getOwnPropertyDescriptor$1(String.prototype, 'endsWith');
-    return descriptor && !descriptor.writable;
-  }();
-
-  // `String.prototype.endsWith` method
-  // https://tc39.es/ecma262/#sec-string.prototype.endswith
-  $$2({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG$1 && !CORRECT_IS_REGEXP_LOGIC$1 }, {
-    endsWith: function endsWith(searchString /* , endPosition = @length */) {
-      var that = toString$3(requireObjectCoercible$2(this));
-      notARegExp$1(searchString);
-      var endPosition = arguments.length > 1 ? arguments[1] : undefined;
-      var len = that.length;
-      var end = endPosition === undefined ? len : min$1(toLength$2(endPosition), len);
-      var search = toString$3(searchString);
-      return slice(that, end - search.length, end) === search;
-    }
-  });
-
-  var $$1 = _export;
-  var uncurryThis$1 = functionUncurryThisClause;
-  var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
-  var toLength$1 = toLength$5;
-  var toString$2 = toString$8;
-  var notARegExp = notARegexp;
-  var requireObjectCoercible$1 = requireObjectCoercible$9;
-  var correctIsRegExpLogic = correctIsRegexpLogic;
-
-  var stringSlice$1 = uncurryThis$1(''.slice);
-  var min = Math.min;
-
-  var CORRECT_IS_REGEXP_LOGIC = correctIsRegExpLogic('startsWith');
-  // https://github.com/zloirock/core-js/pull/702
-  var MDN_POLYFILL_BUG = !CORRECT_IS_REGEXP_LOGIC && !!function () {
-    var descriptor = getOwnPropertyDescriptor(String.prototype, 'startsWith');
-    return descriptor && !descriptor.writable;
-  }();
-
-  // `String.prototype.startsWith` method
-  // https://tc39.es/ecma262/#sec-string.prototype.startswith
-  $$1({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_REGEXP_LOGIC }, {
-    startsWith: function startsWith(searchString /* , position = 0 */) {
-      var that = toString$2(requireObjectCoercible$1(this));
-      notARegExp(searchString);
-      var index = toLength$1(min(arguments.length > 1 ? arguments[1] : undefined, that.length));
-      var search = toString$2(searchString);
-      return stringSlice$1(that, index, index + search.length) === search;
-    }
-  });
-
-  var $ = _export;
-  var globalThis$2 = globalThis_1;
-
-  // `globalThis` object
-  // https://tc39.es/ecma262/#sec-globalthis
-  $({ global: true, forced: globalThis$2.globalThis !== globalThis$2 }, {
-    globalThis: globalThis$2
-  });
-
-  // One place to point the SDK at your server.
-  // Change this to your prod URL when you deploy.
-  var API_BASE_URL = 'http://localhost:4000'; // ← change to https://api.evzone-pay.com
-  var DEFAULT_TIMEOUT_MS = 12000;
-
   var isCallable = isCallable$m;
-  var isObject = isObject$c;
+  var isObject$1 = isObject$c;
   var setPrototypeOf = objectSetPrototypeOf;
 
   // makes subclassing work correct for wrapped built-ins
@@ -5234,54 +5191,80 @@
       // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
       isCallable(NewTarget = dummy.constructor) &&
       NewTarget !== Wrapper &&
-      isObject(NewTargetPrototype = NewTarget.prototype) &&
+      isObject$1(NewTargetPrototype = NewTarget.prototype) &&
       NewTargetPrototype !== Wrapper.prototype
     ) setPrototypeOf($this, NewTargetPrototype);
     return $this;
   };
 
-  var defineProperty = objectDefineProperty.f;
+  var isObject = isObject$c;
+  var classof = classofRaw$2;
+  var wellKnownSymbol$2 = wellKnownSymbol$j;
+
+  var MATCH$2 = wellKnownSymbol$2('match');
+
+  // `IsRegExp` abstract operation
+  // https://tc39.es/ecma262/#sec-isregexp
+  var isRegexp = function (it) {
+    var isRegExp;
+    return isObject(it) && ((isRegExp = it[MATCH$2]) !== undefined ? !!isRegExp : classof(it) === 'RegExp');
+  };
+
+  var call$2 = functionCall;
+  var hasOwn$1 = hasOwnProperty_1;
+  var isPrototypeOf$1 = objectIsPrototypeOf;
+  var regExpFlags = regexpFlags$1;
+
+  var RegExpPrototype$2 = RegExp.prototype;
+
+  var regexpGetFlags = function (R) {
+    var flags = R.flags;
+    return flags === undefined && !('flags' in RegExpPrototype$2) && !hasOwn$1(R, 'flags') && isPrototypeOf$1(RegExpPrototype$2, R)
+      ? call$2(regExpFlags, R) : flags;
+  };
+
+  var defineProperty$1 = objectDefineProperty.f;
 
   var proxyAccessor$1 = function (Target, Source, key) {
-    key in Target || defineProperty(Target, key, {
+    key in Target || defineProperty$1(Target, key, {
       configurable: true,
       get: function () { return Source[key]; },
       set: function (it) { Source[key] = it; }
     });
   };
 
-  var DESCRIPTORS = descriptors;
-  var globalThis$1 = globalThis_1;
-  var uncurryThis = functionUncurryThis;
+  var DESCRIPTORS$1 = descriptors;
+  var globalThis$2 = globalThis_1;
+  var uncurryThis$3 = functionUncurryThis;
   var isForced = isForced_1;
   var inheritIfRequired = inheritIfRequired$1;
   var createNonEnumerableProperty = createNonEnumerableProperty$6;
   var create = objectCreate;
   var getOwnPropertyNames = objectGetOwnPropertyNames.f;
   var isPrototypeOf = objectIsPrototypeOf;
-  var isRegExp = isRegexp;
-  var toString$1 = toString$8;
-  var getRegExpFlags = regexpGetFlags;
+  var isRegExp$1 = isRegexp;
+  var toString$3 = toString$8;
+  var getRegExpFlags$1 = regexpGetFlags;
   var stickyHelpers = regexpStickyHelpers;
   var proxyAccessor = proxyAccessor$1;
-  var defineBuiltIn = defineBuiltIn$8;
-  var fails = fails$l;
+  var defineBuiltIn$1 = defineBuiltIn$8;
+  var fails$2 = fails$l;
   var hasOwn = hasOwnProperty_1;
   var enforceInternalState = internalState.enforce;
   var setSpecies = setSpecies$2;
-  var wellKnownSymbol = wellKnownSymbol$j;
+  var wellKnownSymbol$1 = wellKnownSymbol$j;
   var UNSUPPORTED_DOT_ALL = regexpUnsupportedDotAll;
   var UNSUPPORTED_NCG = regexpUnsupportedNcg;
 
-  var MATCH = wellKnownSymbol('match');
-  var NativeRegExp = globalThis$1.RegExp;
-  var RegExpPrototype = NativeRegExp.prototype;
-  var SyntaxError = globalThis$1.SyntaxError;
-  var exec = uncurryThis(RegExpPrototype.exec);
-  var charAt = uncurryThis(''.charAt);
-  var replace = uncurryThis(''.replace);
-  var stringIndexOf = uncurryThis(''.indexOf);
-  var stringSlice = uncurryThis(''.slice);
+  var MATCH$1 = wellKnownSymbol$1('match');
+  var NativeRegExp = globalThis$2.RegExp;
+  var RegExpPrototype$1 = NativeRegExp.prototype;
+  var SyntaxError = globalThis$2.SyntaxError;
+  var exec = uncurryThis$3(RegExpPrototype$1.exec);
+  var charAt = uncurryThis$3(''.charAt);
+  var replace = uncurryThis$3(''.replace);
+  var stringIndexOf = uncurryThis$3(''.indexOf);
+  var stringSlice$1 = uncurryThis$3(''.slice);
   // TODO: Use only proper RegExpIdentifierName
   var IS_NCG = /^\?<[^\s\d!#%&*+<=>@^][^\s!#%&*+<=>@^]*>/;
   var re1 = /a/g;
@@ -5293,9 +5276,9 @@
   var MISSED_STICKY = stickyHelpers.MISSED_STICKY;
   var UNSUPPORTED_Y = stickyHelpers.UNSUPPORTED_Y;
 
-  var BASE_FORCED = DESCRIPTORS &&
-    (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG || fails(function () {
-      re2[MATCH] = false;
+  var BASE_FORCED = DESCRIPTORS$1 &&
+    (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG || fails$2(function () {
+      re2[MATCH$1] = false;
       // RegExp constructor can alter flags and IsRegExp works correct with @@match
       // eslint-disable-next-line sonarjs/inconsistent-function-call -- required for testing
       return NativeRegExp(re1) !== re1 || NativeRegExp(re2) === re2 || String(NativeRegExp(re1, 'i')) !== '/a/i';
@@ -5349,10 +5332,10 @@
         case chr === '(':
           result += chr;
           // ignore non-capturing groups
-          if (stringSlice(string, index + 1, index + 3) === '?:') {
+          if (stringSlice$1(string, index + 1, index + 3) === '?:') {
             continue;
           }
-          if (exec(IS_NCG, stringSlice(string, index + 1))) {
+          if (exec(IS_NCG, stringSlice$1(string, index + 1))) {
             index += 2;
             ncg = true;
           }
@@ -5377,8 +5360,8 @@
   // https://tc39.es/ecma262/#sec-regexp-constructor
   if (isForced('RegExp', BASE_FORCED)) {
     var RegExpWrapper = function RegExp(pattern, flags) {
-      var thisIsRegExp = isPrototypeOf(RegExpPrototype, this);
-      var patternIsRegExp = isRegExp(pattern);
+      var thisIsRegExp = isPrototypeOf(RegExpPrototype$1, this);
+      var patternIsRegExp = isRegExp$1(pattern);
       var flagsAreUndefined = flags === undefined;
       var groups = [];
       var rawPattern = pattern;
@@ -5388,13 +5371,13 @@
         return pattern;
       }
 
-      if (patternIsRegExp || isPrototypeOf(RegExpPrototype, pattern)) {
+      if (patternIsRegExp || isPrototypeOf(RegExpPrototype$1, pattern)) {
         pattern = pattern.source;
-        if (flagsAreUndefined) flags = getRegExpFlags(rawPattern);
+        if (flagsAreUndefined) flags = getRegExpFlags$1(rawPattern);
       }
 
-      pattern = pattern === undefined ? '' : toString$1(pattern);
-      flags = flags === undefined ? '' : toString$1(flags);
+      pattern = pattern === undefined ? '' : toString$3(pattern);
+      flags = flags === undefined ? '' : toString$3(flags);
       rawPattern = pattern;
 
       if (UNSUPPORTED_DOT_ALL && 'dotAll' in re1) {
@@ -5415,7 +5398,7 @@
         groups = handled[1];
       }
 
-      result = inheritIfRequired(NativeRegExp(pattern, flags), thisIsRegExp ? this : RegExpPrototype, RegExpWrapper);
+      result = inheritIfRequired(NativeRegExp(pattern, flags), thisIsRegExp ? this : RegExpPrototype$1, RegExpWrapper);
 
       if (dotAll || sticky || groups.length) {
         state = enforceInternalState(result);
@@ -5439,21 +5422,47 @@
       proxyAccessor(RegExpWrapper, NativeRegExp, keys[index++]);
     }
 
-    RegExpPrototype.constructor = RegExpWrapper;
-    RegExpWrapper.prototype = RegExpPrototype;
-    defineBuiltIn(globalThis$1, 'RegExp', RegExpWrapper, { constructor: true });
+    RegExpPrototype$1.constructor = RegExpWrapper;
+    RegExpWrapper.prototype = RegExpPrototype$1;
+    defineBuiltIn$1(globalThis$2, 'RegExp', RegExpWrapper, { constructor: true });
   }
 
   // https://tc39.es/ecma262/#sec-get-regexp-@@species
   setSpecies('RegExp');
 
-  var call = functionCall;
+  var PROPER_FUNCTION_NAME = functionName.PROPER;
+  var defineBuiltIn = defineBuiltIn$8;
+  var anObject$1 = anObject$e;
+  var $toString = toString$8;
+  var fails$1 = fails$l;
+  var getRegExpFlags = regexpGetFlags;
+
+  var TO_STRING = 'toString';
+  var RegExpPrototype = RegExp.prototype;
+  var nativeToString = RegExpPrototype[TO_STRING];
+
+  var NOT_GENERIC = fails$1(function () { return nativeToString.call({ source: 'a', flags: 'b' }) !== '/a/b'; });
+  // FF44- RegExp#toString has a wrong name
+  var INCORRECT_NAME = PROPER_FUNCTION_NAME && nativeToString.name !== TO_STRING;
+
+  // `RegExp.prototype.toString` method
+  // https://tc39.es/ecma262/#sec-regexp.prototype.tostring
+  if (NOT_GENERIC || INCORRECT_NAME) {
+    defineBuiltIn(RegExpPrototype, TO_STRING, function toString() {
+      var R = anObject$1(this);
+      var pattern = $toString(R.source);
+      var flags = $toString(getRegExpFlags(R));
+      return '/' + pattern + '/' + flags;
+    }, { unsafe: true });
+  }
+
+  var call$1 = functionCall;
   var fixRegExpWellKnownSymbolLogic = fixRegexpWellKnownSymbolLogic;
   var anObject = anObject$e;
   var isNullOrUndefined = isNullOrUndefined$6;
-  var toLength = toLength$5;
-  var toString = toString$8;
-  var requireObjectCoercible = requireObjectCoercible$9;
+  var toLength$2 = toLength$5;
+  var toString$2 = toString$8;
+  var requireObjectCoercible$2 = requireObjectCoercible$9;
   var getMethod = getMethod$5;
   var advanceStringIndex = advanceStringIndex$2;
   var regExpExec = regexpExecAbstract;
@@ -5464,15 +5473,15 @@
       // `String.prototype.match` method
       // https://tc39.es/ecma262/#sec-string.prototype.match
       function match(regexp) {
-        var O = requireObjectCoercible(this);
+        var O = requireObjectCoercible$2(this);
         var matcher = isNullOrUndefined(regexp) ? undefined : getMethod(regexp, MATCH);
-        return matcher ? call(matcher, regexp, O) : new RegExp(regexp)[MATCH](toString(O));
+        return matcher ? call$1(matcher, regexp, O) : new RegExp(regexp)[MATCH](toString$2(O));
       },
       // `RegExp.prototype[@@match]` method
       // https://tc39.es/ecma262/#sec-regexp.prototype-@@match
       function (string) {
         var rx = anObject(this);
-        var S = toString(string);
+        var S = toString$2(string);
         var res = maybeCallNative(nativeMatch, rx, S);
 
         if (res.done) return res.value;
@@ -5485,9 +5494,9 @@
         var n = 0;
         var result;
         while ((result = regExpExec(rx, S)) !== null) {
-          var matchStr = toString(result[0]);
+          var matchStr = toString$2(result[0]);
           A[n] = matchStr;
-          if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+          if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength$2(rx.lastIndex), fullUnicode);
           n++;
         }
         return n === 0 ? null : A;
@@ -5496,17 +5505,233 @@
   });
 
   // src/utils/cookie.js
+
+  var DEFAULT_NAME = 'evz_user_no';
+
+  /**
+   * Read the user number from cookies (default: "evz_user_no").
+   * Returns null if not present or not in a browser.
+   */
   function getUserNoFromCookie() {
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'evz_user_no';
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_NAME;
     if (typeof document === 'undefined') return null;
-    var m = document.cookie.match(new RegExp("(?:^|; )".concat(name, "=([^;]*)")));
+    var escaped = String(name).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    var m = document.cookie.match(new RegExp('(?:^|;\\s*)' + escaped + '=([^;]*)'));
     return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  /**
+   * Set the user number cookie.
+   * Defaults: 7-day expiry, SameSite=Strict, Secure when on HTTPS, Path=/.
+   */
+  function setUserNoCookie(userNo) {
+    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    if (typeof document === 'undefined') return;
+    if (!userNo) return;
+    var {
+      name = DEFAULT_NAME,
+      days = 7,
+      path = '/',
+      sameSite = 'Strict',
+      // 'Strict' | 'Lax' | 'None' (if 'None', you must be on HTTPS)
+      secure = typeof location !== 'undefined' && location.protocol === 'https:'
+    } = opts;
+    var expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+    var parts = ["".concat(encodeURIComponent(name), "=").concat(encodeURIComponent(userNo)), "Expires=".concat(expires.toUTCString()), "Path=".concat(path), "SameSite=".concat(sameSite)];
+    if (secure) parts.push('Secure');
+    document.cookie = parts.join('; ');
+  }
+
+  /**
+   * Remove the user number cookie.
+   */
+  function clearUserNoCookie() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_NAME;
+    var {
+      path = '/'
+    } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    if (typeof document === 'undefined') return;
+    document.cookie = "".concat(encodeURIComponent(name), "=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=").concat(path);
   }
 
   var cookieUtil = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    getUserNoFromCookie: getUserNoFromCookie
+    clearUserNoCookie: clearUserNoCookie,
+    getUserNoFromCookie: getUserNoFromCookie,
+    setUserNoCookie: setUserNoCookie
   });
+
+  var DESCRIPTORS = descriptors;
+  var uncurryThis$2 = functionUncurryThis;
+  var call = functionCall;
+  var fails = fails$l;
+  var objectKeys = objectKeys$2;
+  var getOwnPropertySymbolsModule = objectGetOwnPropertySymbols;
+  var propertyIsEnumerableModule = objectPropertyIsEnumerable;
+  var toObject = toObject$4;
+  var IndexedObject = indexedObject;
+
+  // eslint-disable-next-line es/no-object-assign -- safe
+  var $assign = Object.assign;
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  var defineProperty = Object.defineProperty;
+  var concat = uncurryThis$2([].concat);
+
+  // `Object.assign` method
+  // https://tc39.es/ecma262/#sec-object.assign
+  var objectAssign = !$assign || fails(function () {
+    // should have correct order of operations (Edge bug)
+    if (DESCRIPTORS && $assign({ b: 1 }, $assign(defineProperty({}, 'a', {
+      enumerable: true,
+      get: function () {
+        defineProperty(this, 'b', {
+          value: 3,
+          enumerable: false
+        });
+      }
+    }), { b: 2 })).b !== 1) return true;
+    // should work with symbols and should have deterministic property order (V8 bug)
+    var A = {};
+    var B = {};
+    // eslint-disable-next-line es/no-symbol -- safe
+    var symbol = Symbol('assign detection');
+    var alphabet = 'abcdefghijklmnopqrst';
+    A[symbol] = 7;
+    // eslint-disable-next-line es/no-array-prototype-foreach -- safe
+    alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+    return $assign({}, A)[symbol] !== 7 || objectKeys($assign({}, B)).join('') !== alphabet;
+  }) ? function assign(target, source) { // eslint-disable-line no-unused-vars -- required for `.length`
+    var T = toObject(target);
+    var argumentsLength = arguments.length;
+    var index = 1;
+    var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+    var propertyIsEnumerable = propertyIsEnumerableModule.f;
+    while (argumentsLength > index) {
+      var S = IndexedObject(arguments[index++]);
+      var keys = getOwnPropertySymbols ? concat(objectKeys(S), getOwnPropertySymbols(S)) : objectKeys(S);
+      var length = keys.length;
+      var j = 0;
+      var key;
+      while (length > j) {
+        key = keys[j++];
+        if (!DESCRIPTORS || call(propertyIsEnumerable, S, key)) T[key] = S[key];
+      }
+    } return T;
+  } : $assign;
+
+  var $$3 = _export;
+  var assign = objectAssign;
+
+  // `Object.assign` method
+  // https://tc39.es/ecma262/#sec-object.assign
+  // eslint-disable-next-line es/no-object-assign -- required for testing
+  $$3({ target: 'Object', stat: true, arity: 2, forced: Object.assign !== assign }, {
+    assign: assign
+  });
+
+  var isRegExp = isRegexp;
+
+  var $TypeError = TypeError;
+
+  var notARegexp = function (it) {
+    if (isRegExp(it)) {
+      throw new $TypeError("The method doesn't accept regular expressions");
+    } return it;
+  };
+
+  var wellKnownSymbol = wellKnownSymbol$j;
+
+  var MATCH = wellKnownSymbol('match');
+
+  var correctIsRegexpLogic = function (METHOD_NAME) {
+    var regexp = /./;
+    try {
+      '/./'[METHOD_NAME](regexp);
+    } catch (error1) {
+      try {
+        regexp[MATCH] = false;
+        return '/./'[METHOD_NAME](regexp);
+      } catch (error2) { /* empty */ }
+    } return false;
+  };
+
+  var $$2 = _export;
+  var uncurryThis$1 = functionUncurryThisClause;
+  var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
+  var toLength$1 = toLength$5;
+  var toString$1 = toString$8;
+  var notARegExp$1 = notARegexp;
+  var requireObjectCoercible$1 = requireObjectCoercible$9;
+  var correctIsRegExpLogic$1 = correctIsRegexpLogic;
+
+  var slice = uncurryThis$1(''.slice);
+  var min$1 = Math.min;
+
+  var CORRECT_IS_REGEXP_LOGIC$1 = correctIsRegExpLogic$1('endsWith');
+  // https://github.com/zloirock/core-js/pull/702
+  var MDN_POLYFILL_BUG$1 = !CORRECT_IS_REGEXP_LOGIC$1 && !!function () {
+    var descriptor = getOwnPropertyDescriptor$1(String.prototype, 'endsWith');
+    return descriptor && !descriptor.writable;
+  }();
+
+  // `String.prototype.endsWith` method
+  // https://tc39.es/ecma262/#sec-string.prototype.endswith
+  $$2({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG$1 && !CORRECT_IS_REGEXP_LOGIC$1 }, {
+    endsWith: function endsWith(searchString /* , endPosition = @length */) {
+      var that = toString$1(requireObjectCoercible$1(this));
+      notARegExp$1(searchString);
+      var endPosition = arguments.length > 1 ? arguments[1] : undefined;
+      var len = that.length;
+      var end = endPosition === undefined ? len : min$1(toLength$1(endPosition), len);
+      var search = toString$1(searchString);
+      return slice(that, end - search.length, end) === search;
+    }
+  });
+
+  var $$1 = _export;
+  var uncurryThis = functionUncurryThisClause;
+  var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
+  var toLength = toLength$5;
+  var toString = toString$8;
+  var notARegExp = notARegexp;
+  var requireObjectCoercible = requireObjectCoercible$9;
+  var correctIsRegExpLogic = correctIsRegexpLogic;
+
+  var stringSlice = uncurryThis(''.slice);
+  var min = Math.min;
+
+  var CORRECT_IS_REGEXP_LOGIC = correctIsRegExpLogic('startsWith');
+  // https://github.com/zloirock/core-js/pull/702
+  var MDN_POLYFILL_BUG = !CORRECT_IS_REGEXP_LOGIC && !!function () {
+    var descriptor = getOwnPropertyDescriptor(String.prototype, 'startsWith');
+    return descriptor && !descriptor.writable;
+  }();
+
+  // `String.prototype.startsWith` method
+  // https://tc39.es/ecma262/#sec-string.prototype.startswith
+  $$1({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_REGEXP_LOGIC }, {
+    startsWith: function startsWith(searchString /* , position = 0 */) {
+      var that = toString(requireObjectCoercible(this));
+      notARegExp(searchString);
+      var index = toLength(min(arguments.length > 1 ? arguments[1] : undefined, that.length));
+      var search = toString(searchString);
+      return stringSlice(that, index, index + search.length) === search;
+    }
+  });
+
+  var $ = _export;
+  var globalThis$1 = globalThis_1;
+
+  // `globalThis` object
+  // https://tc39.es/ecma262/#sec-globalthis
+  $({ global: true, forced: globalThis$1.globalThis !== globalThis$1 }, {
+    globalThis: globalThis$1
+  });
+
+  // One place to point the SDK at your server.
+  // Change this to your prod URL when you deploy.
+  var API_BASE_URL = 'http://localhost:4000'; // ← change to https://api.evzone-pay.com
+  var DEFAULT_TIMEOUT_MS = 12000;
 
   /**
    * Create a Paykit API client.
@@ -5768,7 +5993,7 @@
       onSuccess
     } = _ref;
     // ---------- Server-driven state ----------
-    var [view, setView] = require$$0.useState('loading'); // 'loading' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
+    var [view, setView] = require$$0.useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
     var [errorMsg, setErrorMsg] = require$$0.useState('');
     var [session, setSession] = require$$0.useState(null);
     var [quote, setQuote] = require$$0.useState(null);
@@ -5823,12 +6048,12 @@
           return;
         }
 
-        // Resolve user identifier: prefer prop userWalletId; else use cookie-based userNo
+        // Prefer explicit walletId from props; else try cookie userNo
         var cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
         if (!enterpriseWalletNo || !userWalletId && !cookieUserNo) {
           if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-            setErrorMsg('Missing enterpriseWalletNo or signed-in wallet user.');
-            setView('invalid');
+            // Show sign-in modal instead of invalid
+            setView('signin');
           }
           return;
         }
@@ -5868,6 +6093,16 @@
       boot(ctrl.signal);
       return () => ctrl.abort();
     }, [boot]);
+
+    // After popup login success: save cookie + reboot
+    var handleLoginSuccess = (userNo /*, authToken */) => {
+      try {
+        if (userNo) setUserNoCookie(userNo);
+      } catch (_unused) {}
+      setView('loading');
+      var ctrl = new AbortController();
+      boot(ctrl.signal);
+    };
 
     // ---------- Details for display ----------
     var details = require$$0.useMemo(() => {
@@ -5954,7 +6189,6 @@
       setPasscode('');
       setQuote(null);
       setView('summary');
-      // host handler still called, unchanged
       _onClose === null || _onClose === void 0 ? void 0 : _onClose();
     };
 
@@ -6013,7 +6247,12 @@
 
     // ---------- Decide which modal to show ----------
     var content = null;
-    if (view === 'loading') content = renderLoading();else if (view === 'invalid') content = renderInvalid();else if (view === 'summary') content = renderSummary();else if (view === 'passcode') content = renderPasscode();else if (view === 'success') {
+    if (view === 'loading') content = renderLoading();else if (view === 'signin') content = /*#__PURE__*/jsxRuntimeExports.jsx(HasAccountSummary, {
+      open: true,
+      onLoginSuccess: handleLoginSuccess,
+      onClose: closeAndReset,
+      zIndex: zIndex
+    });else if (view === 'invalid') content = renderInvalid();else if (view === 'summary') content = renderSummary();else if (view === 'passcode') content = renderPasscode();else if (view === 'success') {
       var _quote$total2;
       content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
         open: true,
