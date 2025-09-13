@@ -1,57 +1,126 @@
+// src/ProcessingModal.js
 import React from 'react';
-import { Modal, Typography } from 'antd';
-const { Text } = Typography;
+import { Modal, Typography, Avatar } from 'antd';
 
+const { Title, Text } = Typography;
+
+const BRAND_LOGO =
+  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+
+// Smooth Airbnb-style blue gradient
+const BLUE_START = '#2EA1FF';
+const BLUE_END   = '#1B8CFF';
+
+/**
+ * Props:
+ *  - open?: boolean
+ *  - onClose?: () => void   // usually not closable while processing
+ *  - src?: string           // GIF/MP4/IMG URL (defaults to your Cloudinary GIF)
+ *  - message?: string       // big heading (default: "Processing")
+ *  - subText?: string       // small line below
+ *  - width?: number         // default 480
+ *  - zIndex?: number        // default 2000
+ *  - roundedSize?: number   // square preview size (default 160)
+ *  - loop?: boolean         // if a <video> is used
+ *
+ * Notes:
+ *  - File extension decides whether to render <img> (gif/png/jpg/svg) or <video>.
+ */
 export default function ProcessingModal({
-  open,
-  src,
-  message = 'Processing payment…',
-  width = 420,
+  open = true,
+  onClose,
+  src = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif',
+  message = 'Processing',
+  subText = '',
+  width = 480,
   zIndex = 2000,
+  roundedSize = 160,
   loop = true,
 }) {
+  const isGif =
+    typeof src === 'string' &&
+    /\.(gif|png|jpe?g|svg)(\?.*)?$/i.test(src);
+
   return (
     <Modal
       open={open}
-      footer={null}
-      closable={false}
-      maskClosable={false}
       centered
       width={width}
+      footer={null}
+      onCancel={onClose}
+      maskClosable={false}
+      closable={false}          // processing should not be dismissible
       zIndex={zIndex}
       title={null}
-      bodyStyle={{ padding: 24, textAlign: 'center' }}
-      className="evz-processing-modal"
+      bodyStyle={{ padding: 20, textAlign: 'center' }}
+      className="evz-modal"
     >
-      <div className="evz-video-wrap">
-        <video
-          src={src}
-          autoPlay
-          muted
-          playsInline
-          loop={loop}
-          preload="auto"
-          width="160"
-          height="160"
-          style={{ display: 'block', margin: '0 auto', borderRadius: 12, objectFit: 'contain' }}
-          disablePictureInPicture
-          onContextMenu={(e) => e.preventDefault()}
-        />
+      {/* Brand header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Avatar src={BRAND_LOGO} size={28} />
+        <Text strong style={{ fontSize: 16 }}>EVzone Pay</Text>
       </div>
-      <Text type="secondary" style={{ display: 'block', marginTop: 12, fontWeight: 600 }}>
-        {message}
-      </Text>
 
-      <style>{`
-        .evz-processing-modal .ant-modal-content { border-radius: 14px; }
-        .evz-video-wrap {
-          display: inline-flex;
-          padding: 8px;
-          border-radius: 14px;
-          background: radial-gradient(100% 100% at 50% 0%, #5CB9FC 0%, #179CFC 100%);
-          box-shadow: 0 10px 28px rgba(23,156,252,.28);
-        }
-      `}</style>
+      {/* dashed separator */}
+      <div
+        style={{
+          borderTop: '1px dashed #e5e7eb',
+          margin: '12px -20px 16px',
+        }}
+      />
+
+      {/* Blue gradient square with media */}
+      <div
+        aria-hidden
+        style={{
+          margin: '8px auto 12px',
+          width: roundedSize,
+          height: roundedSize,
+          borderRadius: 16,
+          background: `linear-gradient(180deg, ${BLUE_START} 0%, ${BLUE_END} 100%)`,
+          boxShadow: '0 12px 34px rgba(30,140,255,0.28)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {isGif ? (
+          <img
+            src={src}
+            alt=""
+            style={{
+              maxWidth: '82%',
+              maxHeight: '82%',
+              borderRadius: 12,
+              objectFit: 'contain',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+            crossOrigin="anonymous"
+            draggable={false}
+          />
+        ) : (
+          <video
+            src={src}
+            autoPlay
+            muted
+            playsInline
+            loop={loop}
+            preload="auto"
+            style={{
+              maxWidth: '82%',
+              maxHeight: '82%',
+              borderRadius: 12,
+              objectFit: 'contain',
+            }}
+          />
+        )}
+      </div>
+
+      <Title level={4} style={{ margin: '0 0 4px' }}>{message}</Title>
+      {subText ? (
+        <Text type="secondary" style={{ display: 'block' }}>{subText}</Text>
+      ) : null}
     </Modal>
   );
 }

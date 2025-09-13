@@ -1,3 +1,4 @@
+// rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
@@ -20,46 +21,56 @@ export default {
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
+        antd: 'antd',
+        '@ant-design/icons': 'icons', // ensure your UMD host provides this global
       },
     },
   ],
+  external: ['react', 'react-dom', 'antd', '@ant-design/icons'],
   plugins: [
+    // 1) Assets (gif/mp4/etc.) before anything else
+    url({
+      include: [
+        '**/*.mp4', '**/*.webm', '**/*.mp3',
+        '**/*.gif', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg',
+        '**/*.json'
+      ],
+      limit: 0,
+      fileName: 'assets/[name]-[hash][extname]',
+    }),
+
+    // 2) Resolve ESM + .jsx
+    resolve({
+      extensions: ['.mjs', '.js', '.jsx', '.json'],
+    }),
+
+    // 3) Transpile JSX before CommonJS touches modules
     babel({
       babelHelpers: 'bundled',
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: {
-              esmodules: true, // Target modern browsers that support ES modules
-              browsers: 'defaults, not IE 11', // Broad compatibility, excludes IE
-            },
-            useBuiltIns: 'usage', // Polyfill only what's needed
-            corejs: 3, // Use core-js for polyfills
-          },
-        ],
-        '@babel/preset-react',
-      ],
-      plugins: [
-        '@babel/plugin-proposal-optional-chaining', // Explicitly transpile optional chaining
-        '@babel/plugin-proposal-nullish-coalescing-operator', // For future-proofing
-      ],
       extensions: ['.js', '.jsx'],
       exclude: 'node_modules/**',
+      presets: [
+        ['@babel/preset-env', {
+          targets: { esmodules: true },
+          useBuiltIns: 'usage',
+          corejs: 3,
+        }],
+        ['@babel/preset-react', { runtime: 'automatic' }],
+      ],
+      plugins: [
+        '@babel/plugin-proposal-optional-chaining',
+        '@babel/plugin-proposal-nullish-coalescing-operator',
+      ],
     }),
-    resolve(),
-    commonjs(),
-    url({
-      include: ['**/*.jpg', '**/*.png', '**/*.gif'],
-      limit: 0,
-      destDir: 'dist',
-      publicPath: '',
-      fileName: '[name][extname]',
+
+    // 4) CommonJS only for node_modules
+    commonjs({
+      include: /node_modules/,
     }),
+
     NodeGlobalsPolyfillPlugin({
       process: true,
       buffer: true,
     }),
   ],
-  external: ['react', 'react-dom', 'antd', '@ant-design/icons'],
 };

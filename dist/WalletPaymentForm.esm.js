@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Modal, Avatar, Typography, Space, Button, Input } from 'antd';
+import require$$0, { useState, useMemo, useCallback, useEffect } from 'react';
+import { Typography, Modal, Avatar, Space, Button, Input } from 'antd';
 import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled } from '@ant-design/icons';
 
 function asyncGeneratorStep(n, t, e, r, o, a, c) {
@@ -248,9 +248,9 @@ var environmentUserAgent = userAgent$5 ? String(userAgent$5) : '';
 var globalThis$k = globalThis_1;
 var userAgent$4 = environmentUserAgent;
 
-var process$3 = globalThis$k.process;
+var process$4 = globalThis$k.process;
 var Deno$1 = globalThis$k.Deno;
-var versions = process$3 && process$3.versions || Deno$1 && Deno$1.version;
+var versions = process$4 && process$4.versions || Deno$1 && Deno$1.version;
 var v8 = versions && versions.v8;
 var match, version;
 
@@ -1788,7 +1788,7 @@ var IS_NODE$2 = environmentIsNode;
 
 var set = globalThis$b.setImmediate;
 var clear = globalThis$b.clearImmediate;
-var process$2 = globalThis$b.process;
+var process$3 = globalThis$b.process;
 var Dispatch = globalThis$b.Dispatch;
 var Function$1 = globalThis$b.Function;
 var MessageChannel = globalThis$b.MessageChannel;
@@ -1844,7 +1844,7 @@ if (!set || !clear) {
   // Node.js 0.8-
   if (IS_NODE$2) {
     defer = function (id) {
-      process$2.nextTick(runner(id));
+      process$3.nextTick(runner(id));
     };
   // Sphere (JS game engine) Dispatch API
   } else if (Dispatch && Dispatch.now) {
@@ -1946,7 +1946,7 @@ var IS_NODE$1 = environmentIsNode;
 
 var MutationObserver = globalThis$9.MutationObserver || globalThis$9.WebKitMutationObserver;
 var document$2 = globalThis$9.document;
-var process$1 = globalThis$9.process;
+var process$2 = globalThis$9.process;
 var Promise$1 = globalThis$9.Promise;
 var microtask$1 = safeGetBuiltIn('queueMicrotask');
 var notify$1, toggle, node, promise, then;
@@ -1957,7 +1957,7 @@ if (!microtask$1) {
 
   var flush = function () {
     var parent, fn;
-    if (IS_NODE$1 && (parent = process$1.domain)) parent.exit();
+    if (IS_NODE$1 && (parent = process$2.domain)) parent.exit();
     while (fn = queue.get()) try {
       fn();
     } catch (error) {
@@ -1989,7 +1989,7 @@ if (!microtask$1) {
   // Node.js without promises
   } else if (IS_NODE$1) {
     notify$1 = function () {
-      process$1.nextTick(flush);
+      process$2.nextTick(flush);
     };
   // for other environments - macrotask based on:
   // - setImmediate
@@ -2133,7 +2133,7 @@ var PromiseConstructor = NativePromiseConstructor$2;
 var PromisePrototype = NativePromisePrototype$1;
 var TypeError$1 = globalThis$6.TypeError;
 var document$1 = globalThis$6.document;
-var process = globalThis$6.process;
+var process$1 = globalThis$6.process;
 var newPromiseCapability$1 = newPromiseCapabilityModule$3.f;
 var newGenericPromiseCapability = newPromiseCapability$1;
 
@@ -2225,7 +2225,7 @@ var onUnhandled = function (state) {
     if (IS_UNHANDLED) {
       result = perform$2(function () {
         if (IS_NODE) {
-          process.emit('unhandledRejection', value, promise);
+          process$1.emit('unhandledRejection', value, promise);
         } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
       });
       // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
@@ -2243,7 +2243,7 @@ var onHandleUnhandled = function (state) {
   call$b(task, globalThis$6, function () {
     var promise = state.facade;
     if (IS_NODE) {
-      process.emit('rejectionHandled', promise);
+      process$1.emit('rejectionHandled', promise);
     } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
   });
 };
@@ -2331,7 +2331,7 @@ if (FORCED_PROMISE_CONSTRUCTOR$4) {
     state.parent = true;
     reaction.ok = isCallable$3(onFulfilled) ? onFulfilled : true;
     reaction.fail = isCallable$3(onRejected) && onRejected;
-    reaction.domain = IS_NODE ? process.domain : undefined;
+    reaction.domain = IS_NODE ? process$1.domain : undefined;
     if (state.state === PENDING) state.reactions.add(reaction);
     else microtask(function () {
       callReaction(reaction, state);
@@ -2783,12 +2783,431 @@ for (var COLLECTION_NAME in DOMIterables) {
 
 handlePrototype(DOMTokenListPrototype, 'DOMTokenList');
 
+var jsxRuntime = {exports: {}};
+
+var reactJsxRuntime_production = {};
+
+/**
+ * @license React
+ * react-jsx-runtime.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var hasRequiredReactJsxRuntime_production;
+
+function requireReactJsxRuntime_production () {
+	if (hasRequiredReactJsxRuntime_production) return reactJsxRuntime_production;
+	hasRequiredReactJsxRuntime_production = 1;
+	var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"),
+	  REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+	function jsxProd(type, config, maybeKey) {
+	  var key = null;
+	  void 0 !== maybeKey && (key = "" + maybeKey);
+	  void 0 !== config.key && (key = "" + config.key);
+	  if ("key" in config) {
+	    maybeKey = {};
+	    for (var propName in config)
+	      "key" !== propName && (maybeKey[propName] = config[propName]);
+	  } else maybeKey = config;
+	  config = maybeKey.ref;
+	  return {
+	    $$typeof: REACT_ELEMENT_TYPE,
+	    type: type,
+	    key: key,
+	    ref: void 0 !== config ? config : null,
+	    props: maybeKey
+	  };
+	}
+	reactJsxRuntime_production.Fragment = REACT_FRAGMENT_TYPE;
+	reactJsxRuntime_production.jsx = jsxProd;
+	reactJsxRuntime_production.jsxs = jsxProd;
+	return reactJsxRuntime_production;
+}
+
+var reactJsxRuntime_development = {};
+
+/**
+ * @license React
+ * react-jsx-runtime.development.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var hasRequiredReactJsxRuntime_development;
+
+function requireReactJsxRuntime_development () {
+	if (hasRequiredReactJsxRuntime_development) return reactJsxRuntime_development;
+	hasRequiredReactJsxRuntime_development = 1;
+	"production" !== process.env.NODE_ENV &&
+	  (function () {
+	    function getComponentNameFromType(type) {
+	      if (null == type) return null;
+	      if ("function" === typeof type)
+	        return type.$$typeof === REACT_CLIENT_REFERENCE
+	          ? null
+	          : type.displayName || type.name || null;
+	      if ("string" === typeof type) return type;
+	      switch (type) {
+	        case REACT_FRAGMENT_TYPE:
+	          return "Fragment";
+	        case REACT_PROFILER_TYPE:
+	          return "Profiler";
+	        case REACT_STRICT_MODE_TYPE:
+	          return "StrictMode";
+	        case REACT_SUSPENSE_TYPE:
+	          return "Suspense";
+	        case REACT_SUSPENSE_LIST_TYPE:
+	          return "SuspenseList";
+	        case REACT_ACTIVITY_TYPE:
+	          return "Activity";
+	      }
+	      if ("object" === typeof type)
+	        switch (
+	          ("number" === typeof type.tag &&
+	            console.error(
+	              "Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."
+	            ),
+	          type.$$typeof)
+	        ) {
+	          case REACT_PORTAL_TYPE:
+	            return "Portal";
+	          case REACT_CONTEXT_TYPE:
+	            return (type.displayName || "Context") + ".Provider";
+	          case REACT_CONSUMER_TYPE:
+	            return (type._context.displayName || "Context") + ".Consumer";
+	          case REACT_FORWARD_REF_TYPE:
+	            var innerType = type.render;
+	            type = type.displayName;
+	            type ||
+	              ((type = innerType.displayName || innerType.name || ""),
+	              (type = "" !== type ? "ForwardRef(" + type + ")" : "ForwardRef"));
+	            return type;
+	          case REACT_MEMO_TYPE:
+	            return (
+	              (innerType = type.displayName || null),
+	              null !== innerType
+	                ? innerType
+	                : getComponentNameFromType(type.type) || "Memo"
+	            );
+	          case REACT_LAZY_TYPE:
+	            innerType = type._payload;
+	            type = type._init;
+	            try {
+	              return getComponentNameFromType(type(innerType));
+	            } catch (x) {}
+	        }
+	      return null;
+	    }
+	    function testStringCoercion(value) {
+	      return "" + value;
+	    }
+	    function checkKeyStringCoercion(value) {
+	      try {
+	        testStringCoercion(value);
+	        var JSCompiler_inline_result = !1;
+	      } catch (e) {
+	        JSCompiler_inline_result = true;
+	      }
+	      if (JSCompiler_inline_result) {
+	        JSCompiler_inline_result = console;
+	        var JSCompiler_temp_const = JSCompiler_inline_result.error;
+	        var JSCompiler_inline_result$jscomp$0 =
+	          ("function" === typeof Symbol &&
+	            Symbol.toStringTag &&
+	            value[Symbol.toStringTag]) ||
+	          value.constructor.name ||
+	          "Object";
+	        JSCompiler_temp_const.call(
+	          JSCompiler_inline_result,
+	          "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.",
+	          JSCompiler_inline_result$jscomp$0
+	        );
+	        return testStringCoercion(value);
+	      }
+	    }
+	    function getTaskName(type) {
+	      if (type === REACT_FRAGMENT_TYPE) return "<>";
+	      if (
+	        "object" === typeof type &&
+	        null !== type &&
+	        type.$$typeof === REACT_LAZY_TYPE
+	      )
+	        return "<...>";
+	      try {
+	        var name = getComponentNameFromType(type);
+	        return name ? "<" + name + ">" : "<...>";
+	      } catch (x) {
+	        return "<...>";
+	      }
+	    }
+	    function getOwner() {
+	      var dispatcher = ReactSharedInternals.A;
+	      return null === dispatcher ? null : dispatcher.getOwner();
+	    }
+	    function UnknownOwner() {
+	      return Error("react-stack-top-frame");
+	    }
+	    function hasValidKey(config) {
+	      if (hasOwnProperty.call(config, "key")) {
+	        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
+	        if (getter && getter.isReactWarning) return false;
+	      }
+	      return void 0 !== config.key;
+	    }
+	    function defineKeyPropWarningGetter(props, displayName) {
+	      function warnAboutAccessingKey() {
+	        specialPropKeyWarningShown ||
+	          ((specialPropKeyWarningShown = true),
+	          console.error(
+	            "%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)",
+	            displayName
+	          ));
+	      }
+	      warnAboutAccessingKey.isReactWarning = true;
+	      Object.defineProperty(props, "key", {
+	        get: warnAboutAccessingKey,
+	        configurable: true
+	      });
+	    }
+	    function elementRefGetterWithDeprecationWarning() {
+	      var componentName = getComponentNameFromType(this.type);
+	      didWarnAboutElementRef[componentName] ||
+	        ((didWarnAboutElementRef[componentName] = true),
+	        console.error(
+	          "Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."
+	        ));
+	      componentName = this.props.ref;
+	      return void 0 !== componentName ? componentName : null;
+	    }
+	    function ReactElement(
+	      type,
+	      key,
+	      self,
+	      source,
+	      owner,
+	      props,
+	      debugStack,
+	      debugTask
+	    ) {
+	      self = props.ref;
+	      type = {
+	        $$typeof: REACT_ELEMENT_TYPE,
+	        type: type,
+	        key: key,
+	        props: props,
+	        _owner: owner
+	      };
+	      null !== (void 0 !== self ? self : null)
+	        ? Object.defineProperty(type, "ref", {
+	            enumerable: false,
+	            get: elementRefGetterWithDeprecationWarning
+	          })
+	        : Object.defineProperty(type, "ref", { enumerable: false, value: null });
+	      type._store = {};
+	      Object.defineProperty(type._store, "validated", {
+	        configurable: false,
+	        enumerable: false,
+	        writable: true,
+	        value: 0
+	      });
+	      Object.defineProperty(type, "_debugInfo", {
+	        configurable: false,
+	        enumerable: false,
+	        writable: true,
+	        value: null
+	      });
+	      Object.defineProperty(type, "_debugStack", {
+	        configurable: false,
+	        enumerable: false,
+	        writable: true,
+	        value: debugStack
+	      });
+	      Object.defineProperty(type, "_debugTask", {
+	        configurable: false,
+	        enumerable: false,
+	        writable: true,
+	        value: debugTask
+	      });
+	      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
+	      return type;
+	    }
+	    function jsxDEVImpl(
+	      type,
+	      config,
+	      maybeKey,
+	      isStaticChildren,
+	      source,
+	      self,
+	      debugStack,
+	      debugTask
+	    ) {
+	      var children = config.children;
+	      if (void 0 !== children)
+	        if (isStaticChildren)
+	          if (isArrayImpl(children)) {
+	            for (
+	              isStaticChildren = 0;
+	              isStaticChildren < children.length;
+	              isStaticChildren++
+	            )
+	              validateChildKeys(children[isStaticChildren]);
+	            Object.freeze && Object.freeze(children);
+	          } else
+	            console.error(
+	              "React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead."
+	            );
+	        else validateChildKeys(children);
+	      if (hasOwnProperty.call(config, "key")) {
+	        children = getComponentNameFromType(type);
+	        var keys = Object.keys(config).filter(function (k) {
+	          return "key" !== k;
+	        });
+	        isStaticChildren =
+	          0 < keys.length
+	            ? "{key: someKey, " + keys.join(": ..., ") + ": ...}"
+	            : "{key: someKey}";
+	        didWarnAboutKeySpread[children + isStaticChildren] ||
+	          ((keys =
+	            0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}"),
+	          console.error(
+	            'A props object containing a "key" prop is being spread into JSX:\n  let props = %s;\n  <%s {...props} />\nReact keys must be passed directly to JSX without using spread:\n  let props = %s;\n  <%s key={someKey} {...props} />',
+	            isStaticChildren,
+	            children,
+	            keys,
+	            children
+	          ),
+	          (didWarnAboutKeySpread[children + isStaticChildren] = true));
+	      }
+	      children = null;
+	      void 0 !== maybeKey &&
+	        (checkKeyStringCoercion(maybeKey), (children = "" + maybeKey));
+	      hasValidKey(config) &&
+	        (checkKeyStringCoercion(config.key), (children = "" + config.key));
+	      if ("key" in config) {
+	        maybeKey = {};
+	        for (var propName in config)
+	          "key" !== propName && (maybeKey[propName] = config[propName]);
+	      } else maybeKey = config;
+	      children &&
+	        defineKeyPropWarningGetter(
+	          maybeKey,
+	          "function" === typeof type
+	            ? type.displayName || type.name || "Unknown"
+	            : type
+	        );
+	      return ReactElement(
+	        type,
+	        children,
+	        self,
+	        source,
+	        getOwner(),
+	        maybeKey,
+	        debugStack,
+	        debugTask
+	      );
+	    }
+	    function validateChildKeys(node) {
+	      "object" === typeof node &&
+	        null !== node &&
+	        node.$$typeof === REACT_ELEMENT_TYPE &&
+	        node._store &&
+	        (node._store.validated = 1);
+	    }
+	    var React = require$$0,
+	      REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"),
+	      REACT_PORTAL_TYPE = Symbol.for("react.portal"),
+	      REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"),
+	      REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"),
+	      REACT_PROFILER_TYPE = Symbol.for("react.profiler");
+	    var REACT_CONSUMER_TYPE = Symbol.for("react.consumer"),
+	      REACT_CONTEXT_TYPE = Symbol.for("react.context"),
+	      REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"),
+	      REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"),
+	      REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"),
+	      REACT_MEMO_TYPE = Symbol.for("react.memo"),
+	      REACT_LAZY_TYPE = Symbol.for("react.lazy"),
+	      REACT_ACTIVITY_TYPE = Symbol.for("react.activity"),
+	      REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"),
+	      ReactSharedInternals =
+	        React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE,
+	      hasOwnProperty = Object.prototype.hasOwnProperty,
+	      isArrayImpl = Array.isArray,
+	      createTask = console.createTask
+	        ? console.createTask
+	        : function () {
+	            return null;
+	          };
+	    React = {
+	      react_stack_bottom_frame: function (callStackForError) {
+	        return callStackForError();
+	      }
+	    };
+	    var specialPropKeyWarningShown;
+	    var didWarnAboutElementRef = {};
+	    var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(
+	      React,
+	      UnknownOwner
+	    )();
+	    var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
+	    var didWarnAboutKeySpread = {};
+	    reactJsxRuntime_development.Fragment = REACT_FRAGMENT_TYPE;
+	    reactJsxRuntime_development.jsx = function (type, config, maybeKey, source, self) {
+	      var trackActualOwner =
+	        1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
+	      return jsxDEVImpl(
+	        type,
+	        config,
+	        maybeKey,
+	        false,
+	        source,
+	        self,
+	        trackActualOwner
+	          ? Error("react-stack-top-frame")
+	          : unknownOwnerDebugStack,
+	        trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask
+	      );
+	    };
+	    reactJsxRuntime_development.jsxs = function (type, config, maybeKey, source, self) {
+	      var trackActualOwner =
+	        1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
+	      return jsxDEVImpl(
+	        type,
+	        config,
+	        maybeKey,
+	        true,
+	        source,
+	        self,
+	        trackActualOwner
+	          ? Error("react-stack-top-frame")
+	          : unknownOwnerDebugStack,
+	        trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask
+	      );
+	    };
+	  })();
+	return reactJsxRuntime_development;
+}
+
+if (process.env.NODE_ENV === 'production') {
+  jsxRuntime.exports = requireReactJsxRuntime_production();
+} else {
+  jsxRuntime.exports = requireReactJsxRuntime_development();
+}
+
+var jsxRuntimeExports = jsxRuntime.exports;
+
 // src/TransactionSummary.jsx
 var {
-  Title: Title$6,
-  Text: Text$6
+  Title: Title$7,
+  Text: Text$7
 } = Typography;
-var BRAND_LOGO$3 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+var BRAND_LOGO$4 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 var BRAND_GREEN$1 = '#02CD8D'; // EVzone green
 
 /**
@@ -2819,7 +3238,7 @@ function TransactionSummary(_ref) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: true,
     centered: true,
     width: width,
@@ -2832,7 +3251,7 @@ function TransactionSummary(_ref) {
     bodyStyle: {
       padding: 20
     },
-    closeIcon: /*#__PURE__*/React.createElement("span", {
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
       style: {
         width: 28,
         height: 28,
@@ -2843,99 +3262,114 @@ function TransactionSummary(_ref) {
         justifyContent: 'center',
         color: '#fff',
         boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
-      }
-    }, /*#__PURE__*/React.createElement(CloseOutlined, null))
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    src: BRAND_LOGO$3,
-    size: 28
-  }), /*#__PURE__*/React.createElement(Text$6, {
-    strong: true,
-    style: {
-      fontSize: 16
-    }
-  }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: '1px dashed #e5e7eb',
-      margin: '12px -20px 16px'
-    }
-  }), /*#__PURE__*/React.createElement(Space, {
-    direction: "vertical",
-    align: "center",
-    style: {
-      width: '100%',
-      marginBottom: 8
-    }
-  }, d.merchantLogo ? /*#__PURE__*/React.createElement(Avatar, {
-    src: d.merchantLogo,
-    size: 56
-  }) : /*#__PURE__*/React.createElement(Avatar, {
-    size: 56
-  }, (d.merchantName || 'E')[0]), /*#__PURE__*/React.createElement(Title$6, {
-    level: 4,
-    style: {
-      margin: 0
-    }
-  }, d.merchantName || 'Unknown Merchant'), /*#__PURE__*/React.createElement(Text$6, {
-    type: "secondary",
-    style: {
-      marginTop: -4
-    }
-  }, "Total Billing"), /*#__PURE__*/React.createElement(Title$6, {
-    level: 3,
-    style: {
-      margin: 0,
-      color: BRAND_GREEN$1
-    }
-  }, currency, " ", amountStr(total))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 8
-    }
-  }, /*#__PURE__*/React.createElement(Title$6, {
-    level: 5,
-    style: {
-      marginBottom: 8
-    }
-  }, "Transaction Details"), /*#__PURE__*/React.createElement(KV, {
-    label: "Type",
-    value: d.type || 'Booking'
-  }), /*#__PURE__*/React.createElement(KV, {
-    label: "To",
-    value: d.id
-  }), /*#__PURE__*/React.createElement(KV, {
-    label: "Particulars",
-    value: d.particulars || 'Hotel Booking'
-  }), /*#__PURE__*/React.createElement(KV, {
-    label: "Billed Currency",
-    value: currency
-  }), /*#__PURE__*/React.createElement(KV, {
-    label: "Billed Amount",
-    value: "".concat(currency, " ").concat(amountStr((_d$billedAmount = d.billedAmount) !== null && _d$billedAmount !== void 0 ? _d$billedAmount : total))
-  }), /*#__PURE__*/React.createElement(KV, {
-    label: /*#__PURE__*/React.createElement("strong", null, "Total Billing"),
-    value: /*#__PURE__*/React.createElement("strong", {
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
       style: {
-        color: BRAND_GREEN$1
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: BRAND_LOGO$4,
+        size: 28
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+        strong: true,
+        style: {
+          fontSize: 16
+        },
+        children: "EVzone Pay"
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
       }
-    }, currency, " ", amountStr(total)),
-    withTopBorder: true
-  })), /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    size: "large",
-    shape: "round",
-    block: true,
-    style: {
-      marginTop: 16
-    },
-    onClick: onConfirm,
-    disabled: confirmDisabled,
-    loading: confirmLoading
-  }, "Confirm"));
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%',
+        marginBottom: 8
+      },
+      children: [d.merchantLogo ? /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: d.merchantLogo,
+        size: 56
+      }) : /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        size: 56,
+        children: (d.merchantName || 'E')[0]
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+        level: 4,
+        style: {
+          margin: 0
+        },
+        children: d.merchantName || 'Unknown Merchant'
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+        type: "secondary",
+        style: {
+          marginTop: -4
+        },
+        children: "Total Billing"
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$7, {
+        level: 3,
+        style: {
+          margin: 0,
+          color: BRAND_GREEN$1
+        },
+        children: [currency, " ", amountStr(total)]
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        marginTop: 8
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+        level: 5,
+        style: {
+          marginBottom: 8
+        },
+        children: "Transaction Details"
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: "Type",
+        value: d.type || 'Booking'
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: "To",
+        value: d.id
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: "Particulars",
+        value: d.particulars || 'Hotel Booking'
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: "Billed Currency",
+        value: currency
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: "Billed Amount",
+        value: "".concat(currency, " ").concat(amountStr((_d$billedAmount = d.billedAmount) !== null && _d$billedAmount !== void 0 ? _d$billedAmount : total))
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
+        label: /*#__PURE__*/jsxRuntimeExports.jsx("strong", {
+          children: "Total Billing"
+        }),
+        value: /*#__PURE__*/jsxRuntimeExports.jsxs("strong", {
+          style: {
+            color: BRAND_GREEN$1
+          },
+          children: [currency, " ", amountStr(total)]
+        }),
+        withTopBorder: true
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      style: {
+        marginTop: 16
+      },
+      onClick: onConfirm,
+      disabled: confirmDisabled,
+      loading: confirmLoading,
+      children: "Confirm"
+    })]
+  });
 }
 
 /** Left/right row used above */
@@ -2945,21 +3379,26 @@ function KV(_ref3) {
     value,
     withTopBorder = false
   } = _ref3;
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr auto',
       gap: 12,
       padding: '8px 4px',
       borderTop: withTopBorder ? '1px solid #eee' : undefined
-    }
-  }, /*#__PURE__*/React.createElement(Text$6, {
-    type: "secondary"
-  }, label), /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: 'right'
-    }
-  }, /*#__PURE__*/React.createElement(Text$6, null, value)));
+    },
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+      type: "secondary",
+      children: label
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        textAlign: 'right'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
+        children: value
+      })
+    })]
+  });
 }
 
 var uncurryThis$8 = functionUncurryThis;
@@ -3648,10 +4087,10 @@ fixRegExpWellKnownSymbolLogic('replace', function (_, nativeReplace, maybeCallNa
 }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
 var {
-  Title: Title$5,
-  Text: Text$5
+  Title: Title$6,
+  Text: Text$6
 } = Typography;
-var BRAND_LOGO$2 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+var BRAND_LOGO$3 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 var BRAND_GREEN = '#02CD8D';
 
 // Fallback rates only used when no server quote is provided
@@ -3699,7 +4138,7 @@ function EnterPasscode(_ref) {
   var pctText = n => "".concat((n * 100).toFixed(1), "%");
   var taxPctLabel = typeof (quote === null || quote === void 0 ? void 0 : quote.tax) === 'number' && typeof (quote === null || quote === void 0 ? void 0 : quote.amount) === 'number' ? "".concat((quote.tax / (quote.amount || 1) * 100).toFixed(1), "%") : pctText(FALLBACK_TAX_PCT);
   var feePctLabel = typeof (quote === null || quote === void 0 ? void 0 : quote.fee) === 'number' && typeof (quote === null || quote === void 0 ? void 0 : quote.amount) === 'number' ? "".concat((quote.fee / (quote.amount || 1) * 100).toFixed(1), "%") : pctText(FALLBACK_FEE_PCT);
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: true,
     centered: true,
     width: width,
@@ -3710,7 +4149,7 @@ function EnterPasscode(_ref) {
     bodyStyle: {
       padding: 20
     },
-    closeIcon: /*#__PURE__*/React.createElement("span", {
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
       style: {
         width: 28,
         height: 28,
@@ -3721,139 +4160,169 @@ function EnterPasscode(_ref) {
         justifyContent: 'center',
         color: '#fff',
         boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: BRAND_LOGO$3,
+        size: 28
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+        strong: true,
+        style: {
+          fontSize: 16
+        },
+        children: "EVzone Pay"
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
       }
-    }, /*#__PURE__*/React.createElement(CloseOutlined, null))
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    src: BRAND_LOGO$2,
-    size: 28
-  }), /*#__PURE__*/React.createElement(Text$5, {
-    strong: true,
-    style: {
-      fontSize: 16
-    }
-  }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: '1px dashed #e5e7eb',
-      margin: '12px -20px 16px'
-    }
-  }), /*#__PURE__*/React.createElement(Title$5, {
-    level: 4,
-    style: {
-      marginTop: 0,
-      color: BRAND_GREEN
-    }
-  }, "Merchant Info :"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '1fr auto',
-      alignItems: 'center',
-      gap: 12,
-      marginBottom: 12
-    }
-  }, /*#__PURE__*/React.createElement(Space, {
-    align: "center"
-  }, d.merchantLogo ? /*#__PURE__*/React.createElement(Avatar, {
-    src: d.merchantLogo,
-    size: 40
-  }) : /*#__PURE__*/React.createElement(Avatar, {
-    size: 40
-  }, (d.merchantName || 'E')[0]), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontWeight: 600
-    }
-  }, d.merchantName || 'Unknown Merchant'), /*#__PURE__*/React.createElement(Text$5, {
-    type: "secondary",
-    style: {
-      fontSize: 12
-    }
-  }, d.id))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: 'right'
-    }
-  }, /*#__PURE__*/React.createElement(Text$5, {
-    type: "secondary",
-    style: {
-      display: 'block',
-      fontSize: 12
-    }
-  }, "Amount"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontWeight: 700
-    }
-  }, currency, " ", fmt0(total)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      margin: '6px 0 6px'
-    }
-  }, /*#__PURE__*/React.createElement(Text$5, null, "Enter Passcode")), /*#__PURE__*/React.createElement(Input.Password, {
-    value: passcode,
-    onChange: onChange,
-    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022",
-    maxLength: 6,
-    inputMode: "numeric",
-    autoComplete: "one-time-code",
-    iconRender: visible => visible ? /*#__PURE__*/React.createElement(EyeTwoTone, null) : /*#__PURE__*/React.createElement(EyeInvisibleOutlined, null),
-    style: {
-      height: 40,
-      letterSpacing: 4,
-      fontWeight: 600
-    },
-    onPressEnter: () => passcode.length === 6 && !submitting && onSubmit()
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: '#e6f4ff',
-      borderRadius: 8,
-      padding: 12,
-      marginTop: 12,
-      display: 'grid',
-      gridTemplateColumns: '20px 1fr',
-      alignItems: 'flex-start',
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement(InfoCircleFilled, {
-    style: {
-      color: '#1677ff',
-      fontSize: 18,
-      lineHeight: '20px'
-    }
-  }), /*#__PURE__*/React.createElement(Text$5, {
-    style: {
-      color: '#1f1f1f'
-    }
-  }, "You are making a payment to ", /*#__PURE__*/React.createElement("b", null, d.merchantName || 'Unknown Merchant'), ". An amount of", ' ', /*#__PURE__*/React.createElement("b", null, currency, " ", fmt0(total)), " will be deducted from your wallet, including", ' ', /*#__PURE__*/React.createElement("b", null, taxPctLabel, " tax"), " (", currency, " ", fmt0(tax), ") and", ' ', /*#__PURE__*/React.createElement("b", null, feePctLabel, " wallet fee"), " (", currency, " ", fmt0(fee), ").")), /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    size: "large",
-    shape: "round",
-    block: true,
-    style: {
-      marginTop: 14
-    },
-    disabled: passcode.length !== 6 || submitting,
-    loading: submitting,
-    onClick: onSubmit
-  }, "Confirm"), /*#__PURE__*/React.createElement(Button, {
-    size: "large",
-    shape: "round",
-    block: true,
-    danger: true,
-    ghost: true,
-    style: {
-      marginTop: 10
-    },
-    onClick: onBack,
-    disabled: submitting
-  }, "Back"));
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
+      level: 4,
+      style: {
+        marginTop: 0,
+        color: BRAND_GREEN
+      },
+      children: "Merchant Info :"
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+        align: "center",
+        children: [d.merchantLogo ? /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+          src: d.merchantLogo,
+          size: 40
+        }) : /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+          size: 40,
+          children: (d.merchantName || 'E')[0]
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx("div", {
+            style: {
+              fontWeight: 600
+            },
+            children: d.merchantName || 'Unknown Merchant'
+          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+            type: "secondary",
+            style: {
+              fontSize: 12
+            },
+            children: d.id
+          })]
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          textAlign: 'right'
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+          type: "secondary",
+          style: {
+            display: 'block',
+            fontSize: 12
+          },
+          children: "Amount"
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+          style: {
+            fontWeight: 700
+          },
+          children: [currency, " ", fmt0(total)]
+        })]
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        margin: '6px 0 6px'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+        children: "Enter Passcode"
+      })
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Input.Password, {
+      value: passcode,
+      onChange: onChange,
+      placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022",
+      maxLength: 6,
+      inputMode: "numeric",
+      autoComplete: "one-time-code",
+      iconRender: visible => visible ? /*#__PURE__*/jsxRuntimeExports.jsx(EyeTwoTone, {}) : /*#__PURE__*/jsxRuntimeExports.jsx(EyeInvisibleOutlined, {}),
+      style: {
+        height: 40,
+        letterSpacing: 4,
+        fontWeight: 600
+      },
+      onPressEnter: () => passcode.length === 6 && !submitting && onSubmit()
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        background: '#e6f4ff',
+        borderRadius: 8,
+        padding: 12,
+        marginTop: 12,
+        display: 'grid',
+        gridTemplateColumns: '20px 1fr',
+        alignItems: 'flex-start',
+        gap: 8
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(InfoCircleFilled, {
+        style: {
+          color: '#1677ff',
+          fontSize: 18,
+          lineHeight: '20px'
+        }
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$6, {
+        style: {
+          color: '#1f1f1f'
+        },
+        children: ["You are making a payment to ", /*#__PURE__*/jsxRuntimeExports.jsx("b", {
+          children: d.merchantName || 'Unknown Merchant'
+        }), ". An amount of", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
+          children: [currency, " ", fmt0(total)]
+        }), " will be deducted from your wallet, including", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
+          children: [taxPctLabel, " tax"]
+        }), " (", currency, " ", fmt0(tax), ") and", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
+          children: [feePctLabel, " wallet fee"]
+        }), " (", currency, " ", fmt0(fee), ")."]
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      style: {
+        marginTop: 14
+      },
+      disabled: passcode.length !== 6 || submitting,
+      loading: submitting,
+      onClick: onSubmit,
+      children: "Confirm"
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+      size: "large",
+      shape: "round",
+      block: true,
+      danger: true,
+      ghost: true,
+      style: {
+        marginTop: 10
+      },
+      onClick: onBack,
+      disabled: submitting,
+      children: "Back"
+    })]
+  });
 }
 
 // src/PaymentSuccessModal.js
 var {
-  Title: Title$4,
-  Text: Text$4
+  Title: Title$5,
+  Text: Text$5
 } = Typography;
 
 // Smooth blue palette (sampled from your reference)
@@ -3888,7 +4357,7 @@ function PaymentSuccessModal(_ref) {
       return "".concat(cur, " ").concat(n.toLocaleString());
     }
   };
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
     centered: true,
     width: width,
@@ -3901,60 +4370,69 @@ function PaymentSuccessModal(_ref) {
       padding: 28,
       textAlign: 'center'
     },
-    className: "evz-success-modal"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "evz-badge",
-    "aria-hidden": true
-  }, /*#__PURE__*/React.createElement("svg", {
-    viewBox: "0 0 24 24",
-    width: "28",
-    height: "28",
-    fill: "none",
-    "aria-hidden": true
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M20 6L9 17l-5-5",
-    stroke: "#fff",
-    strokeWidth: "3",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }))), /*#__PURE__*/React.createElement(Title$4, {
-    level: 3,
-    style: {
-      marginTop: 14,
-      marginBottom: 10,
-      color: '#111827',
-      fontWeight: 700
-    }
-  }, title), showAmount && typeof amount === 'number' && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: -2,
-      marginBottom: 12,
-      color: '#4B5563',
-      fontWeight: 600
-    }
-  }, fmtAmount(amount, currency)), subtitle ? /*#__PURE__*/React.createElement(Text$4, {
-    type: "secondary",
-    style: {
-      display: 'block',
-      marginBottom: 12
-    }
-  }, subtitle) : null, /*#__PURE__*/React.createElement(Button, {
-    className: "evz-primary",
-    type: "primary",
-    size: "large",
-    shape: "round",
-    block: true,
-    onClick: onClose
-  }, "Done"), /*#__PURE__*/React.createElement("style", null, "\n        .evz-success-modal .ant-modal-content {\n          border-radius: 14px;\n        }\n\n        /* Blue circular badge */\n        .evz-badge {\n          margin: 0 auto 8px;\n          width: 72px;               /* \u2193 slightly reduced from 84px */\n          height: 72px;\n          border-radius: 50%;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          background: radial-gradient(100% 100% at 50% 0%, ".concat(BLUE_LIGHT, " 0%, ").concat(BLUE_BASE, " 100%);\n          box-shadow: 0 10px 28px rgba(23, 156, 252, 0.32);\n          animation: evzPop .26s ease-out;\n        }\n\n        /* Primary button in the smooth blue tone */\n        .evz-success-modal .evz-primary.ant-btn-primary {\n          background: ").concat(BLUE_BASE, ";\n          border-color: ").concat(BLUE_BASE, ";\n          font-weight: 600;\n          height: 40px;\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:hover,\n        .evz-success-modal .evz-primary.ant-btn-primary:focus {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:active {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n          filter: saturate(1.05);\n        }\n\n        @keyframes evzPop {\n          0%   { transform: scale(.92); opacity: .65; }\n          100% { transform: scale(1);   opacity: 1; }\n        }\n\n        /* Respect reduced motion */\n        @media (prefers-reduced-motion: reduce) {\n          .evz-badge { animation: none !important; }\n        }\n      ")));
+    className: "evz-success-modal",
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      className: "evz-badge",
+      "aria-hidden": true,
+      children: /*#__PURE__*/jsxRuntimeExports.jsx("svg", {
+        viewBox: "0 0 24 24",
+        width: "28",
+        height: "28",
+        fill: "none",
+        "aria-hidden": true,
+        children: /*#__PURE__*/jsxRuntimeExports.jsx("path", {
+          d: "M20 6L9 17l-5-5",
+          stroke: "#fff",
+          strokeWidth: "3",
+          strokeLinecap: "round",
+          strokeLinejoin: "round"
+        })
+      })
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
+      level: 3,
+      style: {
+        marginTop: 14,
+        marginBottom: 10,
+        color: '#111827',
+        fontWeight: 700
+      },
+      children: title
+    }), showAmount && typeof amount === 'number' && /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        marginTop: -2,
+        marginBottom: 12,
+        color: '#4B5563',
+        fontWeight: 600
+      },
+      children: fmtAmount(amount, currency)
+    }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
+      type: "secondary",
+      style: {
+        display: 'block',
+        marginBottom: 12
+      },
+      children: subtitle
+    }) : null, /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+      className: "evz-primary",
+      type: "primary",
+      size: "large",
+      shape: "round",
+      block: true,
+      onClick: onClose,
+      children: "Done"
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
+      children: "\n        .evz-success-modal .ant-modal-content {\n          border-radius: 14px;\n        }\n\n        /* Blue circular badge */\n        .evz-badge {\n          margin: 0 auto 8px;\n          width: 72px;               /* \u2193 slightly reduced from 84px */\n          height: 72px;\n          border-radius: 50%;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          background: radial-gradient(100% 100% at 50% 0%, ".concat(BLUE_LIGHT, " 0%, ").concat(BLUE_BASE, " 100%);\n          box-shadow: 0 10px 28px rgba(23, 156, 252, 0.32);\n          animation: evzPop .26s ease-out;\n        }\n\n        /* Primary button in the smooth blue tone */\n        .evz-success-modal .evz-primary.ant-btn-primary {\n          background: ").concat(BLUE_BASE, ";\n          border-color: ").concat(BLUE_BASE, ";\n          font-weight: 600;\n          height: 40px;\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:hover,\n        .evz-success-modal .evz-primary.ant-btn-primary:focus {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:active {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n          filter: saturate(1.05);\n        }\n\n        @keyframes evzPop {\n          0%   { transform: scale(.92); opacity: .65; }\n          100% { transform: scale(1);   opacity: 1; }\n        }\n\n        /* Respect reduced motion */\n        @media (prefers-reduced-motion: reduce) {\n          .evz-badge { animation: none !important; }\n        }\n      ")
+    })]
+  });
 }
 
 // src/PaymentFailedModal.js
 var {
-  Title: Title$3,
+  Title: Title$4,
   Paragraph: Paragraph$1,
-  Text: Text$3
+  Text: Text$4
 } = Typography;
-var BRAND_LOGO$1 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+var BRAND_LOGO$2 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 var BRAND_RED$1 = '#ff4d4f';
 function PaymentFailedModal(_ref) {
   var {
@@ -3967,7 +4445,7 @@ function PaymentFailedModal(_ref) {
     zIndex = 2000,
     width = 460
   } = _ref;
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
     centered: true,
     width: width,
@@ -3981,7 +4459,7 @@ function PaymentFailedModal(_ref) {
     },
     className: "evz-modal" // ✅ enables smooth pop-in/out (global CSS you added)
     ,
-    closeIcon: /*#__PURE__*/React.createElement("span", {
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
       style: {
         width: 28,
         height: 28,
@@ -3993,88 +4471,100 @@ function PaymentFailedModal(_ref) {
         color: '#fff',
         boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
       },
-      "aria-label": "Close"
-    }, /*#__PURE__*/React.createElement(CloseOutlined, null))
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    src: BRAND_LOGO$1,
-    size: 28
-  }), /*#__PURE__*/React.createElement(Text$3, {
-    strong: true,
-    style: {
-      fontSize: 16
-    }
-  }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: '1px dashed #e5e7eb',
-      margin: '12px -20px 16px'
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 60,
-      height: 60,
-      borderRadius: '50%',
-      background: BRAND_RED$1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: '0 auto 12px',
-      boxShadow: '0 6px 16px rgba(255,77,79,0.28)'
-    },
-    "aria-hidden": true
-  }, /*#__PURE__*/React.createElement(CloseOutlined, {
-    style: {
-      color: '#fff',
-      fontSize: 34,
-      fontWeight: 700
-    }
-  })), /*#__PURE__*/React.createElement(Space, {
-    direction: "vertical",
-    align: "center",
-    style: {
-      width: '100%'
-    }
-  }, /*#__PURE__*/React.createElement(Title$3, {
-    level: 3,
-    style: {
-      margin: 0,
-      color: BRAND_RED$1
-    }
-  }, "Payment Failed"), /*#__PURE__*/React.createElement(Paragraph$1, {
-    style: {
-      marginTop: 8,
-      textAlign: 'center',
-      color: '#444'
-    }
-  }, "We couldn\u2019t complete the payment. Please check your wallet for more details and try again.", reason ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Text$3, {
-    type: "secondary",
-    style: {
-      fontSize: 12
-    }
-  }, "Reason: ", reason)) : null), /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    danger: true,
-    shape: "round",
-    size: "middle",
-    onClick: onDetails || onClose,
-    style: {
-      width: 140
-    }
-  }, "Details")));
+      "aria-label": "Close",
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: BRAND_LOGO$2,
+        size: 28
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
+        strong: true,
+        style: {
+          fontSize: 16
+        },
+        children: "EVzone Pay"
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        width: 60,
+        height: 60,
+        borderRadius: '50%',
+        background: BRAND_RED$1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 12px',
+        boxShadow: '0 6px 16px rgba(255,77,79,0.28)'
+      },
+      "aria-hidden": true,
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {
+        style: {
+          color: '#fff',
+          fontSize: 34,
+          fontWeight: 700
+        }
+      })
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
+        level: 3,
+        style: {
+          margin: 0,
+          color: BRAND_RED$1
+        },
+        children: "Payment Failed"
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Paragraph$1, {
+        style: {
+          marginTop: 8,
+          textAlign: 'center',
+          color: '#444'
+        },
+        children: ["We couldn\u2019t complete the payment. Please check your wallet for more details and try again.", reason ? /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$4, {
+            type: "secondary",
+            style: {
+              fontSize: 12
+            },
+            children: ["Reason: ", reason]
+          })]
+        }) : null]
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+        type: "primary",
+        danger: true,
+        shape: "round",
+        size: "middle",
+        onClick: onDetails || onClose,
+        style: {
+          width: 140
+        },
+        children: "Details"
+      })]
+    })]
+  });
 }
 
 // src/InsufficientFundsModal.js
 var {
-  Title: Title$2,
+  Title: Title$3,
   Paragraph,
-  Text: Text$2
+  Text: Text$3
 } = Typography;
-var BRAND_LOGO = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+var BRAND_LOGO$1 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 var BRAND_ORANGE = '#FF9800';
 var BRAND_RED = '#ff4d4f';
 var PRIMARY_BLUE = '#1677ff';
@@ -4097,7 +4587,7 @@ function InsufficientFundsModal(_ref) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
     centered: true,
     width: width,
@@ -4109,7 +4599,7 @@ function InsufficientFundsModal(_ref) {
     bodyStyle: {
       padding: 20
     },
-    closeIcon: /*#__PURE__*/React.createElement("span", {
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
       style: {
         width: 28,
         height: 28,
@@ -4120,147 +4610,171 @@ function InsufficientFundsModal(_ref) {
         justifyContent: 'center',
         color: '#fff',
         boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: BRAND_LOGO$1,
+        size: 28
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+        strong: true,
+        style: {
+          fontSize: 16
+        },
+        children: "EVzone Pay"
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
       }
-    }, /*#__PURE__*/React.createElement(CloseOutlined, null))
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    src: BRAND_LOGO,
-    size: 28
-  }), /*#__PURE__*/React.createElement(Text$2, {
-    strong: true,
-    style: {
-      fontSize: 16
-    }
-  }, "EVzone Pay")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: '1px dashed #e5e7eb',
-      margin: '12px -20px 16px'
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 60,
-      height: 60,
-      borderRadius: '50%',
-      background: BRAND_ORANGE,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: '0 auto 12px',
-      boxShadow: '0 6px 16px rgba(255,152,0,0.28)'
-    }
-  }, /*#__PURE__*/React.createElement(CloseOutlined, {
-    style: {
-      color: '#fff',
-      fontSize: 34,
-      fontWeight: 700
-    }
-  })), /*#__PURE__*/React.createElement(Space, {
-    direction: "vertical",
-    align: "center",
-    style: {
-      width: '100%'
-    }
-  }, /*#__PURE__*/React.createElement(Title$2, {
-    level: 3,
-    style: {
-      margin: 0,
-      color: BRAND_ORANGE
-    }
-  }, "Insufficient Funds"), !hasNumbers ? /*#__PURE__*/React.createElement(Paragraph, {
-    style: {
-      marginTop: 8,
-      textAlign: 'center',
-      color: '#444'
-    }
-  }, "The account did not have sufficient funds to cover the transaction amount at the time of the transaction.") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Paragraph, {
-    style: {
-      marginTop: 8,
-      textAlign: 'center',
-      color: '#444'
-    }
-  }, "Your wallet balance is lower than the total required for this payment."), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: '100%',
-      background: '#fffbe6',
-      border: '1px dashed #ffe58f',
-      borderRadius: 10,
-      padding: 12
-    }
-  }, /*#__PURE__*/React.createElement(Row, {
-    label: "Balance",
-    value: "".concat(currency, " ").concat(fmt(balance))
-  }), /*#__PURE__*/React.createElement(Row, {
-    label: "Required",
-    value: "".concat(currency, " ").concat(fmt(requiredTotal))
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '1fr auto',
-      gap: 8,
-      paddingTop: 8,
-      marginTop: 6,
-      borderTop: '1px solid #fff0b3'
-    }
-  }, /*#__PURE__*/React.createElement(Text$2, {
-    strong: true
-  }, "Shortfall"), /*#__PURE__*/React.createElement(Text$2, {
-    strong: true,
-    style: {
-      color: BRAND_ORANGE
-    }
-  }, currency, " ", fmt(shortfall))))), /*#__PURE__*/React.createElement(Space, {
-    size: "middle",
-    style: {
-      marginTop: 12
-    }
-  }, /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    shape: "round",
-    size: "middle",
-    onClick: onAddFunds || onClose,
-    style: {
-      width: 160
-    }
-  }, "Add Funds"), /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    ghost: true,
-    className: "evz-try",
-    shape: "round",
-    size: "middle",
-    onClick: onRetry || onClose,
-    style: {
-      width: 160,
-      color: PRIMARY_BLUE,
-      borderColor: PRIMARY_BLUE
-    }
-  }, "Try Again"))), /*#__PURE__*/React.createElement("style", null, "\n        /* ensure ghost button text/border stay visible even if a global .ant-btn { color:#fff } exists */\n        .evz-try.ant-btn {\n          color: ".concat(PRIMARY_BLUE, ";\n          border-color: ").concat(PRIMARY_BLUE, ";\n          background: transparent;\n        }\n        .evz-try.ant-btn:hover,\n        .evz-try.ant-btn:focus {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.06);\n        }\n        .evz-try.ant-btn:active {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.10);\n        }\n      ")));
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        width: 60,
+        height: 60,
+        borderRadius: '50%',
+        background: BRAND_ORANGE,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 12px',
+        boxShadow: '0 6px 16px rgba(255,152,0,0.28)'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {
+        style: {
+          color: '#fff',
+          fontSize: 34,
+          fontWeight: 700
+        }
+      })
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
+        level: 3,
+        style: {
+          margin: 0,
+          color: BRAND_ORANGE
+        },
+        children: "Insufficient Funds"
+      }), !hasNumbers ? /*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
+        style: {
+          marginTop: 8,
+          textAlign: 'center',
+          color: '#444'
+        },
+        children: "The account did not have sufficient funds to cover the transaction amount at the time of the transaction."
+      }) : /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
+          style: {
+            marginTop: 8,
+            textAlign: 'center',
+            color: '#444'
+          },
+          children: "Your wallet balance is lower than the total required for this payment."
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+          style: {
+            width: '100%',
+            background: '#fffbe6',
+            border: '1px dashed #ffe58f',
+            borderRadius: 10,
+            padding: 12
+          },
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Row, {
+            label: "Balance",
+            value: "".concat(currency, " ").concat(fmt(balance))
+          }), /*#__PURE__*/jsxRuntimeExports.jsx(Row, {
+            label: "Required",
+            value: "".concat(currency, " ").concat(fmt(requiredTotal))
+          }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+            style: {
+              display: 'grid',
+              gridTemplateColumns: '1fr auto',
+              gap: 8,
+              paddingTop: 8,
+              marginTop: 6,
+              borderTop: '1px solid #fff0b3'
+            },
+            children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+              strong: true,
+              children: "Shortfall"
+            }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$3, {
+              strong: true,
+              style: {
+                color: BRAND_ORANGE
+              },
+              children: [currency, " ", fmt(shortfall)]
+            })]
+          })]
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+        size: "middle",
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          type: "primary",
+          shape: "round",
+          size: "middle",
+          onClick: onAddFunds || onClose,
+          style: {
+            width: 160
+          },
+          children: "Add Funds"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          type: "primary",
+          ghost: true,
+          className: "evz-try",
+          shape: "round",
+          size: "middle",
+          onClick: onRetry || onClose,
+          style: {
+            width: 160,
+            color: PRIMARY_BLUE,
+            borderColor: PRIMARY_BLUE
+          },
+          children: "Try Again"
+        })]
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
+      children: "\n        /* ensure ghost button text/border stay visible even if a global .ant-btn { color:#fff } exists */\n        .evz-try.ant-btn {\n          color: ".concat(PRIMARY_BLUE, ";\n          border-color: ").concat(PRIMARY_BLUE, ";\n          background: transparent;\n        }\n        .evz-try.ant-btn:hover,\n        .evz-try.ant-btn:focus {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.06);\n        }\n        .evz-try.ant-btn:active {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.10);\n        }\n      ")
+    })]
+  });
 }
 function Row(_ref2) {
   var {
     label,
     value
   } = _ref2;
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr auto',
       gap: 8,
       padding: '4px 0'
-    }
-  }, /*#__PURE__*/React.createElement(Text$2, {
-    type: "secondary"
-  }, label), /*#__PURE__*/React.createElement(Text$2, null, value));
+    },
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+      type: "secondary",
+      children: label
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+      children: value
+    })]
+  });
 }
 
 // src/LoadingOverlay.jsx
 var {
-  Title: Title$1,
-  Text: Text$1
+  Title: Title$2,
+  Text: Text$2
 } = Typography;
 
 /**
@@ -4285,7 +4799,7 @@ var LoadingOverlay = _ref => {
     zIndex = 2000,
     width = 420
   } = _ref;
-  return /*#__PURE__*/React.createElement(Modal, {
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
     footer: null,
     closable: false,
@@ -4299,35 +4813,174 @@ var LoadingOverlay = _ref => {
       textAlign: 'center'
     },
     className: "evz-modal" // plays nicely if you have global modal animations
-  }, /*#__PURE__*/React.createElement(Space, {
-    direction: "vertical",
-    align: "center",
-    size: "large",
-    style: {
-      width: '100%'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "evz-pulse"
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    src: logoSrc,
-    size: 96,
-    style: {
-      background: '#fff'
-    }
-  })), /*#__PURE__*/React.createElement(Title$1, {
-    level: 3,
-    style: {
-      margin: '6px 0 0',
-      fontWeight: 800,
-      letterSpacing: '.2px',
-      color: brandColor,
-      textShadow: '0 2px 12px rgba(217,119,6,.35)',
-      animation: "evzBlink ".concat(blinkMs, "ms ease-in-out infinite")
-    }
-  }, brand), tip ? /*#__PURE__*/React.createElement(Text$1, {
-    className: "evz-tip"
-  }, tip) : null), /*#__PURE__*/React.createElement("style", null, "\n        @keyframes evzBlink {\n          0%,100% { opacity: 1; filter: drop-shadow(0 0 0 rgba(217,119,6,0)); }\n          50%     { opacity: .72; filter: drop-shadow(0 0 6px rgba(217,119,6,.45)); }\n        }\n\n        .evz-pulse {\n          display: inline-flex;\n          padding: 6px;\n          border-radius: 50%;\n          background: radial-gradient(65% 65% at 50% 50%, rgba(2,205,141,.18), rgba(2,205,141,0) 70%);\n          position: relative;\n        }\n        .evz-pulse::before {\n          content: '';\n          position: absolute;\n          inset: -8px;\n          border-radius: 50%;\n          border: 2px solid rgba(2,205,141,.35);\n          animation: evzPulse 1.8s ease-out infinite;\n        }\n        @keyframes evzPulse {\n          0%   { transform: scale(.85); opacity: .6; }\n          70%  { transform: scale(1.15); opacity: 0; }\n          100% { transform: scale(1.15); opacity: 0; }\n        }\n\n        .evz-tip {\n          display: block;\n          margin-top: 2px;\n          font-size: 13px;\n          letter-spacing: .2px;\n          background: linear-gradient(90deg,#9aa6af 0%,#ccd3d8 50%,#9aa6af 100%);\n          -webkit-background-clip: text;\n          background-clip: text;\n          color: transparent;\n          -webkit-text-fill-color: transparent; /* WebKit fix */\n          background-size: 200% 100%;\n          animation: evzShimmer 2.2s linear infinite;\n        }\n        @keyframes evzShimmer {\n          0% { background-position: 200% 0; }\n          100% { background-position: -200% 0; }\n        }\n\n        /* Respect users who prefer reduced motion */\n        @media (prefers-reduced-motion: reduce) {\n          .evz-tip { animation: none; }\n          .evz-pulse::before { animation: none; }\n        }\n      "));
+    ,
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      align: "center",
+      size: "large",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx("div", {
+        className: "evz-pulse",
+        children: /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+          src: logoSrc,
+          size: 96,
+          style: {
+            background: '#fff'
+          }
+        })
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
+        level: 3,
+        style: {
+          margin: '6px 0 0',
+          fontWeight: 800,
+          letterSpacing: '.2px',
+          color: brandColor,
+          textShadow: '0 2px 12px rgba(217,119,6,.35)',
+          animation: "evzBlink ".concat(blinkMs, "ms ease-in-out infinite")
+        },
+        children: brand
+      }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
+        className: "evz-tip",
+        children: tip
+      }) : null]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
+      children: "\n        @keyframes evzBlink {\n          0%,100% { opacity: 1; filter: drop-shadow(0 0 0 rgba(217,119,6,0)); }\n          50%     { opacity: .72; filter: drop-shadow(0 0 6px rgba(217,119,6,.45)); }\n        }\n\n        .evz-pulse {\n          display: inline-flex;\n          padding: 6px;\n          border-radius: 50%;\n          background: radial-gradient(65% 65% at 50% 50%, rgba(2,205,141,.18), rgba(2,205,141,0) 70%);\n          position: relative;\n        }\n        .evz-pulse::before {\n          content: '';\n          position: absolute;\n          inset: -8px;\n          border-radius: 50%;\n          border: 2px solid rgba(2,205,141,.35);\n          animation: evzPulse 1.8s ease-out infinite;\n        }\n        @keyframes evzPulse {\n          0%   { transform: scale(.85); opacity: .6; }\n          70%  { transform: scale(1.15); opacity: 0; }\n          100% { transform: scale(1.15); opacity: 0; }\n        }\n\n        .evz-tip {\n          display: block;\n          margin-top: 2px;\n          font-size: 13px;\n          letter-spacing: .2px;\n          background: linear-gradient(90deg,#9aa6af 0%,#ccd3d8 50%,#9aa6af 100%);\n          -webkit-background-clip: text;\n          background-clip: text;\n          color: transparent;\n          -webkit-text-fill-color: transparent; /* WebKit fix */\n          background-size: 200% 100%;\n          animation: evzShimmer 2.2s linear infinite;\n        }\n        @keyframes evzShimmer {\n          0% { background-position: 200% 0; }\n          100% { background-position: -200% 0; }\n        }\n\n        /* Respect users who prefer reduced motion */\n        @media (prefers-reduced-motion: reduce) {\n          .evz-tip { animation: none; }\n          .evz-pulse::before { animation: none; }\n        }\n      "
+    })]
+  });
 };
+
+var {
+  Title: Title$1,
+  Text: Text$1
+} = Typography;
+var BRAND_LOGO = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+
+// Smooth Airbnb-style blue gradient
+var BLUE_START = '#2EA1FF';
+var BLUE_END = '#1B8CFF';
+
+/**
+ * Props:
+ *  - open?: boolean
+ *  - onClose?: () => void   // usually not closable while processing
+ *  - src?: string           // GIF/MP4/IMG URL (defaults to your Cloudinary GIF)
+ *  - message?: string       // big heading (default: "Processing")
+ *  - subText?: string       // small line below
+ *  - width?: number         // default 480
+ *  - zIndex?: number        // default 2000
+ *  - roundedSize?: number   // square preview size (default 160)
+ *  - loop?: boolean         // if a <video> is used
+ *
+ * Notes:
+ *  - File extension decides whether to render <img> (gif/png/jpg/svg) or <video>.
+ */
+function ProcessingModal(_ref) {
+  var {
+    open = true,
+    onClose,
+    src = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif',
+    message = 'Processing',
+    subText = '',
+    width = 480,
+    zIndex = 2000,
+    roundedSize = 160,
+    loop = true
+  } = _ref;
+  var isGif = typeof src === 'string' && /\.(gif|png|jpe?g|svg)(\?.*)?$/i.test(src);
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
+    open: open,
+    centered: true,
+    width: width,
+    footer: null,
+    onCancel: onClose,
+    maskClosable: false,
+    closable: false // processing should not be dismissible
+    ,
+    zIndex: zIndex,
+    title: null,
+    bodyStyle: {
+      padding: 20,
+      textAlign: 'center'
+    },
+    className: "evz-modal",
+    children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
+        src: BRAND_LOGO,
+        size: 28
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        strong: true,
+        style: {
+          fontSize: 16
+        },
+        children: "EVzone Pay"
+      })]
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      "aria-hidden": true,
+      style: {
+        margin: '8px auto 12px',
+        width: roundedSize,
+        height: roundedSize,
+        borderRadius: 16,
+        background: "linear-gradient(180deg, ".concat(BLUE_START, " 0%, ").concat(BLUE_END, " 100%)"),
+        boxShadow: '0 12px 34px rgba(30,140,255,0.28)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      children: isGif ? /*#__PURE__*/jsxRuntimeExports.jsx("img", {
+        src: src,
+        alt: "",
+        style: {
+          maxWidth: '82%',
+          maxHeight: '82%',
+          borderRadius: 12,
+          objectFit: 'contain',
+          pointerEvents: 'none',
+          userSelect: 'none'
+        },
+        crossOrigin: "anonymous",
+        draggable: false
+      }) : /*#__PURE__*/jsxRuntimeExports.jsx("video", {
+        src: src,
+        autoPlay: true,
+        muted: true,
+        playsInline: true,
+        loop: loop,
+        preload: "auto",
+        style: {
+          maxWidth: '82%',
+          maxHeight: '82%',
+          borderRadius: 12,
+          objectFit: 'contain'
+        }
+      })
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+      level: 4,
+      style: {
+        margin: '0 0 4px'
+      },
+      children: message
+    }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+      type: "secondary",
+      style: {
+        display: 'block'
+      },
+      children: subText
+    }) : null]
+  });
+}
 
 var DESCRIPTORS = descriptors;
 var uncurryThis$2 = functionUncurryThis;
@@ -4726,22 +5379,18 @@ var {
   Text
 } = Typography;
 
+// Default processing GIF (hosted)
+var DEFAULT_PROCESSING_GIF = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
+
 /**
  * Props:
- *  - publishableKey: string              // e.g. "pk_test_123"
- *  - enterpriseWalletNo: string          // enterprise wallet number
- *  - userWalletId: string                // paying user's wallet id
- *
- *  - amount: number
- *  - type?: string
- *  - particulars?: string
- *  - currency?: string                   // optional; server billingCurrency will override
- *  - merchantName?: string               // optional; server enterprise.name will override if missing
- *  - merchantLogo?: string
- *
- *  - zIndex?: number (default 2000)
+ *  - publishableKey, enterpriseWalletNo, userWalletId
+ *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
+ *  - processingSrc?: string     // override GIF/MP4 url
+ *  - minProcessingMs?: number   // minimum animation time (default 5000ms)
+ *  - zIndex?: number
  *  - onClose?: () => void
- *  - onSuccess?: (receipt) => void
+ *  - onSuccess?: (payload) => void
  */
 function WalletPaymentForm(_ref) {
   var _session$enterprise3, _session$enterprise4;
@@ -4756,21 +5405,28 @@ function WalletPaymentForm(_ref) {
     currency,
     merchantName,
     merchantLogo,
+    processingSrc,
+    // optional override (can be gif or mp4)
+    minProcessingMs = 5000,
+    // 5s minimum
+
     onClose: _onClose,
     onSuccess
   } = _ref;
   // ---------- Server-driven state ----------
   var [view, setView] = useState('loading'); // 'loading' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
   var [errorMsg, setErrorMsg] = useState('');
-  var [session, setSession] = useState(null); // { sessionId, enterprise, user, billingCurrency, rates, ...}
-  var [quote, setQuote] = useState(null); // { quoteId, total, amount, tax, fee, currency, expiresAt }
+  var [session, setSession] = useState(null);
+  var [quote, setQuote] = useState(null);
 
   // UI state
   var [passcode, setPasscode] = useState('');
   var [submitting, setSubmitting] = useState(false);
+  var [processing, setProcessing] = useState(null); // 'quote' | 'charge' | null
+
   var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
-  // ---------- API client (base URL is taken from src/sdk/constants.js) ----------
+  // ---------- API client ----------
   var api = useMemo(() => {
     if (!publishableKey) return null;
     return createPaykitClient({
@@ -4778,14 +5434,33 @@ function WalletPaymentForm(_ref) {
     });
   }, [publishableKey]);
 
-  // ---------- Boot: initSession (keeps your ~7s overlay) with unmount guard ----------
+  // tiny util
+  var wait = ms => new Promise(r => setTimeout(r, ms));
+
+  // Enforce minimum visible duration for the processing animation
+  function withMinProcessing(_x, _x2) {
+    return _withMinProcessing.apply(this, arguments);
+  } // ---------- Boot: initSession ----------
+  function _withMinProcessing() {
+    _withMinProcessing = _asyncToGenerator(function* (kind, task) {
+      setProcessing(kind);
+      var start = Date.now();
+      try {
+        return yield task();
+      } finally {
+        var elapsed = Date.now() - start;
+        var remain = Math.max(0, Number(minProcessingMs) - elapsed);
+        if (remain > 0) yield wait(remain);
+        setProcessing(null);
+      }
+    });
+    return _withMinProcessing.apply(this, arguments);
+  }
   var boot = useCallback(/*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(function* (signal) {
       setErrorMsg('');
       setQuote(null);
       setPasscode('');
-
-      // basic param checks
       if (!api) {
         if (!(signal !== null && signal !== void 0 && signal.aborted)) {
           setErrorMsg('SDK not configured: missing publishableKey.');
@@ -4807,12 +5482,11 @@ function WalletPaymentForm(_ref) {
         }
         return;
       }
-      var wait = ms => new Promise(r => setTimeout(r, ms));
       try {
         var [initRes] = yield Promise.all([api.initSession({
           enterpriseWalletNo,
           userWalletId
-        }), wait(7000) // keep your premium overlay timing
+        }), wait(7000) // preserve your premium overlay timing
         ]);
         if (signal !== null && signal !== void 0 && signal.aborted) return;
         setSession(initRes);
@@ -4823,7 +5497,7 @@ function WalletPaymentForm(_ref) {
         setView('invalid');
       }
     });
-    return function (_x) {
+    return function (_x3) {
       return _ref2.apply(this, arguments);
     };
   }(), [api, enterpriseWalletNo, userWalletId, amountValid]);
@@ -4834,7 +5508,7 @@ function WalletPaymentForm(_ref) {
     return () => ctrl.abort();
   }, [boot]);
 
-  // ---------- Build display details for your components ----------
+  // ---------- Details for display ----------
   var details = useMemo(() => {
     var _session$enterprise, _session$enterprise2, _quote$total;
     var billingCurrency = (session === null || session === void 0 ? void 0 : session.billingCurrency) || currency || 'UGX';
@@ -4846,7 +5520,6 @@ function WalletPaymentForm(_ref) {
       particulars: particulars || 'Hotel Booking',
       billedCurrency: billingCurrency,
       billedAmount: amount,
-      // Prefer server quote.total (includes fees/taxes). Fallback to amount until quote exists.
       totalBilling: (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : amount,
       merchantName: mName,
       merchantLogo: merchantLogo || ''
@@ -4861,19 +5534,13 @@ function WalletPaymentForm(_ref) {
       setErrorMsg('');
       try {
         var _session$user;
-        var q = yield api.quote({
+        var q = yield withMinProcessing('quote', () => api.quote({
           sessionId: session.sessionId,
           amount
-        });
+        }));
         setQuote(q);
-
-        // client-side balance check with server total
         var balance = Number((session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.balance) || 0);
-        if (balance < Number(q.total || 0)) {
-          setView('insufficient');
-        } else {
-          setView('passcode');
-        }
+        if (balance < Number(q.total || 0)) setView('insufficient');else setView('passcode');
       } catch (e) {
         setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Could not fetch quote.');
         setView('failed');
@@ -4892,13 +5559,11 @@ function WalletPaymentForm(_ref) {
       setSubmitting(true);
       setErrorMsg('');
       try {
-        var res = yield api.charge({
+        var res = yield withMinProcessing('charge', () => api.charge({
           sessionId: session.sessionId,
           quoteId: quote.quoteId,
           passcode
-        });
-
-        // success
+        }));
         setView('success');
         onSuccess === null || onSuccess === void 0 ? void 0 : onSuccess({
           transactionId: (res === null || res === void 0 ? void 0 : res.chargeId) || (quote === null || quote === void 0 ? void 0 : quote.quoteId),
@@ -4912,9 +5577,7 @@ function WalletPaymentForm(_ref) {
           receipt: res === null || res === void 0 ? void 0 : res.receipt
         });
       } catch (e) {
-        if ((e === null || e === void 0 ? void 0 : e.code) === 'INSUFFICIENT_FUNDS') {
-          setView('insufficient');
-        } else {
+        if ((e === null || e === void 0 ? void 0 : e.code) === 'INSUFFICIENT_FUNDS') setView('insufficient');else {
           setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Payment failed.');
           setView('failed');
         }
@@ -4929,55 +5592,54 @@ function WalletPaymentForm(_ref) {
   var closeAndReset = () => {
     setPasscode('');
     setQuote(null);
-    setView('summary'); // keep flow open; host app may also close wrapper
+    setView('summary');
     _onClose === null || _onClose === void 0 ? void 0 : _onClose();
   };
 
   // ---------- Render helpers ----------
-  var renderLoading = () => /*#__PURE__*/React.createElement(LoadingOverlay, {
+  var renderLoading = () => /*#__PURE__*/jsxRuntimeExports.jsx(LoadingOverlay, {
     open: true,
     zIndex: zIndex,
     brand: "EVzone Pay",
     tip: "Preparing secure checkout\u2026"
   });
-  var renderInvalid = () => /*#__PURE__*/React.createElement(Modal, {
+  var renderInvalid = () => /*#__PURE__*/jsxRuntimeExports.jsx(Modal, {
     open: true,
     centered: true,
     footer: null,
     onCancel: closeAndReset,
     zIndex: zIndex,
-    maskClosable: false
-  }, /*#__PURE__*/React.createElement(Space, {
-    direction: "vertical",
-    align: "center",
-    style: {
-      width: '100%'
-    }
-  }, /*#__PURE__*/React.createElement(Title, {
-    level: 4,
-    style: {
-      margin: 0
-    }
-  }, "Cannot Continue"), /*#__PURE__*/React.createElement(Text, {
-    type: "secondary"
-  }, errorMsg || 'Invalid configuration.'), /*#__PURE__*/React.createElement(Button, {
-    type: "primary",
-    onClick: closeAndReset
-  }, "Close")));
-
-  // ⬇️ Summary (server enterprise/currency + live total when quote exists)
-  var renderSummary = () => /*#__PURE__*/React.createElement(TransactionSummary, {
+    maskClosable: false,
+    children: /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      align: "center",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title, {
+        level: 4,
+        style: {
+          margin: 0
+        },
+        children: "Cannot Continue"
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text, {
+        type: "secondary",
+        children: errorMsg || 'Invalid configuration.'
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+        type: "primary",
+        onClick: closeAndReset,
+        children: "Close"
+      })]
+    })
+  });
+  var renderSummary = () => /*#__PURE__*/jsxRuntimeExports.jsx(TransactionSummary, {
     transactionDetails: details,
     onConfirm: handleConfirm,
-    onCancel: closeAndReset
-    // If your TransactionSummary supports these, it’ll show spinner/disable:
-    ,
+    onCancel: closeAndReset,
     confirmDisabled: submitting,
     confirmLoading: submitting
   });
-
-  // ⬇️ Passcode (shows server totals through details.totalBilling)
-  var renderPasscode = () => /*#__PURE__*/React.createElement(EnterPasscode, {
+  var renderPasscode = () => /*#__PURE__*/jsxRuntimeExports.jsx(EnterPasscode, {
     passcode: passcode,
     setPasscode: setPasscode,
     transactionDetails: details,
@@ -4987,14 +5649,11 @@ function WalletPaymentForm(_ref) {
     quote: quote
   });
 
-  // ---------- Router ----------
-  if (view === 'loading') return renderLoading();
-  if (view === 'invalid') return renderInvalid();
-  if (view === 'summary') return renderSummary();
-  if (view === 'passcode') return renderPasscode();
-  if (view === 'success') {
+  // ---------- Decide which modal to show ----------
+  var content = null;
+  if (view === 'loading') content = renderLoading();else if (view === 'invalid') content = renderInvalid();else if (view === 'summary') content = renderSummary();else if (view === 'passcode') content = renderPasscode();else if (view === 'success') {
     var _quote$total2;
-    return /*#__PURE__*/React.createElement(PaymentSuccessModal, {
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
       open: true,
       amount: (_quote$total2 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total2 !== void 0 ? _quote$total2 : amount,
       currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
@@ -5004,24 +5663,36 @@ function WalletPaymentForm(_ref) {
         _onClose === null || _onClose === void 0 ? void 0 : _onClose();
       }
     });
-  }
-  if (view === 'failed') {
-    return /*#__PURE__*/React.createElement(PaymentFailedModal, {
+  } else if (view === 'failed') {
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentFailedModal, {
       open: true,
       zIndex: zIndex,
-      reason: errorMsg // safe if component ignores it
+      reason: errorMsg,
+      onClose: () => setView('summary')
+    });
+  } else if (view === 'insufficient') {
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(InsufficientFundsModal, {
+      open: true,
+      zIndex: zIndex,
+      onClose: () => setView('summary')
+    });
+  }
+
+  // If we're processing, show ONLY the processing modal (no stacking)
+  if (processing) {
+    var procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
+    return /*#__PURE__*/jsxRuntimeExports.jsx(ProcessingModal, {
+      open: true,
+      src: procSrc // can be .gif or .mp4
       ,
-      onClose: () => setView('summary')
+      message: processing === 'quote' ? 'Fetching quote…' : 'Processing payment…',
+      subText: "Please wait",
+      zIndex: zIndex
     });
   }
-  if (view === 'insufficient') {
-    return /*#__PURE__*/React.createElement(InsufficientFundsModal, {
-      open: true,
-      zIndex: zIndex,
-      onClose: () => setView('summary')
-    });
-  }
-  return null;
+
+  // Otherwise, render the selected flow modal
+  return content;
 }
 
 export { WalletPaymentForm, WalletPaymentForm as default };
