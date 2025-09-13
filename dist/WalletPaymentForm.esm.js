@@ -5955,19 +5955,19 @@ var {
   Title,
   Text
 } = Typography;
-
-// Default processing GIF (hosted)
 var DEFAULT_PROCESSING_GIF = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
 /**
  * Props:
  *  - publishableKey, enterpriseWalletNo, userWalletId
  *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
- *  - processingSrc?: string     // override GIF/MP4 url
- *  - minProcessingMs?: number   // minimum animation time (default 5000ms)
+ *  - processingSrc?: string
+ *  - minProcessingMs?: number
  *  - zIndex?: number
  *  - onClose?: () => void
  *  - onSuccess?: (payload) => void
+ *  - supportEmail?: string         // ← NEW (shown in Cannot Continue modal)
+ *  - supportPhone?: string         // ← NEW (shown in Cannot Continue modal)
  */
 function WalletPaymentForm(_ref) {
   var _session$enterprise3, _session$enterprise4;
@@ -5983,41 +5983,32 @@ function WalletPaymentForm(_ref) {
     merchantName,
     merchantLogo,
     processingSrc,
-    // optional override (can be gif or mp4)
     minProcessingMs = 5000,
-    // 5s minimum
-
     onClose: _onClose,
-    onSuccess
+    onSuccess,
+    // NEW
+    supportEmail,
+    supportPhone
   } = _ref;
-  // ---------- Server-driven state ----------
   var [view, setView] = useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
-  var [errorMsg, setErrorMsg] = useState('');
+  var [errorMsg, setErrorMsg] = useState(''); // kept for logging only
   var [session, setSession] = useState(null);
   var [quote, setQuote] = useState(null);
-
-  // UI state
   var [passcode, setPasscode] = useState('');
   var [submitting, setSubmitting] = useState(false);
   var [processing, setProcessing] = useState(null); // 'quote' | 'charge' | null
 
   var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
-
-  // ---------- API client ----------
   var api = useMemo(() => {
     if (!publishableKey) return null;
     return createPaykitClient({
       publishableKey
     });
   }, [publishableKey]);
-
-  // tiny util
   var wait = ms => new Promise(r => setTimeout(r, ms));
-
-  // Enforce minimum visible duration for the processing animation
   function withMinProcessing(_x, _x2) {
     return _withMinProcessing.apply(this, arguments);
-  } // ---------- Boot: initSession ----------
+  }
   function _withMinProcessing() {
     _withMinProcessing = _asyncToGenerator(function* (kind, task) {
       setProcessing(kind);
@@ -6040,24 +6031,20 @@ function WalletPaymentForm(_ref) {
       setPasscode('');
       if (!api) {
         if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-          setErrorMsg('SDK not configured: missing publishableKey.');
+          // Don’t expose server-y message to user; just route to invalid
+          setErrorMsg('Missing publishableKey');
           setView('invalid');
         }
         return;
       }
-
-      // Prefer explicit walletId from props; else try cookie userNo
       var cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
       if (!enterpriseWalletNo || !userWalletId && !cookieUserNo) {
-        if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-          // Show sign-in modal instead of invalid
-          setView('signin');
-        }
+        if (!(signal !== null && signal !== void 0 && signal.aborted)) setView('signin'); // ask user to sign in
         return;
       }
       if (!amountValid) {
         if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-          setErrorMsg('The transaction amount is missing or invalid.');
+          setErrorMsg('Invalid amount');
           setView('invalid');
         }
         return;
@@ -6070,12 +6057,15 @@ function WalletPaymentForm(_ref) {
         } : {
           userNo: cookieUserNo
         });
-        var [initRes] = yield Promise.all([api.initSession(initBody), wait(7000) // preserve your premium overlay timing
-        ]);
+        var [initRes] = yield Promise.all([api.initSession(initBody), wait(7000)]);
         if (signal !== null && signal !== void 0 && signal.aborted) return;
         setSession(initRes);
         setView('summary');
       } catch (e) {
+        // Log internally but DO NOT show raw server error to end user
+        try {
+          console.error('initSession failed:', e);
+        } catch (_unused) {}
         if (signal !== null && signal !== void 0 && signal.aborted) return;
         setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Failed to initialize session.');
         setView('invalid');
@@ -6091,18 +6081,14 @@ function WalletPaymentForm(_ref) {
     boot(ctrl.signal);
     return () => ctrl.abort();
   }, [boot]);
-
-  // After popup login success: save cookie + reboot
   var handleLoginSuccess = (userNo /*, authToken */) => {
     try {
       if (userNo) setUserNoCookie(userNo);
-    } catch (_unused) {}
+    } catch (_unused2) {}
     setView('loading');
     var ctrl = new AbortController();
     boot(ctrl.signal);
   };
-
-  // ---------- Details for display ----------
   var details = useMemo(() => {
     var _session$enterprise, _session$enterprise2, _quote$total;
     var billingCurrency = (session === null || session === void 0 ? void 0 : session.billingCurrency) || currency || 'UGX';
@@ -6119,8 +6105,6 @@ function WalletPaymentForm(_ref) {
       merchantLogo: merchantLogo || ''
     };
   }, [amount, currency, merchantLogo, merchantName, particulars, quote === null || quote === void 0 ? void 0 : quote.total, session === null || session === void 0 ? void 0 : session.billingCurrency, session === null || session === void 0 ? void 0 : (_session$enterprise3 = session.enterprise) === null || _session$enterprise3 === void 0 ? void 0 : _session$enterprise3.name, session === null || session === void 0 ? void 0 : (_session$enterprise4 = session.enterprise) === null || _session$enterprise4 === void 0 ? void 0 : _session$enterprise4.walletNo, type]);
-
-  // ---------- Actions ----------
   var handleConfirm = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator(function* () {
       if (!session || !api) return;
@@ -6136,7 +6120,10 @@ function WalletPaymentForm(_ref) {
         var balance = Number((session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.balance) || 0);
         if (balance < Number(q.total || 0)) setView('insufficient');else setView('passcode');
       } catch (e) {
-        setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Could not fetch quote.');
+        try {
+          console.error('quote failed:', e);
+        } catch (_unused3) {}
+        setErrorMsg('Could not fetch quote.');
         setView('failed');
       } finally {
         setSubmitting(false);
@@ -6172,7 +6159,10 @@ function WalletPaymentForm(_ref) {
         });
       } catch (e) {
         if ((e === null || e === void 0 ? void 0 : e.code) === 'INSUFFICIENT_FUNDS') setView('insufficient');else {
-          setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Payment failed.');
+          try {
+            console.error('charge failed:', e);
+          } catch (_unused4) {}
+          setErrorMsg('Payment failed.');
           setView('failed');
         }
       } finally {
@@ -6189,43 +6179,53 @@ function WalletPaymentForm(_ref) {
     setView('summary');
     _onClose === null || _onClose === void 0 ? void 0 : _onClose();
   };
-
-  // ---------- Render helpers ----------
   var renderLoading = () => /*#__PURE__*/jsxRuntimeExports.jsx(LoadingOverlay, {
     open: true,
     zIndex: zIndex,
     brand: "EVzone Pay",
     tip: "Preparing secure checkout\u2026"
   });
-  var renderInvalid = () => /*#__PURE__*/jsxRuntimeExports.jsx(Modal, {
-    open: true,
-    centered: true,
-    footer: null,
-    onCancel: closeAndReset,
-    zIndex: zIndex,
-    maskClosable: false,
-    children: /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
-      direction: "vertical",
-      align: "center",
-      style: {
-        width: '100%'
-      },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title, {
-        level: 4,
+
+  // FRIENDLY: do not leak server error; show platform contact instead
+  var renderInvalid = () => {
+    var contactLine = supportEmail && supportPhone ? "".concat(supportEmail, " or ").concat(supportPhone) : supportEmail || supportPhone || '';
+    return /*#__PURE__*/jsxRuntimeExports.jsx(Modal, {
+      open: true,
+      centered: true,
+      footer: null,
+      onCancel: closeAndReset,
+      zIndex: zIndex,
+      maskClosable: false,
+      children: /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+        direction: "vertical",
+        align: "center",
         style: {
-          margin: 0
+          width: '100%'
         },
-        children: "Cannot Continue"
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text, {
-        type: "secondary",
-        children: errorMsg || 'Invalid configuration.'
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
-        type: "primary",
-        onClick: closeAndReset,
-        children: "Close"
-      })]
-    })
-  });
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title, {
+          level: 4,
+          style: {
+            margin: 0
+          },
+          children: "Cannot Continue"
+        }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text, {
+          type: "secondary",
+          style: {
+            textAlign: 'center'
+          },
+          children: ["We couldn\u2019t start the checkout right now. No charge was made.", contactLine ? /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
+            children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), "For help, please contact ", /*#__PURE__*/jsxRuntimeExports.jsx("b", {
+              children: contactLine
+            }), "."]
+          }) : null]
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          type: "primary",
+          onClick: closeAndReset,
+          children: "Close"
+        })]
+      })
+    });
+  };
   var renderSummary = () => /*#__PURE__*/jsxRuntimeExports.jsx(TransactionSummary, {
     transactionDetails: details,
     onConfirm: handleConfirm,
@@ -6242,8 +6242,6 @@ function WalletPaymentForm(_ref) {
     submitting: submitting,
     quote: quote
   });
-
-  // ---------- Decide which modal to show ----------
   var content = null;
   if (view === 'loading') content = renderLoading();else if (view === 'signin') content = /*#__PURE__*/jsxRuntimeExports.jsx(HasAccountSummary, {
     open: true,
@@ -6276,21 +6274,16 @@ function WalletPaymentForm(_ref) {
       onClose: () => setView('summary')
     });
   }
-
-  // If we're processing, show ONLY the processing modal (no stacking)
   if (processing) {
     var procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
     return /*#__PURE__*/jsxRuntimeExports.jsx(ProcessingModal, {
       open: true,
-      src: procSrc // can be .gif or .mp4
-      ,
+      src: procSrc,
       message: processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…',
       subText: "Please wait",
       zIndex: zIndex
     });
   }
-
-  // Otherwise, render the selected flow modal
   return content;
 }
 
