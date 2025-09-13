@@ -5,11 +5,15 @@
 
 import { API_BASE_URL, DEFAULT_TIMEOUT_MS } from './constants.js';
 
+// Try to load any helpers the project exported.
+// (Works whether you exported detectUserNoFromCookies, getUserNo, etc.)
+import * as cookieUtil from '../utils/cookie.js';
+
 /**
  * Create a Paykit API client.
  * Usage:
  *   const api = createPaykitClient({ publishableKey: 'pk_test_123' });
- *   const sess = await api.initSession({ enterpriseWalletNo, userWalletId });
+ *   const sess = await api.initSession({ enterpriseWalletNo }); // <-- no user id prop
  */
 export default function createPaykitClient({
   publishableKey,
@@ -75,31 +79,37 @@ export default function createPaykitClient({
 
   /**
    * Initialize a checkout session.
-   * @param {{enterpriseWalletNo:string, userWalletId:string}} p
-   * @returns {Promise<{
-   *   ok:boolean,
-   *   sessionId:string,
-   *   enterprise:{walletNo:string,name:string,currency:string},
-   *   user:{walletId:string,name:string,email?:string,balance:number,currency:string},
-   *   billingCurrency:string,
-   *   rates:{charges:{taxPct:number,walletFeePct:number}},
-   *   expiresAt:string
-   * }>}
+   * @param {{enterpriseWalletNo:string, userNo?:string, userWalletId?:string}} p
+   *  - You SHOULD pass only { enterpriseWalletNo }.
+   *  - SDK will read userNo from cookies; falls back to legacy userWalletId if provided.
    */
   async function initSession(p) {
-    return request('/api/v1/paykit/sdk/session/init', {
-      body: {
-        publishableKey,
-        enterpriseWalletNo: p.enterpriseWalletNo,
-        userWalletId: p.userWalletId,
-      },
-    });
+    if (!p?.enterpriseWalletNo) {
+      throw new Error('paykitClient:initSession requires enterpriseWalletNo');
+    }
+
+    const userNo = p.userNo ?? detectUserNo();
+    const payload = {
+      publishableKey,
+      enterpriseWalletNo: p.enterpriseWalletNo,
+      // prefer userNo if present, else fall back to legacy userWalletId
+      ...(userNo ? { userNo } : (p.userWalletId ? { userWalletId: p.userWalletId } : {})),
+    };
+
+    if (!payload.userNo && !payload.userWalletId) {
+      // No cookie & no legacy id supplied
+      throw decorateError(
+        new Error('Not signed in: missing user identifier'),
+        { code: 'MISSING_USER_ID' }
+      );
+    }
+
+    return request('/api/v1/paykit/sdk/session/init', { body: payload });
   }
 
   /**
    * Get a quote for the amount.
    * @param {{sessionId:string, amount:number}} p
-   * @returns {Promise<{ok:boolean, quoteId:string, amount:number, currency:string, tax:number, fee:number, total:number, expiresAt:string}>}
    */
   async function quote(p) {
     return request('/api/v1/paykit/sdk/tx/quote', {
@@ -110,7 +120,6 @@ export default function createPaykitClient({
   /**
    * Confirm the charge using a quote and passcode.
    * @param {{sessionId:string, quoteId:string, passcode:string, idempotencyKey?:string}} p
-   * @returns {Promise<{ok:boolean, chargeId:string, status:string, receipt:any}>}
    */
   async function charge(p) {
     return request('/api/v1/paykit/sdk/tx/charge', {
@@ -147,4 +156,44 @@ function decorateError(err, extra) {
   const e = err instanceof Error ? err : new Error(String(err));
   Object.assign(e, extra || {});
   return e;
+}
+
+// Prefer project helper; otherwise read cookies locally
+function detectUserNo() {
+  try {
+    // Try commonly-used export names first
+    for (const fnName of [
+      'detectUserNoFromCookies',
+      'getUserNo',
+      'getUserNoFromCookies',
+    ]) {
+      const fn = cookieUtil?.[fnName];
+      if (typeof fn === 'function') {
+        const v = fn();
+        if (v) return v;
+      }
+    }
+  } catch {}
+  return localDetectUserNo();
+}
+
+function localDetectUserNo() {
+  if (typeof document === 'undefined') return null;
+  const keys = [
+    'evz_user_no',    // preferred
+    'wallet_user_id', // legacy
+    'user_id',        // legacy
+    'evz_user_id',    // legacy
+  ];
+  for (const k of keys) {
+    const row = document.cookie.split('; ').find((s) => s.startsWith(`${k}=`));
+    if (row) {
+      try {
+        return decodeURIComponent(row.split('=')[1] || '');
+      } catch {
+        return row.split('=')[1] || '';
+      }
+    }
+  }
+  return null;
 }

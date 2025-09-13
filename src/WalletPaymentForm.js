@@ -11,6 +11,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 
 import ProcessingModal from './ProcessingModal.js';
 import createPaykitClient from './sdk/paykitClient.js';
+import { getUserNoFromCookie } from './utils/cookie.js'; // ← NEW
 
 const { Title, Text } = Typography;
 
@@ -98,9 +99,13 @@ function WalletPaymentForm({
         }
         return;
       }
-      if (!enterpriseWalletNo || !userWalletId) {
+
+      // Resolve user identifier: prefer prop userWalletId; else use cookie-based userNo
+      const cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
+
+      if (!enterpriseWalletNo || (!userWalletId && !cookieUserNo)) {
         if (!signal?.aborted) {
-          setErrorMsg('Missing enterpriseWalletNo or userWalletId.');
+          setErrorMsg('Missing enterpriseWalletNo or signed-in wallet user.');
           setView('invalid');
         }
         return;
@@ -114,8 +119,13 @@ function WalletPaymentForm({
       }
 
       try {
+        const initBody = {
+          enterpriseWalletNo,
+          ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }), // ← ONLY CHANGE
+        };
+
         const [initRes] = await Promise.all([
-          api.initSession({ enterpriseWalletNo, userWalletId }),
+          api.initSession(initBody),
           wait(7000), // preserve your premium overlay timing
         ]);
 
@@ -231,6 +241,7 @@ function WalletPaymentForm({
     setPasscode('');
     setQuote(null);
     setView('summary');
+  // host handler still called, unchanged
     onClose?.();
   };
 
