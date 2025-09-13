@@ -1,41 +1,25 @@
 // src/ProcessingModal.js
 import React from 'react';
-import { Modal, Typography, Avatar } from 'antd';
+import { Modal, Typography } from 'antd';
+import { BRAND_MARK } from './brand.js';
 
 const { Title, Text } = Typography;
 
-const BRAND_LOGO =
-  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
-
-// Smooth Airbnb-style blue gradient
 const BLUE_START = '#2EA1FF';
 const BLUE_END   = '#1B8CFF';
 
-/**
- * Props:
- *  - open?: boolean
- *  - onClose?: () => void   // usually not closable while processing
- *  - src?: string           // GIF/MP4/IMG URL (defaults to your Cloudinary GIF)
- *  - message?: string       // big heading (default: "Processing")
- *  - subText?: string       // small line below
- *  - width?: number         // default 480
- *  - zIndex?: number        // default 2000
- *  - roundedSize?: number   // square preview size (default 160)
- *  - loop?: boolean         // if a <video> is used
- *
- * Notes:
- *  - File extension decides whether to render <img> (gif/png/jpg/svg) or <video>.
- */
 export default function ProcessingModal({
   open = true,
   onClose,
   src = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif',
   message = 'Processing',
-  subText = '',
+  subText = 'Please wait',
   width = 480,
   zIndex = 2000,
-  roundedSize = 160,
+  roundedSize = 140,        // slightly smaller square
   loop = true,
+  brandMaxWidth = 240,      // ↓ smaller brand by default
+  brandMaxHeight = 54,
 }) {
   const isGif =
     typeof src === 'string' &&
@@ -49,23 +33,38 @@ export default function ProcessingModal({
       footer={null}
       onCancel={onClose}
       maskClosable={false}
-      closable={false}          // processing should not be dismissible
+      closable={false}
       zIndex={zIndex}
       title={null}
-      bodyStyle={{ padding: 20, textAlign: 'center' }}
+      bodyStyle={{ padding: 0, textAlign: 'center' }}
       className="evz-modal"
     >
-      {/* Brand header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Avatar src={BRAND_LOGO} size={28} />
-        <Text strong style={{ fontSize: 16 }}>EVzone Pay</Text>
+      {/* Brand header — LEFT aligned & smaller */}
+      <div style={{ padding: '10px 16px 0', textAlign: 'left' }}>
+        <img
+          src={BRAND_MARK}
+          alt=""
+          style={{
+            display: 'block',
+            maxWidth: brandMaxWidth,
+            maxHeight: brandMaxHeight,
+            width: 'auto',
+            height: 'auto',
+            margin: 0,
+            objectFit: 'contain',
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}
+          crossOrigin="anonymous"
+          draggable={false}
+        />
       </div>
 
-      {/* dashed separator */}
+      {/* thin dashed separator with tighter margins */}
       <div
         style={{
           borderTop: '1px dashed #e5e7eb',
-          margin: '12px -20px 16px',
+          margin: '8px 16px 12px',
         }}
       />
 
@@ -73,12 +72,12 @@ export default function ProcessingModal({
       <div
         aria-hidden
         style={{
-          margin: '8px auto 12px',
+          margin: '0 auto 10px',
           width: roundedSize,
           height: roundedSize,
           borderRadius: 16,
           background: `linear-gradient(180deg, ${BLUE_START} 0%, ${BLUE_END} 100%)`,
-          boxShadow: '0 12px 34px rgba(30,140,255,0.28)',
+          boxShadow: '0 10px 28px rgba(30,140,255,0.24)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -117,10 +116,12 @@ export default function ProcessingModal({
         )}
       </div>
 
-      <Title level={4} style={{ margin: '0 0 4px' }}>{message}</Title>
-      {subText ? (
-        <Text type="secondary" style={{ display: 'block' }}>{subText}</Text>
-      ) : null}
+      <div style={{ padding: '0 16px 16px' }}>
+        <Title level={5} style={{ margin: '0 0 2px' }}>{message}</Title>
+        {subText ? (
+          <Text type="secondary" style={{ display: 'block', fontSize: 12 }}>{subText}</Text>
+        ) : null}
+      </div>
     </Modal>
   );
 }

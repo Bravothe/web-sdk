@@ -1,12 +1,12 @@
 // src/InsufficientFundsModal.js
 import React from 'react';
-import { Modal, Button, Typography, Space, Avatar } from 'antd';
+import { Modal, Button, Typography, Space } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { BrandHeader } from './brand.js'; // ← unified brand image header
 
 const { Title, Paragraph, Text } = Typography;
 
-const BRAND_LOGO =
-  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+// Local colors for this modal
 const BRAND_ORANGE = '#FF9800';
 const BRAND_RED = '#ff4d4f';
 const PRIMARY_BLUE = '#1677ff';
@@ -24,8 +24,10 @@ export default function InsufficientFundsModal({
   requiredTotal,
 }) {
   const hasNumbers =
-    typeof balance === 'number' && !Number.isNaN(balance) &&
-    typeof requiredTotal === 'number' && !Number.isNaN(requiredTotal);
+    typeof balance === 'number' &&
+    !Number.isNaN(balance) &&
+    typeof requiredTotal === 'number' &&
+    !Number.isNaN(requiredTotal);
 
   const shortfall = hasNumbers ? Math.max(requiredTotal - balance, 0) : null;
 
@@ -64,11 +66,8 @@ export default function InsufficientFundsModal({
         </span>
       }
     >
-      {/* Brand header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Avatar src={BRAND_LOGO} size={28} />
-        <Text strong style={{ fontSize: 16 }}>EVzone Pay</Text>
-      </div>
+      {/* Brand header (image only, left-aligned, consistent across modals) */}
+      <BrandHeader size="sm" />
 
       {/* dashed separator */}
       <div

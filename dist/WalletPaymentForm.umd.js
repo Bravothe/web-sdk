@@ -3204,12 +3204,84 @@
 
   var jsxRuntimeExports = jsxRuntime.exports;
 
+  var BRAND_MARK = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757750794/sdk-logo_m2h8j7.png';
+
+  /**
+   * BrandHeader
+   * Renders ONLY the brand image (no text/colors).
+   *
+   * Props:
+   *  - size: 'xs' | 'sm' | 'md' | 'lg' | number  (default 'md')
+   *          If a number is given, it's treated as maxWidth in px.
+   *  - maxWidth?: number     // override width cap (px)
+   *  - maxHeight?: number    // override height cap (px)
+   *  - align?: 'left'|'center'|'right' (default 'left')
+   *  - style?: object        // extra container styles
+   *  - className?: string
+   */
+  var PRESETS = {
+    xs: {
+      maxWidth: 160,
+      maxHeight: 38
+    },
+    sm: {
+      maxWidth: 200,
+      maxHeight: 46
+    },
+    md: {
+      maxWidth: 230,
+      maxHeight: 52
+    },
+    // good default (smaller than before)
+    lg: {
+      maxWidth: 260,
+      maxHeight: 60
+    }
+  };
+  function BrandHeader(_ref) {
+    var {
+      size = 'md',
+      maxWidth,
+      maxHeight,
+      align = 'left',
+      style,
+      className
+    } = _ref;
+    var preset = typeof size === 'string' ? PRESETS[size] || PRESETS.md : null;
+
+    // If size is a number, treat it as maxWidth
+    var w = maxWidth !== null && maxWidth !== void 0 ? maxWidth : typeof size === 'number' ? size : preset.maxWidth;
+    var h = maxHeight !== null && maxHeight !== void 0 ? maxHeight : preset ? preset.maxHeight : undefined;
+    return /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      className: className,
+      style: _objectSpread2({
+        textAlign: align,
+        padding: '10px 16px 0'
+      }, style || {}),
+      children: /*#__PURE__*/jsxRuntimeExports.jsx("img", {
+        src: BRAND_MARK,
+        alt: "",
+        style: {
+          display: 'inline-block',
+          maxWidth: w,
+          maxHeight: h,
+          width: 'auto',
+          height: 'auto',
+          objectFit: 'contain',
+          userSelect: 'none',
+          pointerEvents: 'none'
+        },
+        crossOrigin: "anonymous",
+        draggable: false
+      })
+    });
+  }
+
   // src/TransactionSummary.jsx
   var {
     Title: Title$7,
     Text: Text$7
   } = antd.Typography;
-  var BRAND_LOGO$4 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
   var BRAND_GREEN$1 = '#02CD8D'; // EVzone green
 
   /**
@@ -3220,8 +3292,8 @@
    *  - onConfirm: () => void
    *  - onCancel?: () => void
    *  - width?: number (default 520)
-   *  - confirmDisabled?: boolean  // NEW
-   *  - confirmLoading?: boolean   // NEW
+   *  - confirmDisabled?: boolean
+   *  - confirmLoading?: boolean
    */
   function TransactionSummary(_ref) {
     var _ref2, _d$totalBilling, _d$billedAmount;
@@ -3267,22 +3339,8 @@
         },
         children: /*#__PURE__*/jsxRuntimeExports.jsx(icons.CloseOutlined, {})
       }),
-      children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
-        },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
-          src: BRAND_LOGO$4,
-          size: 28
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
-          strong: true,
-          style: {
-            fontSize: 16
-          },
-          children: "EVzone Pay"
-        })]
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+        size: "sm"
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           borderTop: '1px dashed #e5e7eb',
@@ -4092,7 +4150,6 @@
     Title: Title$6,
     Text: Text$6
   } = antd.Typography;
-  var BRAND_LOGO$3 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
   var BRAND_GREEN = '#02CD8D';
 
   // Fallback rates only used when no server quote is provided
@@ -4165,22 +4222,8 @@
         },
         children: /*#__PURE__*/jsxRuntimeExports.jsx(icons.CloseOutlined, {})
       }),
-      children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
-        },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
-          src: BRAND_LOGO$3,
-          size: 28
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
-          strong: true,
-          style: {
-            fontSize: 16
-          },
-          children: "EVzone Pay"
-        })]
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+        size: "sm"
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           borderTop: '1px dashed #e5e7eb',
@@ -4287,9 +4330,9 @@
             children: d.merchantName || 'Unknown Merchant'
           }), ". An amount of", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
             children: [currency, " ", fmt0(total)]
-          }), " will be deducted from your wallet, including", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
+          }), ' ', "will be deducted from your wallet, including ", /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
             children: [taxPctLabel, " tax"]
-          }), " (", currency, " ", fmt0(tax), ") and", ' ', /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
+          }), " (", currency, ' ', fmt0(tax), ") and ", /*#__PURE__*/jsxRuntimeExports.jsxs("b", {
             children: [feePctLabel, " wallet fee"]
           }), " (", currency, " ", fmt0(fee), ")."]
         })]
@@ -4434,7 +4477,6 @@
     Paragraph: Paragraph$1,
     Text: Text$4
   } = antd.Typography;
-  var BRAND_LOGO$2 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
   var BRAND_RED$1 = '#ff4d4f';
   function PaymentFailedModal(_ref) {
     var {
@@ -4459,8 +4501,7 @@
       bodyStyle: {
         padding: 20
       },
-      className: "evz-modal" // ✅ enables smooth pop-in/out (global CSS you added)
-      ,
+      className: "evz-modal",
       closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
         style: {
           width: 28,
@@ -4476,22 +4517,8 @@
         "aria-label": "Close",
         children: /*#__PURE__*/jsxRuntimeExports.jsx(icons.CloseOutlined, {})
       }),
-      children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
-        },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
-          src: BRAND_LOGO$2,
-          size: 28
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
-          strong: true,
-          style: {
-            fontSize: 16
-          },
-          children: "EVzone Pay"
-        })]
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+        size: "sm"
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           borderTop: '1px dashed #e5e7eb',
@@ -4566,7 +4593,8 @@
     Paragraph,
     Text: Text$3
   } = antd.Typography;
-  var BRAND_LOGO$1 = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
+
+  // Local colors for this modal
   var BRAND_ORANGE = '#FF9800';
   var BRAND_RED = '#ff4d4f';
   var PRIMARY_BLUE = '#1677ff';
@@ -4615,22 +4643,8 @@
         },
         children: /*#__PURE__*/jsxRuntimeExports.jsx(icons.CloseOutlined, {})
       }),
-      children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
-        },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
-          src: BRAND_LOGO$1,
-          size: 28
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
-          strong: true,
-          style: {
-            fontSize: 16
-          },
-          children: "EVzone Pay"
-        })]
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+        size: "sm"
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           borderTop: '1px dashed #e5e7eb',
@@ -4857,38 +4871,23 @@
     Title: Title$1,
     Text: Text$1
   } = antd.Typography;
-  var BRAND_LOGO = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
-
-  // Smooth Airbnb-style blue gradient
   var BLUE_START = '#2EA1FF';
   var BLUE_END = '#1B8CFF';
-
-  /**
-   * Props:
-   *  - open?: boolean
-   *  - onClose?: () => void   // usually not closable while processing
-   *  - src?: string           // GIF/MP4/IMG URL (defaults to your Cloudinary GIF)
-   *  - message?: string       // big heading (default: "Processing")
-   *  - subText?: string       // small line below
-   *  - width?: number         // default 480
-   *  - zIndex?: number        // default 2000
-   *  - roundedSize?: number   // square preview size (default 160)
-   *  - loop?: boolean         // if a <video> is used
-   *
-   * Notes:
-   *  - File extension decides whether to render <img> (gif/png/jpg/svg) or <video>.
-   */
   function ProcessingModal(_ref) {
     var {
       open = true,
       onClose,
       src = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif',
       message = 'Processing',
-      subText = '',
+      subText = 'Please wait',
       width = 480,
       zIndex = 2000,
-      roundedSize = 160,
-      loop = true
+      roundedSize = 140,
+      // slightly smaller square
+      loop = true,
+      brandMaxWidth = 240,
+      // ↓ smaller brand by default
+      brandMaxHeight = 54
     } = _ref;
     var isGif = typeof src === 'string' && /\.(gif|png|jpe?g|svg)(\?.*)?$/i.test(src);
     return /*#__PURE__*/jsxRuntimeExports.jsxs(antd.Modal, {
@@ -4898,45 +4897,50 @@
       footer: null,
       onCancel: onClose,
       maskClosable: false,
-      closable: false // processing should not be dismissible
-      ,
+      closable: false,
       zIndex: zIndex,
       title: null,
       bodyStyle: {
-        padding: 20,
+        padding: 0,
         textAlign: 'center'
       },
       className: "evz-modal",
-      children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
+          padding: '10px 16px 0',
+          textAlign: 'left'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(antd.Avatar, {
-          src: BRAND_LOGO,
-          size: 28
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
-          strong: true,
+        children: /*#__PURE__*/jsxRuntimeExports.jsx("img", {
+          src: BRAND_MARK,
+          alt: "",
           style: {
-            fontSize: 16
+            display: 'block',
+            maxWidth: brandMaxWidth,
+            maxHeight: brandMaxHeight,
+            width: 'auto',
+            height: 'auto',
+            margin: 0,
+            objectFit: 'contain',
+            userSelect: 'none',
+            pointerEvents: 'none'
           },
-          children: "EVzone Pay"
-        })]
+          crossOrigin: "anonymous",
+          draggable: false
+        })
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         style: {
           borderTop: '1px dashed #e5e7eb',
-          margin: '12px -20px 16px'
+          margin: '8px 16px 12px'
         }
       }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
         "aria-hidden": true,
         style: {
-          margin: '8px auto 12px',
+          margin: '0 auto 10px',
           width: roundedSize,
           height: roundedSize,
           borderRadius: 16,
           background: "linear-gradient(180deg, ".concat(BLUE_START, " 0%, ").concat(BLUE_END, " 100%)"),
-          boxShadow: '0 12px 34px rgba(30,140,255,0.28)',
+          boxShadow: '0 10px 28px rgba(30,140,255,0.24)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
@@ -4968,19 +4972,25 @@
             objectFit: 'contain'
           }
         })
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
-        level: 4,
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
         style: {
-          margin: '0 0 4px'
+          padding: '0 16px 16px'
         },
-        children: message
-      }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
-        type: "secondary",
-        style: {
-          display: 'block'
-        },
-        children: subText
-      }) : null]
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+          level: 5,
+          style: {
+            margin: '0 0 2px'
+          },
+          children: message
+        }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          type: "secondary",
+          style: {
+            display: 'block',
+            fontSize: 12
+          },
+          children: subText
+        }) : null]
+      })]
     });
   }
 
@@ -5687,7 +5697,7 @@
         open: true,
         src: procSrc // can be .gif or .mp4
         ,
-        message: processing === 'quote' ? 'Fetching quote…' : 'Processing payment…',
+        message: processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…',
         subText: "Please wait",
         zIndex: zIndex
       });

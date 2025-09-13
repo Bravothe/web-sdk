@@ -316,7 +316,7 @@ function WalletPaymentForm({
       <ProcessingModal
         open
         src={procSrc} // can be .gif or .mp4
-        message={processing === 'quote' ? 'Fetching quote…' : 'Processing payment…'}
+        message={processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…'}
         subText="Please wait"
         zIndex={zIndex}
       />

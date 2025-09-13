@@ -2,11 +2,10 @@
 import React from 'react';
 import { Modal, Typography, Space, Avatar, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { BrandHeader } from './brand.js'; // ← unified brand image header
 
 const { Title, Text } = Typography;
 
-const BRAND_LOGO =
-  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 const BRAND_GREEN = '#02CD8D'; // EVzone green
 
 /**
@@ -17,8 +16,8 @@ const BRAND_GREEN = '#02CD8D'; // EVzone green
  *  - onConfirm: () => void
  *  - onCancel?: () => void
  *  - width?: number (default 520)
- *  - confirmDisabled?: boolean  // NEW
- *  - confirmLoading?: boolean   // NEW
+ *  - confirmDisabled?: boolean
+ *  - confirmLoading?: boolean
  */
 export default function TransactionSummary({
   transactionDetails,
@@ -30,7 +29,6 @@ export default function TransactionSummary({
 }) {
   const d = transactionDetails || {};
   const currency = d.billedCurrency || 'UGX';
-
   const total = d.totalBilling ?? d.billedAmount ?? 0;
 
   const amountStr = (v) =>
@@ -67,11 +65,8 @@ export default function TransactionSummary({
         </span>
       }
     >
-      {/* Brand header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Avatar src={BRAND_LOGO} size={28} />
-        <Text strong style={{ fontSize: 16 }}>EVzone Pay</Text>
-      </div>
+      {/* Brand header (image only) */}
+      <BrandHeader size="sm" />
 
       {/* dashed separator (edge-to-edge) */}
       <div

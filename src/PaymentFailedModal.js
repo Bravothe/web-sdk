@@ -1,12 +1,11 @@
 // src/PaymentFailedModal.js
 import React from 'react';
-import { Modal, Typography, Space, Avatar, Button } from 'antd';
+import { Modal, Typography, Space, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { BrandHeader } from './brand.js'; // ← unified brand image header
 
 const { Title, Paragraph, Text } = Typography;
 
-const BRAND_LOGO =
-  'https://res.cloudinary.com/dlfa42ans/image/upload/v1743601557/logo1_ypujra.png';
 const BRAND_RED = '#ff4d4f';
 
 export default function PaymentFailedModal({
@@ -28,7 +27,7 @@ export default function PaymentFailedModal({
       maskClosable={false}
       title={null}
       bodyStyle={{ padding: 20 }}
-      className="evz-modal"   // ✅ enables smooth pop-in/out (global CSS you added)
+      className="evz-modal"
       closeIcon={
         <span
           style={{
@@ -48,11 +47,8 @@ export default function PaymentFailedModal({
         </span>
       }
     >
-      {/* Brand header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Avatar src={BRAND_LOGO} size={28} />
-        <Text strong style={{ fontSize: 16 }}>EVzone Pay</Text>
-      </div>
+      {/* Brand header (image only) */}
+      <BrandHeader size="sm" />
 
       {/* dashed separator (edge-to-edge) */}
       <div
