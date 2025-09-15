@@ -1,5 +1,5 @@
 // src/WalletPaymentForm.js
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, Button, Typography, Space } from 'antd';
 
 import TransactionSummary from './TransactionSummary.js';
@@ -9,11 +9,10 @@ import PaymentFailedModal from './PaymentFailedModal.js';
 import InsufficientFundsModal from './InsufficientFundsModal.js';
 import LoadingOverlay from './LoadingOverlay.js';
 import ProcessingModal from './ProcessingModal.js';
-
 import HasAccountSummary from './HasAccountSummary.js'; // sign-in modal
-import { getUserNoFromCookie, setUserNoCookie } from './utils/cookie.js';
 
-import createPaykitClient from './sdk/paykitClient.js';
+import { setUserNoCookie } from './utils/cookie.js';
+import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
 
 const { Title, Text } = Typography;
 
@@ -36,232 +35,30 @@ const DEFAULT_PROCESSING_GIF =
  *  - supportEmail?: string
  *  - supportPhone?: string
  */
-function WalletPaymentForm({
-  // NEW preferred
-  publicKey,
-  brandId,
-  enterpriseNo,
+function WalletPaymentForm(props) {
+  const {
+    zIndex = 2000,
+    processingSrc,
+    supportEmail,
+    supportPhone,
+  } = props;
 
-  // legacy aliases (kept)
-  publishableKey,
-  enterpriseWalletNo,
-  userWalletId,
-
-  zIndex = 2000,
-
-  amount,
-  type,
-  particulars,
-  currency,
-  merchantName,
-  merchantLogo,
-
-  processingSrc,
-  minProcessingMs = 5000,
-
-  onClose,
-  onSuccess,
-
-  supportEmail,
-  supportPhone,
-}) {
-  // Resolve effective identifiers (prefer NEW)
-  const key = publicKey || publishableKey || null;
-  const ent = enterpriseNo || enterpriseWalletNo || null;
-
-  const [view, setView] = useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
-  const [errorMsg, setErrorMsg] = useState('');
-  const [session, setSession] = useState(null);
-  const [quote, setQuote] = useState(null);
+  const {
+    view,
+    errorMsg,
+    session,
+    quote,
+    submitting,
+    processing,
+    details,
+    handleConfirm,
+    handleSubmit,
+    closeAndReset,
+    restart,
+    goToSummary,
+  } = useWalletPaymentFlow(props);
 
   const [passcode, setPasscode] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [processing, setProcessing] = useState(null); // 'quote' | 'charge' | null
-
-  const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
-
-  const api = useMemo(() => {
-    if (!key) return null;
-    // SDK prefers publicKey but remains backward compatible
-    return createPaykitClient({ publicKey: key, brandId });
-  }, [key, brandId]);
-
-  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-
-  async function withMinProcessing(kind, task) {
-    setProcessing(kind);
-    const start = Date.now();
-    try {
-      return await task();
-    } finally {
-      const elapsed = Date.now() - start;
-      const remain = Math.max(0, Number(minProcessingMs) - elapsed);
-      if (remain > 0) await wait(remain);
-      setProcessing(null);
-    }
-  }
-
-  const boot = useCallback(
-    async (signal) => {
-      setErrorMsg('');
-      setQuote(null);
-      setPasscode('');
-
-      if (!api) {
-        if (!signal?.aborted) {
-          setErrorMsg('Missing publicKey/publishableKey');
-          setView('invalid');
-        }
-        return;
-      }
-
-      const cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
-
-      if (!ent || (!userWalletId && !cookieUserNo)) {
-        if (!signal?.aborted) setView('signin'); // ask user to sign in
-        return;
-      }
-      if (!amountValid) {
-        if (!signal?.aborted) {
-          setErrorMsg('Invalid amount');
-          setView('invalid');
-        }
-        return;
-      }
-
-      try {
-        // Send both NEW+legacy enterprise fields for maximum compatibility
-        const initBody = {
-          enterpriseNo: ent,
-          enterpriseWalletNo: ent,
-          ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }),
-          ...(brandId ? { brandId } : {}),
-        };
-
-        const [initRes] = await Promise.all([api.initSession(initBody), wait(7000)]);
-
-        if (signal?.aborted) return;
-        setSession(initRes);
-        setView('summary');
-      } catch (e) {
-        try { console.error('initSession failed:', e); } catch {}
-        if (signal?.aborted) return;
-        setErrorMsg(e?.message || 'Failed to initialize session.');
-        setView('invalid');
-      }
-    },
-    [api, ent, userWalletId, amountValid, brandId]
-  );
-
-  useEffect(() => {
-    setView('loading');
-    const ctrl = new AbortController();
-    boot(ctrl.signal);
-    return () => ctrl.abort();
-  }, [boot]);
-
-  const handleLoginSuccess = (userNo /*, authToken */) => {
-    try { if (userNo) setUserNoCookie(userNo); } catch {}
-    setView('loading');
-    const ctrl = new AbortController();
-    boot(ctrl.signal);
-  };
-
-  const details = useMemo(() => {
-    const billingCurrency = session?.billingCurrency || currency || 'UGX';
-    const mName = merchantName || session?.enterprise?.name || 'Unknown Merchant';
-    const toId = session?.enterprise?.walletNo || '—';
-
-    return {
-      type: type || 'Booking',
-      id: toId,
-      particulars: particulars || 'Hotel Booking',
-      billedCurrency: billingCurrency,
-      billedAmount: amount,
-      totalBilling: quote?.total ?? amount,
-      merchantName: mName,
-      merchantLogo: merchantLogo || '',
-    };
-  }, [
-    amount,
-    currency,
-    merchantLogo,
-    merchantName,
-    particulars,
-    quote?.total,
-    session?.billingCurrency,
-    session?.enterprise?.name,
-    session?.enterprise?.walletNo,
-    type,
-  ]);
-
-  const handleConfirm = async () => {
-    if (!session || !api) return;
-    setSubmitting(true);
-    setErrorMsg('');
-    try {
-      const q = await withMinProcessing('quote', () =>
-        api.quote({ sessionId: session.sessionId, amount })
-      );
-      setQuote(q);
-
-      const balance = Number(session?.user?.balance || 0);
-      if (balance < Number(q.total || 0)) setView('insufficient');
-      else setView('passcode');
-    } catch (e) {
-      try { console.error('quote failed:', e); } catch {}
-      setErrorMsg('Could not fetch quote.');
-      setView('failed');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!session || !quote || !api) return;
-    if (passcode.length !== 6) return;
-
-    setSubmitting(true);
-    setErrorMsg('');
-    try {
-      const res = await withMinProcessing('charge', () =>
-        api.charge({
-          sessionId: session.sessionId,
-          quoteId: quote.quoteId,
-          passcode,
-        })
-      );
-
-      setView('success');
-      onSuccess?.({
-        transactionId: res?.chargeId || quote?.quoteId,
-        sessionId: session.sessionId,
-        enterprise: session.enterprise,
-        user: session.user,
-        amount: quote.total,
-        currency: quote.currency || details.billedCurrency,
-        type: details.type,
-        particulars: details.particulars,
-        receipt: res?.receipt,
-      });
-    } catch (e) {
-      if (e?.code === 'INSUFFICIENT_FUNDS') setView('insufficient');
-      else {
-        try { console.error('charge failed:', e); } catch {}
-        setErrorMsg('Payment failed.');
-        setView('failed');
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const closeAndReset = () => {
-    setPasscode('');
-    setQuote(null);
-    setView('summary');
-    onClose?.();
-  };
 
   const renderLoading = () => (
     <LoadingOverlay open zIndex={zIndex} brand="EVzone Pay" tip="Preparing secure checkout…" />
@@ -308,19 +105,38 @@ function WalletPaymentForm({
       passcode={passcode}
       setPasscode={setPasscode}
       transactionDetails={details}
-      onSubmit={handleSubmit}
-      onBack={() => setView('summary')}
+      onSubmit={() => handleSubmit(passcode)}
+      onBack={goToSummary}
       submitting={submitting}
       quote={quote}
     />
   );
 
+  // If we're processing, show ONLY the processing modal (no stacking)
+  if (processing) {
+    const procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
+    return (
+      <ProcessingModal
+        open
+        src={procSrc}
+        message={processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…'}
+        subText="Please wait"
+        zIndex={zIndex}
+      />
+    );
+  }
+
+  // Otherwise, render the selected flow modal
   let content = null;
   if (view === 'loading')       content = renderLoading();
   else if (view === 'signin')   content = (
     <HasAccountSummary
       open
-      onLoginSuccess={handleLoginSuccess}
+      onLoginSuccess={(userNo) => {
+        try { if (userNo) setUserNoCookie(userNo); } catch {}
+        setPasscode('');
+        restart();
+      }}
       onClose={closeAndReset}
       zIndex={zIndex}
     />
@@ -332,13 +148,10 @@ function WalletPaymentForm({
     content = (
       <PaymentSuccessModal
         open
-        amount={quote?.total ?? amount}
+        amount={quote?.total ?? details.billedAmount}
         currency={quote?.currency || details.billedCurrency}
         zIndex={zIndex}
-        onClose={() => {
-          setView('summary');
-          onClose?.();
-        }}
+        onClose={closeAndReset}
       />
     );
   } else if (view === 'failed') {
@@ -347,7 +160,7 @@ function WalletPaymentForm({
         open
         zIndex={zIndex}
         reason={errorMsg}
-        onClose={() => setView('summary')}
+        onClose={goToSummary}
       />
     );
   } else if (view === 'insufficient') {
@@ -355,20 +168,7 @@ function WalletPaymentForm({
       <InsufficientFundsModal
         open
         zIndex={zIndex}
-        onClose={() => setView('summary')}
-      />
-    );
-  }
-
-  if (processing) {
-    const procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
-    return (
-      <ProcessingModal
-        open
-        src={procSrc}
-        message={processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…'}
-        subText="Please wait"
-        zIndex={zIndex}
+        onClose={goToSummary}
       />
     );
   }
