@@ -11,18 +11,26 @@ import * as cookieUtil from '../utils/cookie.js';
 
 /**
  * Create a Paykit API client.
- * Usage:
- *   const api = createPaykitClient({ publishableKey: 'pk_test_123', brandId: 'brand_xtr_001' });
- *   const sess = await api.initSession({ enterpriseWalletNo }); // <-- no user id prop
+ * Usage (NEW names preferred):
+ *   const api = createPaykitClient({ publicKey: 'pk_test_123', brandId: 'brand_xtr_001' });
+ *   const sess = await api.initSession({ enterpriseNo: 'EVZ-123456' }); // no user id prop
+ *
+ * Backward-compatible:
+ *   const api = createPaykitClient({ publishableKey: 'pk_test_123' });
+ *   const sess = await api.initSession({ enterpriseWalletNo: 'EVZ-123456' });
  */
 export default function createPaykitClient({
-  publishableKey,
-  brandId,                  // NEW (optional)
+  publicKey,               // NEW (preferred)
+  brandId,                 // optional
+  publishableKey,          // legacy alias (still supported)
   timeoutMs = DEFAULT_TIMEOUT_MS,
   fetchImpl,
 } = {}) {
   if (!API_BASE_URL) throw new Error('paykitClient: API_BASE_URL is not set');
-  if (!publishableKey) throw new Error('paykitClient: publishableKey is required');
+
+  // Prefer new key name; fall back to legacy
+  const key = publicKey || publishableKey;
+  if (!key) throw new Error('paykitClient: publicKey (or publishableKey) is required');
 
   const _fetch =
     fetchImpl || (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
@@ -80,26 +88,33 @@ export default function createPaykitClient({
 
   /**
    * Initialize a checkout session.
-   * @param {{enterpriseWalletNo:string, userNo?:string, userWalletId?:string, brandId?:string}} p
-   *  - You SHOULD pass only { enterpriseWalletNo }.
-   *  - SDK will read userNo from cookies; falls back to legacy userWalletId if provided.
-   *  - brandId is OPTIONAL (can be set here or at client creation).
+   * @param {{
+   *   enterpriseNo?: string,             // NEW (preferred)
+   *   enterpriseWalletNo?: string,       // legacy
+   *   userNo?: string,
+   *   userWalletId?: string,
+   *   brandId?: string,                  // optional per-call override
+   *   billingCurrency?: string
+   * }} p
+   *
+   * Recommended: pass only { enterpriseNo } and rely on cookie userNo.
    */
   async function initSession(p) {
-    if (!p?.enterpriseWalletNo) {
-      throw new Error('paykitClient:initSession requires enterpriseWalletNo');
+    const ent = p?.enterpriseNo || p?.enterpriseWalletNo;
+    if (!ent) {
+      throw new Error('paykitClient:initSession requires enterpriseNo (or enterpriseWalletNo)');
     }
 
     const userNo = p.userNo ?? detectUserNo();
-
-    // Allow brandId per-call override; else use the client-level brandId.
     const brandToSend = p.brandId ?? brandId;
 
+    // Send both NEW + legacy field names for maximum compatibility with server versions.
     const payload = {
-      publishableKey,
-      enterpriseWalletNo: p.enterpriseWalletNo,
-      ...(brandToSend ? { brandId: brandToSend } : {}), // NEW: pass brandId when provided
-      // prefer userNo if present, else fall back to legacy userWalletId
+      publicKey: key,
+      publishableKey: key,          // legacy mirror
+      enterpriseNo: ent,
+      enterpriseWalletNo: ent,      // legacy mirror
+      ...(brandToSend ? { brandId: brandToSend } : {}),
       ...(userNo ? { userNo } : (p.userWalletId ? { userWalletId: p.userWalletId } : {})),
       ...(p.billingCurrency ? { billingCurrency: p.billingCurrency } : {}),
     };

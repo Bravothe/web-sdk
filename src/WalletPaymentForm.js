@@ -21,8 +21,12 @@ const DEFAULT_PROCESSING_GIF =
   'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
 /**
- * Props:
- *  - publishableKey, brandId?, enterpriseWalletNo, userWalletId
+ * Props (NEW names preferred; legacy still supported):
+ *  - publicKey? (NEW) | publishableKey? (legacy)
+ *  - brandId?
+ *  - enterpriseNo? (NEW) | enterpriseWalletNo? (legacy)
+ *  - userWalletId?
+ *
  *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
  *  - processingSrc?: string
  *  - minProcessingMs?: number
@@ -33,8 +37,13 @@ const DEFAULT_PROCESSING_GIF =
  *  - supportPhone?: string
  */
 function WalletPaymentForm({
+  // NEW preferred
+  publicKey,
+  brandId,
+  enterpriseNo,
+
+  // legacy aliases (kept)
   publishableKey,
-  brandId,                 // ← NEW (optional)
   enterpriseWalletNo,
   userWalletId,
 
@@ -56,8 +65,12 @@ function WalletPaymentForm({
   supportEmail,
   supportPhone,
 }) {
+  // Resolve effective identifiers (prefer NEW)
+  const key = publicKey || publishableKey || null;
+  const ent = enterpriseNo || enterpriseWalletNo || null;
+
   const [view, setView] = useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
-  const [errorMsg, setErrorMsg] = useState(''); // kept for logging only
+  const [errorMsg, setErrorMsg] = useState('');
   const [session, setSession] = useState(null);
   const [quote, setQuote] = useState(null);
 
@@ -68,10 +81,10 @@ function WalletPaymentForm({
   const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
   const api = useMemo(() => {
-    if (!publishableKey) return null;
-    // Pass brandId into the SDK client (backward compatible if undefined)
-    return createPaykitClient({ publishableKey, brandId });
-  }, [publishableKey, brandId]);
+    if (!key) return null;
+    // SDK prefers publicKey but remains backward compatible
+    return createPaykitClient({ publicKey: key, brandId });
+  }, [key, brandId]);
 
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -96,7 +109,7 @@ function WalletPaymentForm({
 
       if (!api) {
         if (!signal?.aborted) {
-          setErrorMsg('Missing publishableKey');
+          setErrorMsg('Missing publicKey/publishableKey');
           setView('invalid');
         }
         return;
@@ -104,7 +117,7 @@ function WalletPaymentForm({
 
       const cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
 
-      if (!enterpriseWalletNo || (!userWalletId && !cookieUserNo)) {
+      if (!ent || (!userWalletId && !cookieUserNo)) {
         if (!signal?.aborted) setView('signin'); // ask user to sign in
         return;
       }
@@ -117,17 +130,15 @@ function WalletPaymentForm({
       }
 
       try {
+        // Send both NEW+legacy enterprise fields for maximum compatibility
         const initBody = {
-          enterpriseWalletNo,
+          enterpriseNo: ent,
+          enterpriseWalletNo: ent,
           ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }),
-          // You can also pass brandId per-call; the SDK will prefer per-call over client-level:
           ...(brandId ? { brandId } : {}),
         };
 
-        const [initRes] = await Promise.all([
-          api.initSession(initBody),
-          wait(7000),
-        ]);
+        const [initRes] = await Promise.all([api.initSession(initBody), wait(7000)]);
 
         if (signal?.aborted) return;
         setSession(initRes);
@@ -139,7 +150,7 @@ function WalletPaymentForm({
         setView('invalid');
       }
     },
-    [api, enterpriseWalletNo, userWalletId, amountValid, brandId]
+    [api, ent, userWalletId, amountValid, brandId]
   );
 
   useEffect(() => {

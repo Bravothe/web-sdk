@@ -5735,19 +5735,29 @@
 
   /**
    * Create a Paykit API client.
-   * Usage:
-   *   const api = createPaykitClient({ publishableKey: 'pk_test_123', brandId: 'brand_xtr_001' });
-   *   const sess = await api.initSession({ enterpriseWalletNo }); // <-- no user id prop
+   * Usage (NEW names preferred):
+   *   const api = createPaykitClient({ publicKey: 'pk_test_123', brandId: 'brand_xtr_001' });
+   *   const sess = await api.initSession({ enterpriseNo: 'EVZ-123456' }); // no user id prop
+   *
+   * Backward-compatible:
+   *   const api = createPaykitClient({ publishableKey: 'pk_test_123' });
+   *   const sess = await api.initSession({ enterpriseWalletNo: 'EVZ-123456' });
    */
   function createPaykitClient() {
     var {
-      publishableKey,
+      publicKey,
+      // NEW (preferred)
       brandId,
-      // NEW (optional)
+      // optional
+      publishableKey,
+      // legacy alias (still supported)
       timeoutMs = DEFAULT_TIMEOUT_MS,
       fetchImpl
     } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    if (!publishableKey) throw new Error('paykitClient: publishableKey is required');
+
+    // Prefer new key name; fall back to legacy
+    var key = publicKey || publishableKey;
+    if (!key) throw new Error('paykitClient: publicKey (or publishableKey) is required');
     var _fetch = fetchImpl || (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
     if (!_fetch) throw new Error('paykitClient: fetch is not available in this environment');
     var jsonHeaders = {
@@ -5758,10 +5768,16 @@
     } // ---------- Public API ----------
     /**
      * Initialize a checkout session.
-     * @param {{enterpriseWalletNo:string, userNo?:string, userWalletId?:string, brandId?:string}} p
-     *  - You SHOULD pass only { enterpriseWalletNo }.
-     *  - SDK will read userNo from cookies; falls back to legacy userWalletId if provided.
-     *  - brandId is OPTIONAL (can be set here or at client creation).
+     * @param {{
+     *   enterpriseNo?: string,             // NEW (preferred)
+     *   enterpriseWalletNo?: string,       // legacy
+     *   userNo?: string,
+     *   userWalletId?: string,
+     *   brandId?: string,                  // optional per-call override
+     *   billingCurrency?: string
+     * }} p
+     *
+     * Recommended: pass only { enterpriseNo } and rely on cookie userNo.
      */
     function _request() {
       _request = _asyncToGenerator(function* (path) {
@@ -5828,16 +5844,20 @@
     function _initSession() {
       _initSession = _asyncToGenerator(function* (p) {
         var _p$userNo, _p$brandId;
-        if (!(p !== null && p !== void 0 && p.enterpriseWalletNo)) {
-          throw new Error('paykitClient:initSession requires enterpriseWalletNo');
+        var ent = (p === null || p === void 0 ? void 0 : p.enterpriseNo) || (p === null || p === void 0 ? void 0 : p.enterpriseWalletNo);
+        if (!ent) {
+          throw new Error('paykitClient:initSession requires enterpriseNo (or enterpriseWalletNo)');
         }
         var userNo = (_p$userNo = p.userNo) !== null && _p$userNo !== void 0 ? _p$userNo : detectUserNo();
-
-        // Allow brandId per-call override; else use the client-level brandId.
         var brandToSend = (_p$brandId = p.brandId) !== null && _p$brandId !== void 0 ? _p$brandId : brandId;
+
+        // Send both NEW + legacy field names for maximum compatibility with server versions.
         var payload = _objectSpread2(_objectSpread2(_objectSpread2({
-          publishableKey,
-          enterpriseWalletNo: p.enterpriseWalletNo
+          publicKey: key,
+          publishableKey: key,
+          // legacy mirror
+          enterpriseNo: ent,
+          enterpriseWalletNo: ent
         }, brandToSend ? {
           brandId: brandToSend
         } : {}), userNo ? {
@@ -5970,8 +5990,12 @@
   var DEFAULT_PROCESSING_GIF = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
   /**
-   * Props:
-   *  - publishableKey, brandId?, enterpriseWalletNo, userWalletId
+   * Props (NEW names preferred; legacy still supported):
+   *  - publicKey? (NEW) | publishableKey? (legacy)
+   *  - brandId?
+   *  - enterpriseNo? (NEW) | enterpriseWalletNo? (legacy)
+   *  - userWalletId?
+   *
    *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
    *  - processingSrc?: string
    *  - minProcessingMs?: number
@@ -5984,9 +6008,12 @@
   function WalletPaymentForm(_ref) {
     var _session$enterprise3, _session$enterprise4;
     var {
-      publishableKey,
+      // NEW preferred
+      publicKey,
       brandId,
-      // ← NEW (optional)
+      enterpriseNo,
+      // legacy aliases (kept)
+      publishableKey,
       enterpriseWalletNo,
       userWalletId,
       zIndex = 2000,
@@ -6003,8 +6030,11 @@
       supportEmail,
       supportPhone
     } = _ref;
+    // Resolve effective identifiers (prefer NEW)
+    var key = publicKey || publishableKey || null;
+    var ent = enterpriseNo || enterpriseWalletNo || null;
     var [view, setView] = require$$0.useState('loading'); // 'loading' | 'signin' | 'invalid' | 'summary' | 'passcode' | 'success' | 'failed' | 'insufficient'
-    var [errorMsg, setErrorMsg] = require$$0.useState(''); // kept for logging only
+    var [errorMsg, setErrorMsg] = require$$0.useState('');
     var [session, setSession] = require$$0.useState(null);
     var [quote, setQuote] = require$$0.useState(null);
     var [passcode, setPasscode] = require$$0.useState('');
@@ -6013,13 +6043,13 @@
 
     var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
     var api = require$$0.useMemo(() => {
-      if (!publishableKey) return null;
-      // Pass brandId into the SDK client (backward compatible if undefined)
+      if (!key) return null;
+      // SDK prefers publicKey but remains backward compatible
       return createPaykitClient({
-        publishableKey,
+        publicKey: key,
         brandId
       });
-    }, [publishableKey, brandId]);
+    }, [key, brandId]);
     var wait = ms => new Promise(r => setTimeout(r, ms));
     function withMinProcessing(_x, _x2) {
       return _withMinProcessing.apply(this, arguments);
@@ -6046,13 +6076,13 @@
         setPasscode('');
         if (!api) {
           if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-            setErrorMsg('Missing publishableKey');
+            setErrorMsg('Missing publicKey/publishableKey');
             setView('invalid');
           }
           return;
         }
         var cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
-        if (!enterpriseWalletNo || !userWalletId && !cookieUserNo) {
+        if (!ent || !userWalletId && !cookieUserNo) {
           if (!(signal !== null && signal !== void 0 && signal.aborted)) setView('signin'); // ask user to sign in
           return;
         }
@@ -6064,8 +6094,10 @@
           return;
         }
         try {
+          // Send both NEW+legacy enterprise fields for maximum compatibility
           var initBody = _objectSpread2(_objectSpread2({
-            enterpriseWalletNo
+            enterpriseNo: ent,
+            enterpriseWalletNo: ent
           }, userWalletId ? {
             userWalletId
           } : {
@@ -6089,7 +6121,7 @@
       return function (_x3) {
         return _ref2.apply(this, arguments);
       };
-    }(), [api, enterpriseWalletNo, userWalletId, amountValid, brandId]);
+    }(), [api, ent, userWalletId, amountValid, brandId]);
     require$$0.useEffect(() => {
       setView('loading');
       var ctrl = new AbortController();
