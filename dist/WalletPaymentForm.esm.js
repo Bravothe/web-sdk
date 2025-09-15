@@ -5734,12 +5734,14 @@ var DEFAULT_TIMEOUT_MS = 12000;
 /**
  * Create a Paykit API client.
  * Usage:
- *   const api = createPaykitClient({ publishableKey: 'pk_test_123' });
+ *   const api = createPaykitClient({ publishableKey: 'pk_test_123', brandId: 'brand_xtr_001' });
  *   const sess = await api.initSession({ enterpriseWalletNo }); // <-- no user id prop
  */
 function createPaykitClient() {
   var {
     publishableKey,
+    brandId,
+    // NEW (optional)
     timeoutMs = DEFAULT_TIMEOUT_MS,
     fetchImpl
   } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -5754,9 +5756,10 @@ function createPaykitClient() {
   } // ---------- Public API ----------
   /**
    * Initialize a checkout session.
-   * @param {{enterpriseWalletNo:string, userNo?:string, userWalletId?:string}} p
+   * @param {{enterpriseWalletNo:string, userNo?:string, userWalletId?:string, brandId?:string}} p
    *  - You SHOULD pass only { enterpriseWalletNo }.
    *  - SDK will read userNo from cookies; falls back to legacy userWalletId if provided.
+   *  - brandId is OPTIONAL (can be set here or at client creation).
    */
   function _request() {
     _request = _asyncToGenerator(function* (path) {
@@ -5822,18 +5825,25 @@ function createPaykitClient() {
    */
   function _initSession() {
     _initSession = _asyncToGenerator(function* (p) {
-      var _p$userNo;
+      var _p$userNo, _p$brandId;
       if (!(p !== null && p !== void 0 && p.enterpriseWalletNo)) {
         throw new Error('paykitClient:initSession requires enterpriseWalletNo');
       }
       var userNo = (_p$userNo = p.userNo) !== null && _p$userNo !== void 0 ? _p$userNo : detectUserNo();
-      var payload = _objectSpread2({
+
+      // Allow brandId per-call override; else use the client-level brandId.
+      var brandToSend = (_p$brandId = p.brandId) !== null && _p$brandId !== void 0 ? _p$brandId : brandId;
+      var payload = _objectSpread2(_objectSpread2(_objectSpread2({
         publishableKey,
         enterpriseWalletNo: p.enterpriseWalletNo
-      }, userNo ? {
+      }, brandToSend ? {
+        brandId: brandToSend
+      } : {}), userNo ? {
         userNo
       } : p.userWalletId ? {
         userWalletId: p.userWalletId
+      } : {}), p.billingCurrency ? {
+        billingCurrency: p.billingCurrency
       } : {});
       if (!payload.userNo && !payload.userWalletId) {
         // No cookie & no legacy id supplied
@@ -5959,20 +5969,22 @@ var DEFAULT_PROCESSING_GIF = 'https://res.cloudinary.com/dlfa42ans/image/upload/
 
 /**
  * Props:
- *  - publishableKey, enterpriseWalletNo, userWalletId
+ *  - publishableKey, brandId?, enterpriseWalletNo, userWalletId
  *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
  *  - processingSrc?: string
  *  - minProcessingMs?: number
  *  - zIndex?: number
  *  - onClose?: () => void
  *  - onSuccess?: (payload) => void
- *  - supportEmail?: string         // ← NEW (shown in Cannot Continue modal)
- *  - supportPhone?: string         // ← NEW (shown in Cannot Continue modal)
+ *  - supportEmail?: string
+ *  - supportPhone?: string
  */
 function WalletPaymentForm(_ref) {
   var _session$enterprise3, _session$enterprise4;
   var {
     publishableKey,
+    brandId,
+    // ← NEW (optional)
     enterpriseWalletNo,
     userWalletId,
     zIndex = 2000,
@@ -5986,7 +5998,6 @@ function WalletPaymentForm(_ref) {
     minProcessingMs = 5000,
     onClose: _onClose,
     onSuccess,
-    // NEW
     supportEmail,
     supportPhone
   } = _ref;
@@ -6001,10 +6012,12 @@ function WalletPaymentForm(_ref) {
   var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
   var api = useMemo(() => {
     if (!publishableKey) return null;
+    // Pass brandId into the SDK client (backward compatible if undefined)
     return createPaykitClient({
-      publishableKey
+      publishableKey,
+      brandId
     });
-  }, [publishableKey]);
+  }, [publishableKey, brandId]);
   var wait = ms => new Promise(r => setTimeout(r, ms));
   function withMinProcessing(_x, _x2) {
     return _withMinProcessing.apply(this, arguments);
@@ -6031,7 +6044,6 @@ function WalletPaymentForm(_ref) {
       setPasscode('');
       if (!api) {
         if (!(signal !== null && signal !== void 0 && signal.aborted)) {
-          // Don’t expose server-y message to user; just route to invalid
           setErrorMsg('Missing publishableKey');
           setView('invalid');
         }
@@ -6050,19 +6062,20 @@ function WalletPaymentForm(_ref) {
         return;
       }
       try {
-        var initBody = _objectSpread2({
+        var initBody = _objectSpread2(_objectSpread2({
           enterpriseWalletNo
         }, userWalletId ? {
           userWalletId
         } : {
           userNo: cookieUserNo
-        });
+        }), brandId ? {
+          brandId
+        } : {});
         var [initRes] = yield Promise.all([api.initSession(initBody), wait(7000)]);
         if (signal !== null && signal !== void 0 && signal.aborted) return;
         setSession(initRes);
         setView('summary');
       } catch (e) {
-        // Log internally but DO NOT show raw server error to end user
         try {
           console.error('initSession failed:', e);
         } catch (_unused) {}
@@ -6074,7 +6087,7 @@ function WalletPaymentForm(_ref) {
     return function (_x3) {
       return _ref2.apply(this, arguments);
     };
-  }(), [api, enterpriseWalletNo, userWalletId, amountValid]);
+  }(), [api, enterpriseWalletNo, userWalletId, amountValid, brandId]);
   useEffect(() => {
     setView('loading');
     var ctrl = new AbortController();

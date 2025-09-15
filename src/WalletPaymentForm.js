@@ -22,18 +22,19 @@ const DEFAULT_PROCESSING_GIF =
 
 /**
  * Props:
- *  - publishableKey, enterpriseWalletNo, userWalletId
+ *  - publishableKey, brandId?, enterpriseWalletNo, userWalletId
  *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
  *  - processingSrc?: string
  *  - minProcessingMs?: number
  *  - zIndex?: number
  *  - onClose?: () => void
  *  - onSuccess?: (payload) => void
- *  - supportEmail?: string         // ← NEW (shown in Cannot Continue modal)
- *  - supportPhone?: string         // ← NEW (shown in Cannot Continue modal)
+ *  - supportEmail?: string
+ *  - supportPhone?: string
  */
 function WalletPaymentForm({
   publishableKey,
+  brandId,                 // ← NEW (optional)
   enterpriseWalletNo,
   userWalletId,
 
@@ -52,7 +53,6 @@ function WalletPaymentForm({
   onClose,
   onSuccess,
 
-  // NEW
   supportEmail,
   supportPhone,
 }) {
@@ -69,8 +69,9 @@ function WalletPaymentForm({
 
   const api = useMemo(() => {
     if (!publishableKey) return null;
-    return createPaykitClient({ publishableKey });
-  }, [publishableKey]);
+    // Pass brandId into the SDK client (backward compatible if undefined)
+    return createPaykitClient({ publishableKey, brandId });
+  }, [publishableKey, brandId]);
 
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -95,7 +96,6 @@ function WalletPaymentForm({
 
       if (!api) {
         if (!signal?.aborted) {
-          // Don’t expose server-y message to user; just route to invalid
           setErrorMsg('Missing publishableKey');
           setView('invalid');
         }
@@ -120,6 +120,8 @@ function WalletPaymentForm({
         const initBody = {
           enterpriseWalletNo,
           ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }),
+          // You can also pass brandId per-call; the SDK will prefer per-call over client-level:
+          ...(brandId ? { brandId } : {}),
         };
 
         const [initRes] = await Promise.all([
@@ -131,14 +133,13 @@ function WalletPaymentForm({
         setSession(initRes);
         setView('summary');
       } catch (e) {
-        // Log internally but DO NOT show raw server error to end user
         try { console.error('initSession failed:', e); } catch {}
         if (signal?.aborted) return;
         setErrorMsg(e?.message || 'Failed to initialize session.');
         setView('invalid');
       }
     },
-    [api, enterpriseWalletNo, userWalletId, amountValid]
+    [api, enterpriseWalletNo, userWalletId, amountValid, brandId]
   );
 
   useEffect(() => {

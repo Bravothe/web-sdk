@@ -1,23 +1,29 @@
-# EVzone PayKit — Web (npm SDK)
+Here’s a clean, integration-only README that matches your latest SDK design (no server flow details, no userWalletId on the host app, currency auto-detected, and optional support contact shown in the “Cannot Continue” modal).
 
-A drop-in React component that lets your customers pay with their **EVzone Wallet**. It renders a complete, branded flow (Summary → Passcode → Processing → Success/Failed/Insufficient Funds) with validations and UI transitions.
+---
+
+# EVzone PayKit — Web (React SDK)
+
+A drop-in React component that lets your customers pay with their **EVzone Wallet**. It renders a complete, branded flow (Summary → Passcode → Processing → Success/Failed/Insufficient Funds) with built-in validations and smooth UI.
 
 ---
 
 ## Requirements
 
 * React 17+ (or 18+)
-* Provide these values from **your platform** for the current payer:
+* From **your app**, provide:
 
   * `publishableKey`
-  * `enterpriseWalletNo` (wallet **receiving** the money)
-  * `userWalletId` (wallet **sending** the money)
-  * `amount` (total to charge)
-  * `type` (e.g., `"Purchase"`, `"Subscription"`)
-  * `particulars` (what’s being purchased)
-  * `merchantLogo` (URL to your company/brand logo)
+  * `enterpriseWalletNo` (the enterprise wallet **receiving** funds)
+  * `amount` (the total to charge)
+  * `type` (e.g. `"Purchase"`, `"Subscription"`)
+  * `particulars` (what the customer is paying for)
+  * `merchantLogo` (URL to your logo)
+  * *(optional)* `supportEmail`, `supportPhone` (shown if the checkout can’t start)
 
-> **Note:** Do **not** provide currency. It is determined by EVzone based on the wallet IDs you pass.
+> **Do not pass a currency.** EVzone determines the currency from the wallets.
+
+> **Do not pass a user wallet ID or user number.** The SDK handles the user internally (via a signed-in check and a secure sign-in pop-up when needed).
 
 ---
 
@@ -25,7 +31,6 @@ A drop-in React component that lets your customers pay with their **EVzone Walle
 
 ```bash
 npm install evzone-pay-ss9
-
 ```
 
 ---
@@ -37,75 +42,67 @@ Render the form when the user clicks **Pay Now**.
 ```jsx
 // src/Home.jsx
 import React, { useMemo, useState } from 'react';
-import { WalletPaymentForm } from 'evzone-pay13';
+import { WalletPaymentForm } from 'evzone-pay-ss9';
 
 const PUBLISHABLE_KEY = 'pk_test_123';
 const ENTERPRISE_WALLET_NO = 'EVZ-123456';
-const USER_WALLET_ID = 'user_789';
 
 export default function Home() {
-  const [show, setShow] = useState(false);
-  const amount = 60000;
+  const [open, setOpen] = useState(false);
 
   const txn = useMemo(
     () => ({
-      amount,
+      amount: 60000,
       type: 'Purchase',
-      particulars: '2 Computers',
+      particulars: '2x Laptops, 1x Mouse',
       merchantLogo:
-        'https://res.cloudinary.com/dlfa42ans/image/upload/v1753798918/boys_zmnhiz.jpg',
+        'https://res.cloudinary.com/dlfa42ans/image/upload/v1743854843/logo5_ljusns.png',
     }),
-    [amount]
+    []
   );
 
   return (
     <div style={{ padding: 24 }}>
-      <h1>EVzone SDK for Commercial or Online Shopping</h1>
-      <p>Amount: UGX {amount.toLocaleString()}</p>
+      <h1>EVzone Checkout</h1>
+      <p>Amount: UGX {txn.amount.toLocaleString()}</p>
 
-      <button onClick={() => setShow(true)}>Pay Now</button>
+      <button onClick={() => setOpen(true)}>Pay with EVzone Wallet</button>
 
-      {show && (
+      {open && (
         <WalletPaymentForm
-          // REQUIRED identifiers (drive session init)
+          // REQUIRED (safe to expose)
           publishableKey={PUBLISHABLE_KEY}
           enterpriseWalletNo={ENTERPRISE_WALLET_NO}
-          userWalletId={USER_WALLET_ID}
-
-          // Transaction inputs
           amount={txn.amount}
           type={txn.type}
           particulars={txn.particulars}
-          merchantLogo={txn.merchantLogo}       
+          merchantLogo={txn.merchantLogo}
 
-          // UX handlers
-          onClose={() => setShow(false)}
+          //contact shown in the “Cannot Continue” modal
+          supportEmail="support@yourshop.com"
+          supportPhone="+256 700 000000"
+
+          onClose={() => setOpen(false)}
           onSuccess={(payload) => {
-            console.log('SUCCESS payload:', payload);
-            
+            console.log('Payment success:', payload);
+            // Keep or close your wrapper/modal as you prefer.
           }}
         />
       )}
     </div>
   );
 }
-
 ```
----
 
-## What you must provide (from your app)
-
-* **`publishableKey`** – Your EVzone publishable key.
-* **`enterpriseWalletNo`** – The enterprise wallet **receiving** the payment.
-* **`userWalletId`** – The customer’s wallet **sending** the payment.
-* **`amount`** – The total amount to charge (sum of items/services).
-* **`type`** – Transaction type (e.g., `"Purchase"`, `"Subscription"`).
-* **`particulars`** – A human-readable description of what’s being purchased.
-* **`merchantLogo`** – URL to your brand’s logo (displayed in the modals).
-
-> **Currency:** Do **not** pass a currency prop. The EVzone backend derives the correct currency from the wallet IDs you provide.
+**What happens at runtime?**
+The SDK checks whether the shopper is already signed in to EVzone in this browser. If not, it prompts a secure pop-up sign-in and then continues the checkout automatically—your app doesn’t handle or see the user’s number.
 
 ---
+
+## Troubleshooting (host app)
+
+* **Form doesn’t start**
+  Ensure `publishableKey`, `enterpriseWalletNo`, `amount`, `type`, `particulars`, and `merchantLogo` are provided. If it still can’t start, users will see a **friendly** “Cannot Continue” message with your `supportEmail`/`supportPhone` if you supplied them.
 
 ## License & Support
 
