@@ -1,7 +1,11 @@
 // src/hooks/useWalletPaymentFlow.js
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import createPaykitClient from '../sdk/paykitClient.js';
-import { getUserNoFromCookie } from '../utils/cookie.js';
+import {
+  getUserNoFromCookie,
+  getUserNosFromCookie,   // scans list + enumerated cookies
+  setUserNoCookie,        // set the selected/active user
+} from '../utils/cookie.js';
 
 /**
  * Encapsulates all checkout/session/quote/charge logic.
@@ -36,20 +40,27 @@ export default function useWalletPaymentFlow({
   const ent = enterpriseNo || enterpriseWalletNo || null;
 
   // ---------- State ----------
-  const [view, setView] = useState('loading'); // loading | signin | invalid | summary | passcode | success | failed | insufficient
+  // views: loading | accountPicker | signin | invalid | summary | passcode | success | failed | insufficient
+  const [view, setView] = useState('loading');
   const [errorMsg, setErrorMsg] = useState('');
   const [session, setSession] = useState(null);
   const [quote, setQuote] = useState(null);
+  const [accounts, setAccounts] = useState([]); // [{userNo, walletId, owner, email, photo}]
 
   const [submitting, setSubmitting] = useState(false);
   const [processing, setProcessing] = useState(null); // 'quote' | 'charge' | null
+
+  // Remember a pick during this flow so we don't re-show the picker until the component is reopened
+  const [pickedUserNoThisFlow, setPickedUserNoThisFlow] = useState(null);
+
+  // A one-shot "force this user on next boot" flag to avoid double-click
+  const forceUserNoRef = useRef(null);
 
   // ---------- Derived ----------
   const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
 
   const api = useMemo(() => {
     if (!key) return null;
-    // SDK prefers { publicKey }, stays backward compatible with publishableKey
     return createPaykitClient({ publicKey: key, brandId });
   }, [key, brandId]);
 
@@ -70,25 +81,92 @@ export default function useWalletPaymentFlow({
   }
 
   // ---------- Boot / init session ----------
-  const boot = useCallback(async () => {
+  const boot = useCallback(async (opts = {}) => {
     setErrorMsg('');
     setQuote(null);
+    setAccounts([]);
+
+    const forceUserNo = opts.forceUserNo ?? forceUserNoRef.current;
+    // consume the one-shot flag immediately so we don't reuse it accidentally
+    forceUserNoRef.current = null;
 
     if (!api) {
       setErrorMsg('Missing publicKey/publishableKey');
       setView('invalid');
       return;
     }
-
-    const cookieUserNo = !userWalletId ? getUserNoFromCookie() : null;
-
-    if (!ent || (!userWalletId && !cookieUserNo)) {
-      setView('signin'); // ask user to sign in
+    if (!ent) {
+      setView('signin');
       return;
     }
     if (!amountValid) {
       setErrorMsg('Invalid amount');
       setView('invalid');
+      return;
+    }
+
+    // If caller didn't force a userWalletId, check cookies/accounts first
+    let cookieUserNo = !userWalletId ? (getUserNoFromCookie() || null) : null;
+
+    if (!userWalletId) {
+      // Combine all known sources: utils helper + fallback scan for evz_user1/evz_user2
+      let userNos = dedupe([
+        ...getUserNosFromCookie(),     // evz_user_no / evz_user_no_2 + list cookie
+        ...scanAltEnumeratedCookies(), // evz_user1 / evz_user2
+      ]).filter(Boolean);
+
+      if (forceUserNo) {
+        // If we were told to force a specific user, ensure cookie is set and skip the picker
+        if (!cookieUserNo || cookieUserNo !== forceUserNo) {
+          try { setUserNoCookie(forceUserNo); } catch {}
+        }
+        cookieUserNo = forceUserNo;
+        // make sure the forced user exists in the list locally (helps when cookies are inconsistent)
+        if (!userNos.includes(forceUserNo)) userNos.push(forceUserNo);
+      }
+
+      if (userNos.length === 0) {
+        // 0 accounts -> signin
+        setView('signin');
+        return;
+      }
+
+      if (!forceUserNo) {
+        if (userNos.length === 1) {
+          // 1 account -> auto-select and proceed (ensure cookie set)
+          const only = userNos[0];
+          if (!cookieUserNo || cookieUserNo !== only) {
+            try { setUserNoCookie(only); } catch {}
+            cookieUserNo = only;
+          }
+        } else if (userNos.length > 1) {
+          // 2+ accounts -> show picker *unless* we already picked one earlier in this flow
+          if (!pickedUserNoThisFlow) {
+            try {
+              if (typeof api.lookupUsersByNo === 'function') {
+                const res = await api.lookupUsersByNo(userNos);
+                const list = Array.isArray(res?.users)
+                  ? res.users
+                  : (Array.isArray(res) ? res : []);
+                setAccounts(list.length > 0 ? list : buildPlaceholderAccounts(userNos));
+              } else {
+                setAccounts(buildPlaceholderAccounts(userNos));
+              }
+            } catch {
+              setAccounts(buildPlaceholderAccounts(userNos));
+            }
+            setView('accountPicker');
+            return; // wait for user to pick, then restart({ forceUserNo })
+          }
+          // we already picked in this flow; continue with that
+          cookieUserNo = pickedUserNoThisFlow || cookieUserNo || null;
+        }
+      }
+    }
+
+    // At this point we either have a forced userWalletId or a cookieUserNo
+    if (!userWalletId && !cookieUserNo) {
+      setView('signin');
       return;
     }
 
@@ -103,7 +181,7 @@ export default function useWalletPaymentFlow({
 
       const [initRes] = await Promise.all([
         api.initSession(initBody),
-        wait(7000), // keep existing premium overlay timing
+        wait(7000), // keep existing overlay timing
       ]);
 
       setSession(initRes);
@@ -113,9 +191,9 @@ export default function useWalletPaymentFlow({
       setErrorMsg(e?.message || 'Failed to initialize session.');
       setView('invalid');
     }
-  }, [api, ent, userWalletId, amountValid, brandId]);
+  }, [api, ent, userWalletId, amountValid, brandId, minProcessingMs, pickedUserNoThisFlow]);
 
-  // Auto-boot on mount / when inputs change
+  // Auto-boot on mount / when inputs change (each time the form is shown, this component mounts → checks cookies first)
   useEffect(() => {
     setView('loading');
     let cancelled = false;
@@ -125,10 +203,13 @@ export default function useWalletPaymentFlow({
     return () => { cancelled = true; };
   }, [boot]);
 
-  // Allow the UI to trigger a fresh boot (e.g., after login success)
-  const restart = useCallback(() => {
+  // Allow the UI to trigger a fresh boot; optionally force a specific userNo
+  const restart = useCallback((forceUserNo) => {
+    if (forceUserNo) {
+      forceUserNoRef.current = forceUserNo; // one-shot
+    }
     setView('loading');
-    boot();
+    boot({ forceUserNo });
   }, [boot]);
 
   // ---------- Details for display ----------
@@ -230,6 +311,13 @@ export default function useWalletPaymentFlow({
 
   const goToSummary = useCallback(() => setView('summary'), []);
 
+  // When user chooses an account from the picker: set primary cookie, remember pick, and restart *forcing* that user
+  const selectAccount = useCallback((userNo) => {
+    try { if (userNo) setUserNoCookie(userNo); } catch {}
+    setPickedUserNoThisFlow(userNo);
+    restart(userNo); // force next boot to use this user directly (prevents the second picker)
+  }, [restart]);
+
   return {
     // state
     view,
@@ -242,6 +330,10 @@ export default function useWalletPaymentFlow({
     // derived
     details,
 
+    // multi-account
+    accounts,
+    selectAccount,
+
     // actions
     handleConfirm,
     handleSubmit,
@@ -249,4 +341,36 @@ export default function useWalletPaymentFlow({
     restart,
     goToSummary,
   };
+}
+
+/* ---------- helpers (local to this file) ---------- */
+
+// Read alternate enumerated cookies like: evz_user1=U-000123; evz_user2=U-000789
+function scanAltEnumeratedCookies() {
+  if (typeof document === 'undefined' || !document.cookie) return [];
+  const items = document.cookie.split('; ');
+  const out = [];
+  const re = /^evz_user\d+$/i; // supports evz_user1, evz_user2, ...
+  for (const raw of items) {
+    const eq = raw.indexOf('=');
+    if (eq === -1) continue;
+    const name = decodeURIComponent(raw.slice(0, eq).trim());
+    const value = decodeURIComponent(raw.slice(eq + 1));
+    if (re.test(name) && value) out.push(value);
+  }
+  return out;
+}
+
+function dedupe(arr) {
+  return Array.from(new Set(arr || []));
+}
+
+function buildPlaceholderAccounts(userNos) {
+  return userNos.map((u) => ({
+    userNo: u,
+    walletId: null,
+    owner: `User ${String(u).slice(-3)}`,
+    email: `${String(u).toLowerCase().replace(/[^a-z0-9]+/g, '')}@example.com`,
+    photo: `https://i.pravatar.cc/80?u=${encodeURIComponent(u)}`,
+  }));
 }

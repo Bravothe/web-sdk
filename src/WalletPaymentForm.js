@@ -9,9 +9,9 @@ import PaymentFailedModal from './PaymentFailedModal.js';
 import InsufficientFundsModal from './InsufficientFundsModal.js';
 import LoadingOverlay from './LoadingOverlay.js';
 import ProcessingModal from './ProcessingModal.js';
-import HasAccountSummary from './HasAccountSummary.js'; // sign-in modal
+import HasAccountSummary from './HasAccountSummary.js';
+import AccountPickerModal from './AccountPickerModal.js';
 
-import { setUserNoCookie } from './utils/cookie.js';
 import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
 
 const { Title, Text } = Typography;
@@ -46,15 +46,19 @@ function WalletPaymentForm(props) {
   const {
     view,
     errorMsg,
-    session,
     quote,
     submitting,
     processing,
     details,
+
+    // from the upgraded hook
+    accounts,
+    selectAccount,
+
     handleConfirm,
     handleSubmit,
     closeAndReset,
-    restart,
+    restart,       // kept if you want to trigger a manual reboot elsewhere
     goToSummary,
   } = useWalletPaymentFlow(props);
 
@@ -129,13 +133,29 @@ function WalletPaymentForm(props) {
   // Otherwise, render the selected flow modal
   let content = null;
   if (view === 'loading')       content = renderLoading();
+  else if (view === 'accountPicker') {
+    // Multi-account chooser (Google-style) when multiple userNos are in cookies
+    content = (
+      <AccountPickerModal
+        open
+        zIndex={zIndex}
+        accounts={accounts || []}
+        onSelect={(userNo) => {
+          setPasscode('');
+          // Hook writes the cookie and restarts the flow
+          selectAccount?.(userNo);
+        }}
+        onClose={closeAndReset}
+      />
+    );
+  }
   else if (view === 'signin')   content = (
     <HasAccountSummary
       open
       onLoginSuccess={(userNo) => {
-        try { if (userNo) setUserNoCookie(userNo); } catch {}
         setPasscode('');
-        restart();
+        // Use hook’s helper so it stays the single source of truth
+        selectAccount?.(userNo);
       }}
       onClose={closeAndReset}
       zIndex={zIndex}

@@ -155,10 +155,42 @@ export default function createPaykitClient({
     });
   }
 
+  /**
+   * Lookup user profiles by userNo (for account picker UI).
+   * Accepts an array of userNos found in cookies and returns
+   * [{ userNo, walletId, owner, email, photo }] (shape is server-defined).
+   *
+   * This is optional: if the server doesn’t expose the route yet,
+   * callers should catch errors and fall back to the sign-in flow.
+   *
+   * @param {string[]} userNos
+   * @returns {Promise<{users: Array<{userNo:string, walletId:string, owner?:string, email?:string, photo?:string}>}>}
+   */
+  async function lookupUsersByNo(userNos) {
+    const arr = Array.isArray(userNos) ? userNos.filter(Boolean) : [];
+    if (arr.length === 0) return { users: [] };
+
+    const payload = {
+      publicKey: key,
+      publishableKey: key,      // legacy mirror
+      ...(brandId ? { brandId } : {}),
+      userNos: Array.from(new Set(arr)),
+    };
+
+    // Server route suggestion: POST /api/v1/paykit/sdk/users/by-no
+    // Response shape suggestion: { ok: true, users: [...] }
+    const res = await request('/api/v1/paykit/sdk/users/by-no', { body: payload });
+    // Normalize to { users: [...] } even if server returns an array for convenience
+    if (Array.isArray(res)) return { users: res };
+    if (Array.isArray(res?.users)) return { users: res.users };
+    return { users: [] };
+  }
+
   return {
     initSession,
     quote,
     charge,
+    lookupUsersByNo,   // ← NEW
     genIdempotencyKey,
   };
 }
