@@ -1,8 +1,26 @@
 // src/utils/cookie.js
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Public API (stable) that other SDK files call:
+//   - getUserNoFromCookie()
+//   - getUserNosFromCookie()
+//   - setUserNoCookie(), clearUserNoCookie()
+//   - setPrimaryUserNoCookie(), addUserNoToList(), removeUserNoFromList()
+//   - setUserNosCookie(), clearUserNosCookie()
+//   - detectUserNoFromCookies()  ← alias for getUserNoFromCookie()
+//   - getUserNo()                ← alias for getUserNoFromCookie()
+//   - getDummyUsersFromCookies() ← NEW: return [{userNo,walletId,owner,email,photo}, ...]
+//   - getUsersForPicker()        ← NEW: same as above; stable name for UI layer
+// Teammates can later swap getDummyUsersFromCookies() with a real implementation.
+// ──────────────────────────────────────────────────────────────────────────────
+
 const DEFAULT_NAME = 'evz_user_no';     // primary/active user (used when user picks)
 const LIST_NAME = 'evz_user_nos';       // JSON list of userNos (fallback to CSV)
-const ENUM_PREFIX = 'evz_user';         // NEW: enumerated cookies => evz_user1, evz_user2, ...
+const ENUM_PREFIX = 'evz_user';         // enumerated cookies => evz_user1, evz_user2, ...
+
+/* ------------------------------------------------------------------ */
+/*             Primary user cookie (active selection)                  */
+/* ------------------------------------------------------------------ */
 
 /**
  * Read the active user number cookie (default: "evz_user_no").
@@ -49,6 +67,12 @@ export function clearUserNoCookie(name = DEFAULT_NAME, { path = '/' } = {}) {
   document.cookie = `${encodeURIComponent(name)}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=${path}`;
 }
 
+/**
+ * Alias exports expected elsewhere in the SDK.
+ */
+export function detectUserNoFromCookies() { return getUserNoFromCookie(); }
+export function getUserNo() { return getUserNoFromCookie(); }
+
 /* ------------------------------------------------------------------ */
 /*                      Multi-account helper API                      */
 /* ------------------------------------------------------------------ */
@@ -57,8 +81,8 @@ export function clearUserNoCookie(name = DEFAULT_NAME, { path = '/' } = {}) {
  * Return all known user numbers on this device.
  * Merges and de-dupes (primary first if present):
  *  - JSON/CSV list cookie (evz_user_nos)
- *  - NEW enumerated cookies: evz_user1, evz_user2, ...
- *  - Primary cookie (evz_user_no)
+ *  - enumerated cookies: evz_user1, evz_user2, ...
+ *  - primary cookie (evz_user_no)
  */
 export function getUserNosFromCookie(listName = LIST_NAME) {
   if (typeof document === 'undefined') return [];
@@ -78,7 +102,7 @@ export function getUserNosFromCookie(listName = LIST_NAME) {
     }
   }
 
-  // NEW: enumerated cookies evz_user1, evz_user2, ... (ordered by index)
+  // Enumerated cookies evz_user1, evz_user2, ... (ordered by index)
   const fromEnumerated = listEnumeratedUserNos();
 
   // Merge + de-dup
@@ -149,7 +173,55 @@ export function setPrimaryUserNoCookie(userNo, opts = {}) {
 }
 
 /* ------------------------------------------------------------------ */
-/*                            Internals                                */
+/*                  DUMMY USERS FOR PICKER (NO SERVER)                */
+/* ------------------------------------------------------------------ */
+/**
+ * Return demo user profiles derived from cookie userNos.
+ * Shape: { userNo, walletId, owner?, email?, photo? }
+ *
+ * Teammates can replace this logic with a real lookup while keeping
+ * the same function signature and exports.
+ */
+export function getDummyUsersFromCookies() {
+  const userNos = getUserNosFromCookie();
+
+  // Known demo profiles (stable for your QA/storybook)
+  const known = {
+    'U-000123': {
+      walletId: 'W-256-48392018',
+      owner: 'John Doe',
+      email: 'john@x.com',
+      photo: 'https://api.dicebear.com/7.x/initials/svg?seed=John%20Doe',
+    },
+    'U-000789': {
+      walletId: 'W-256-74731323',
+      owner: 'Jane Smith',
+      email: 'jane@x.com',
+      photo: 'https://api.dicebear.com/7.x/initials/svg?seed=Jane%20Smith',
+    },
+  };
+
+  // Build output; unknown userNos get a safe default avatar
+  const out = [];
+  for (const no of userNos) {
+    if (!no) continue;
+    const prof = known[no] || makeFallbackProfile(no);
+    out.push({ userNo: no, ...prof });
+  }
+  return dedupeByUserNo(out);
+}
+
+/**
+ * Stable name used by UI layer to fetch accounts for the picker.
+ * Today it returns the dummy set above; later your teammates can
+ * redirect this to a real loader while preserving the signature.
+ */
+export function getUsersForPicker() {
+  return getDummyUsersFromCookies();
+}
+
+/* ------------------------------------------------------------------ */
+/*                               Internals                             */
 /* ------------------------------------------------------------------ */
 
 function isHttps() {
@@ -211,4 +283,29 @@ function listEnumeratedUserNos(prefix = ENUM_PREFIX) {
   // Sort by numeric suffix (1,2,3…)
   found.sort((a, b) => a.idx - b.idx);
   return found.map((x) => x.value);
+}
+
+function dedupeByUserNo(list) {
+  const seen = new Set();
+  const out = [];
+  for (const u of list) {
+    if (!u || !u.userNo) continue;
+    if (seen.has(u.userNo)) continue;
+    seen.add(u.userNo);
+    out.push(u);
+  }
+  return out;
+}
+
+function makeFallbackProfile(userNo) {
+  // Derive a readable label from userNo suffix
+  const suffix = String(userNo).slice(-3);
+  const owner = `User ${suffix}`;
+  const photo = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(owner)}`;
+  return {
+    walletId: `W-256-${Math.floor(10_000_000 + Math.random() * 89_999_999)}`,
+    owner,
+    email: null,
+    photo,
+  };
 }

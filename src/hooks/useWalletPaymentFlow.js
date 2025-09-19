@@ -1,24 +1,63 @@
 // src/hooks/useWalletPaymentFlow.js
+// OFFLINE / DUMMY MODE:
+// - No network calls. No import of createPaykitClient.
+// - Uses cookie helpers to discover userNos and builds dummy user profiles
+//   (email + photo) for the account picker.
+// - Creates a local "session", computes a dummy quote, and simulates a charge.
+// - Logs the selected userNo so your teammate can hook their auth later.
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import createPaykitClient from '../sdk/paykitClient.js';
 import {
   getUserNoFromCookie,
   getUserNosFromCookie,   // scans list + enumerated cookies
-  setUserNoCookie,        // set the selected/active user
+  setUserNoCookie,       // set the selected/active user
+  getUsersForPicker,     // returns [{userNo,walletId,owner,email,photo}]
 } from '../utils/cookie.js';
 
+// Dummy platform knobs (match your server-ish math)
+const CHARGES = { taxPct: 0.025, walletFeePct: 0.015 };
+
+// Local demo user state (balance, currency, passcode)
+// You can tweak these safely; UI will reflect them.
+const DUMMY_USER_STATE = {
+  'U-000789': { balance: 50000, currency: 'UGX', passcode: '123456' }, // Jane
+  'U-000123': { balance: 1200,  currency: 'USD', passcode: '123456' }, // John
+};
+
+// Fallback defaults for unknown users
+const DEFAULT_USER_STATE = { balance: 100000, currency: 'UGX', passcode: '123456' };
+
+// Quick helpers
+const rnd = (n) => Math.round(Number(n) || 0);
+
+function buildBreakdown(subtotal) {
+  const tax = rnd(subtotal * CHARGES.taxPct);
+  const walletFee = rnd(subtotal * CHARGES.walletFeePct);
+  const total = subtotal; // fees are informational in this demo
+  return {
+    subtotal,
+    taxPct: CHARGES.taxPct,
+    tax,
+    walletFeePct: CHARGES.walletFeePct,
+    walletFee,
+    total,
+  };
+}
+
+function nowIso() { return new Date().toISOString(); }
+
 /**
- * Encapsulates all checkout/session/quote/charge logic.
+ * Encapsulates all checkout/session/quote/charge logic (OFFLINE).
  * UI components subscribe to this hook and render based on its state.
  */
 export default function useWalletPaymentFlow({
-  // preferred + legacy identifiers
+  // preferred + legacy identifiers (still required by your UI)
   publicKey,
   publishableKey,
   brandId,
   enterpriseNo,
   enterpriseWalletNo,
-  userWalletId,
+  userWalletId,        // if you force it, we skip cookie flow
 
   // transaction display fields
   amount,
@@ -36,15 +75,17 @@ export default function useWalletPaymentFlow({
   onSuccess,
 }) {
   // Resolve effective identifiers (prefer NEW names)
-  const key = publicKey || publishableKey || null;
-  const ent = enterpriseNo || enterpriseWalletNo || null;
+  const key = publicKey || publishableKey || null;              // still validated for UX messages
+  const ent = enterpriseNo || enterpriseWalletNo || null;       // used to display enterpriseNo
 
   // ---------- State ----------
   // views: loading | accountPicker | signin | invalid | summary | passcode | success | failed | insufficient
   const [view, setView] = useState('loading');
   const [errorMsg, setErrorMsg] = useState('');
-  const [session, setSession] = useState(null);
-  const [quote, setQuote] = useState(null);
+
+  // Local "session"
+  const [session, setSession] = useState(null); // { sessionId, enterprise:{...}, user:{...}, billingCurrency, expiresAt }
+  const [quote, setQuote] = useState(null);     // { quoteId, total, currency, breakdown, ... }
   const [accounts, setAccounts] = useState([]); // [{userNo, walletId, owner, email, photo}]
 
   const [submitting, setSubmitting] = useState(false);
@@ -58,11 +99,6 @@ export default function useWalletPaymentFlow({
 
   // ---------- Derived ----------
   const amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
-
-  const api = useMemo(() => {
-    if (!key) return null;
-    return createPaykitClient({ publicKey: key, brandId });
-  }, [key, brandId]);
 
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -80,7 +116,39 @@ export default function useWalletPaymentFlow({
     }
   }
 
-  // ---------- Boot / init session ----------
+  // Build a local "session" object from a chosen userNo (no server calls)
+  function makeLocalSession(entNo, chosenUserNo) {
+    const userState = DUMMY_USER_STATE[chosenUserNo] || DEFAULT_USER_STATE;
+
+    // find a display profile (email/photo/owner) from cookie utils fallback
+    const pool = getUsersForPicker();
+    const prof = Array.isArray(pool)
+      ? (pool.find(u => u.userNo === chosenUserNo) || {})
+      : {};
+
+    return {
+      sessionId: 'sess_' + Math.random().toString(36).slice(2),
+      enterprise: {
+        walletNo: entNo,
+        name: merchantName || 'Demo Enterprise', // prefer the merchantName prop if present
+        currency: 'UGX',                         // demo enterprise currency
+      },
+      user: {
+        walletId: prof.walletId || ('W-256-' + Math.floor(10_000_00 + Math.random()*89_999_99)),
+        name: prof.owner || ('User ' + String(chosenUserNo).slice(-3)),
+        email: prof.email || null,
+        balance: userState.balance,
+        currency: userState.currency,
+        userNo: chosenUserNo, // keep locally
+      },
+      billingCurrency: currency || userState.currency || 'UGX',
+      rates: { CHARGES },
+      expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(), // 15 min
+      createdAt: nowIso(),
+    };
+  }
+
+  // ---------- Boot / init session (OFFLINE) ----------
   const boot = useCallback(async (opts = {}) => {
     setErrorMsg('');
     setQuote(null);
@@ -90,13 +158,13 @@ export default function useWalletPaymentFlow({
     // consume the one-shot flag immediately so we don't reuse it accidentally
     forceUserNoRef.current = null;
 
-    if (!api) {
+    if (!key) {
       setErrorMsg('Missing publicKey/publishableKey');
       setView('invalid');
       return;
     }
     if (!ent) {
-      setView('signin');
+      setView('signin'); // enterpriseNo missing → show "Has account?" modal
       return;
     }
     if (!amountValid) {
@@ -105,14 +173,13 @@ export default function useWalletPaymentFlow({
       return;
     }
 
-    // If caller didn't force a userWalletId, check cookies/accounts first
+    // If caller didn't force a specific wallet, check cookies/accounts first
     let cookieUserNo = !userWalletId ? (getUserNoFromCookie() || null) : null;
 
     if (!userWalletId) {
-      // Combine all known sources: utils helper + fallback scan for evz_user1/evz_user2
+      // Merge all known sources (primary/list/enumerated)
       let userNos = dedupe([
-        ...getUserNosFromCookie(),     // evz_user_no / evz_user_no_2 + list cookie
-        ...scanAltEnumeratedCookies(), // evz_user1 / evz_user2
+        ...getUserNosFromCookie(),
       ]).filter(Boolean);
 
       if (forceUserNo) {
@@ -121,12 +188,10 @@ export default function useWalletPaymentFlow({
           try { setUserNoCookie(forceUserNo); } catch {}
         }
         cookieUserNo = forceUserNo;
-        // make sure the forced user exists in the list locally (helps when cookies are inconsistent)
         if (!userNos.includes(forceUserNo)) userNos.push(forceUserNo);
       }
 
       if (userNos.length === 0) {
-        // 0 accounts -> signin
         setView('signin');
         return;
       }
@@ -140,25 +205,17 @@ export default function useWalletPaymentFlow({
             cookieUserNo = only;
           }
         } else if (userNos.length > 1) {
-          // 2+ accounts -> show picker *unless* we already picked one earlier in this flow
+          // 2+ accounts -> show picker *unless* we already picked earlier in this flow
           if (!pickedUserNoThisFlow) {
             try {
-              if (typeof api.lookupUsersByNo === 'function') {
-                const res = await api.lookupUsersByNo(userNos);
-                const list = Array.isArray(res?.users)
-                  ? res.users
-                  : (Array.isArray(res) ? res : []);
-                setAccounts(list.length > 0 ? list : buildPlaceholderAccounts(userNos));
-              } else {
-                setAccounts(buildPlaceholderAccounts(userNos));
-              }
+              const list = getUsersForPicker();
+              setAccounts(Array.isArray(list) && list.length ? list : buildPlaceholderAccounts(userNos));
             } catch {
               setAccounts(buildPlaceholderAccounts(userNos));
             }
             setView('accountPicker');
             return; // wait for user to pick, then restart({ forceUserNo })
           }
-          // we already picked in this flow; continue with that
           cookieUserNo = pickedUserNoThisFlow || cookieUserNo || null;
         }
       }
@@ -170,30 +227,20 @@ export default function useWalletPaymentFlow({
       return;
     }
 
-    try {
-      // Send both NEW+legacy enterprise fields for maximum compatibility
-      const initBody = {
-        enterpriseNo: ent,
-        enterpriseWalletNo: ent,
-        ...(userWalletId ? { userWalletId } : { userNo: cookieUserNo }),
-        ...(brandId ? { brandId } : {}),
-      };
+    // Simulate a little prep time (keeps UI parity)
+    await wait(700);
 
-      const [initRes] = await Promise.all([
-        api.initSession(initBody),
-        wait(7000), // keep existing overlay timing
-      ]);
-
-      setSession(initRes);
-      setView('summary');
-    } catch (e) {
-      try { console.error('initSession failed:', e); } catch {}
-      setErrorMsg(e?.message || 'Failed to initialize session.');
-      setView('invalid');
+    // Build local session immediately (no server)
+    const chosen = userWalletId ? null : cookieUserNo;
+    if (chosen) {
+      try { console.log('[evzone-sdk] selected userNo:', chosen); } catch {}
     }
-  }, [api, ent, userWalletId, amountValid, brandId, minProcessingMs, pickedUserNoThisFlow]);
+    const sess = makeLocalSession(ent, chosen || 'U-LOCAL');
+    setSession(sess);
+    setView('summary');
+  }, [key, ent, userWalletId, amountValid, pickedUserNoThisFlow, currency, merchantName]);
 
-  // Auto-boot on mount / when inputs change (each time the form is shown, this component mounts → checks cookies first)
+  // Auto-boot on mount / when inputs change
   useEffect(() => {
     setView('loading');
     let cancelled = false;
@@ -221,7 +268,7 @@ export default function useWalletPaymentFlow({
     return {
       type: type || 'Booking',
       id: toId,
-      particulars: particulars || 'Hotel Booking',
+      particulars: particulars || 'Payment',
       billedCurrency: billingCurrency,
       billedAmount: amount,
       totalBilling: quote?.total ?? amount,
@@ -241,43 +288,97 @@ export default function useWalletPaymentFlow({
     type,
   ]);
 
-  // ---------- Actions ----------
+  // ---------- Actions (OFFLINE) ----------
   const handleConfirm = useCallback(async () => {
-    if (!session || !api) return;
+    if (!session) return;
     setSubmitting(true);
     setErrorMsg('');
     try {
-      const q = await withMinProcessing('quote', () =>
-        api.quote({ sessionId: session.sessionId, amount })
-      );
+      const q = await withMinProcessing('quote', async () => {
+        // local "quote"
+        const subtotal = rnd(amount);
+        const breakdown = buildBreakdown(subtotal);
+        const q = {
+          quoteId: 'qt_' + Math.random().toString(36).slice(2),
+          total: subtotal,
+          currency: session.billingCurrency || 'UGX',
+          breakdown,
+          createdAt: nowIso(),
+          expiresAt: new Date(Date.now() + 5 * 60_000).toISOString(),
+        };
+        return q;
+      });
+
       setQuote(q);
 
       const balance = Number(session?.user?.balance || 0);
       if (balance < Number(q.total || 0)) setView('insufficient');
       else setView('passcode');
     } catch (e) {
-      try { console.error('quote failed:', e); } catch {}
-      setErrorMsg('Could not fetch quote.');
+      try { console.error('quote failed (offline):', e); } catch {}
+      setErrorMsg('Could not prepare quote.');
       setView('failed');
     } finally {
       setSubmitting(false);
     }
-  }, [api, session, amount]);
+  }, [session, amount]);
 
   const handleSubmit = useCallback(async (passcode) => {
-    if (!session || !quote || !api) return;
+    if (!session || !quote) return;
     if (!passcode || String(passcode).length !== 6) return;
 
     setSubmitting(true);
     setErrorMsg('');
     try {
-      const res = await withMinProcessing('charge', () =>
-        api.charge({
-          sessionId: session.sessionId,
-          quoteId: quote.quoteId,
-          passcode,
-        })
-      );
+      const res = await withMinProcessing('charge', async () => {
+        // validate passcode against our local dummy state
+        const uNo = session?.user?.userNo;
+        const state = (uNo && DUMMY_USER_STATE[uNo]) || DEFAULT_USER_STATE;
+        if (String(passcode) !== String(state.passcode)) {
+          const err = new Error('Incorrect passcode');
+          err.code = 'INVALID_PASSCODE';
+          throw err;
+        }
+
+        const total = Number(quote.total || 0);
+        const currBalance = Number(session.user.balance || 0);
+        if (currBalance < total) {
+          const err = new Error('Not enough balance');
+          err.code = 'INSUFFICIENT_FUNDS';
+          throw err;
+        }
+
+        // "post" it locally: reduce balance, build receipt
+        const newBal = rnd(currBalance - total);
+
+        // reflect it in session for UI
+        const nextSess = {
+          ...session,
+          user: { ...session.user, balance: newBal },
+        };
+        setSession(nextSess);
+
+        return {
+          chargeId: 'ch_' + Math.random().toString(36).slice(2),
+          receipt: {
+            transactionId: 'W-' + Math.floor(Math.random() * 1e9),
+            timestamp: nowIso(),
+            billing: { amount: total, currency: quote.currency },
+            user: {
+              walletId: session.user.walletId,
+              debited: total,
+              currency: session.user.currency,
+              newBalance: newBal,
+            },
+            enterprise: {
+              walletNo: session.enterprise.walletNo,
+              credited: total,
+              currency: session.enterprise.currency || 'UGX',
+            },
+            breakdown: quote.breakdown,
+          },
+        };
+      });
 
       setView('success');
       onSuccess?.({
@@ -294,14 +395,14 @@ export default function useWalletPaymentFlow({
     } catch (e) {
       if (e?.code === 'INSUFFICIENT_FUNDS') setView('insufficient');
       else {
-        try { console.error('charge failed:', e); } catch {}
-        setErrorMsg('Payment failed.');
+        try { console.error('charge failed (offline):', e); } catch {}
+        setErrorMsg(e?.message || 'Payment failed.');
         setView('failed');
       }
     } finally {
       setSubmitting(false);
     }
-  }, [api, session, quote, details, onSuccess]);
+  }, [session, quote, details, onSuccess]);
 
   const closeAndReset = useCallback(() => {
     setQuote(null);
@@ -315,6 +416,8 @@ export default function useWalletPaymentFlow({
   const selectAccount = useCallback((userNo) => {
     try { if (userNo) setUserNoCookie(userNo); } catch {}
     setPickedUserNoThisFlow(userNo);
+    // Important: LOG the userNo so your teammate can capture it in their flow.
+    try { console.log('[evzone-sdk] user picked (cookie primary):', userNo); } catch {}
     restart(userNo); // force next boot to use this user directly (prevents the second picker)
   }, [restart]);
 
@@ -344,22 +447,6 @@ export default function useWalletPaymentFlow({
 }
 
 /* ---------- helpers (local to this file) ---------- */
-
-// Read alternate enumerated cookies like: evz_user1=U-000123; evz_user2=U-000789
-function scanAltEnumeratedCookies() {
-  if (typeof document === 'undefined' || !document.cookie) return [];
-  const items = document.cookie.split('; ');
-  const out = [];
-  const re = /^evz_user\d+$/i; // supports evz_user1, evz_user2, ...
-  for (const raw of items) {
-    const eq = raw.indexOf('=');
-    if (eq === -1) continue;
-    const name = decodeURIComponent(raw.slice(0, eq).trim());
-    const value = decodeURIComponent(raw.slice(eq + 1));
-    if (re.test(name) && value) out.push(value);
-  }
-  return out;
-}
 
 function dedupe(arr) {
   return Array.from(new Set(arr || []));
