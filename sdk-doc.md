@@ -1,26 +1,24 @@
-# EVzone SDK — Cookie-Based Account Detection & Selection
+# EVzone SDK — Cookie-Based Account Detection & Selection (Single Doc)
 
-This note tells you exactly what to implement so the SDK:
+This guide tells you **exactly** what to implement so the SDK:
 
 * reads **user numbers** from cookies,
-* resolves them to **full user profiles** `{ userNo, walletId, owner, email, photo }`,
+* resolves them to **full user profiles**
+  `{ userNo, walletId, owner, email, photo }`,
 * and shows the correct modal:
 
   * **0 users** → *No account / Sign in*
   * **1 user** → *Summary*
   * **2+ users** → *Account Picker*
 
-It also shows you where to **console the full selected profile object**.
+It also shows where to **console the full selected profile object** and how to **wire sign-in** so cookies are detected after login.
 
 ---
 
-## What you need to do
-
-### 1) Implement profile resolution in `src/utils/cookie.js`
+## 1) Cookies → Profiles (`src/utils/cookie.js`)
 
 You already have helpers like `getUserNoFromCookie`, `getUserNosFromCookie`, etc.
-
-Add/modify **one function** that turns an array of userNos → **full profile objects**.
+Add **one** function that turns userNos → full profiles.
 
 ```js
 // src/utils/cookie.js
@@ -29,12 +27,12 @@ Add/modify **one function** that turns an array of userNos → **full profile ob
  * Return an array of profiles for the given userNos.
  * Each profile MUST have: { userNo, walletId, owner, email, photo }.
  *
- * Replace the example lookup below with your own cookie/storage logic.
+ * Replace the example map with your own cookie/storage-backed values.
  */
 export function resolveUserProfilesFromCookies(userNos = []) {
   const arr = Array.isArray(userNos) ? userNos.filter(Boolean) : [];
 
-  // TODO: Replace this map with your own values read from cookies/local storage
+  // ✅ Example stub — replace with your cookie-backed data
   const known = {
     'U-000123': {
       walletId: 'W-256-48392018',
@@ -67,14 +65,13 @@ export function resolveUserProfilesFromCookies(userNos = []) {
 }
 ```
 
-> When you wire in your real cookie logic:
-> **Don’t change the function name or return shape**—just populate the same fields from your data source.
+> When you wire in your real cookie logic later: **keep the same function name and return shape**—just populate fields from your data source.
 
 ---
 
-### 2) Make lookup use the cookie resolver (already supported by the SDK)
+## 2) Account lookup uses your cookie resolver (`src/sdk/paykitClient.js`)
 
-In `src/sdk/paykitClient.js`, the SDK calls `lookupUsersByNo(userNos)` to get profiles for the Account Picker. Ensure it **delegates to the resolver** you just implemented:
+The SDK calls `lookupUsersByNo(userNos)` to populate the Account Picker. Make it delegate to the resolver above (no external calls).
 
 ```js
 // src/sdk/paykitClient.js
@@ -84,19 +81,19 @@ async function lookupUsersByNo(userNos) {
   const arr = Array.isArray(userNos) ? userNos.filter(Boolean) : [];
   if (arr.length === 0) return { users: [] };
 
-  // No external calls here. Just resolve from cookies/storage.
+  // Resolve from cookies/storage only
   const users = resolveUserProfilesFromCookies(arr);
   return { users };
 }
 ```
 
-> Nothing else needs changing here.
+> Nothing else in this file needs changing for this flow.
 
 ---
 
-### 3) Log the **full profile object** when an account is chosen
+## 3) Log the **full profile** when an account is chosen (`src/WalletPaymentForm.js`)
 
-The SDK already provides the `accounts` array to the payment form during the Account Picker step. Add one line to log the full object that was chosen.
+During the Account Picker step, add one line to log the chosen object.
 
 ```jsx
 // src/WalletPaymentForm.js
@@ -108,13 +105,12 @@ else if (view === 'accountPicker') {
       zIndex={zIndex}
       accounts={accounts || []}
       onSelect={(userNo) => {
-        // 🔎 Log the full selected profile:
+        // 🔎 Log the full selected profile object:
         const selected = (accounts || []).find(a => a.userNo === userNo);
         try { console.log('[EVZ SDK] selected account:', selected); } catch {}
 
         setPasscode('');
-        // Continue the flow with the picked account
-        selectAccount?.(userNo);
+        selectAccount?.(userNo); // continue the flow
       }}
       onClose={closeAndReset}
     />
@@ -122,7 +118,7 @@ else if (view === 'accountPicker') {
 }
 ```
 
-If the user goes through the **Sign In** step instead, log right after a successful sign-in (you get the `userNo` there too):
+If the user goes through **Sign In** instead of the picker, you can also log immediately after the login succeeds (optional):
 
 ```jsx
 // src/WalletPaymentForm.js
@@ -130,9 +126,8 @@ else if (view === 'signin') content = (
   <HasAccountSummary
     open
     onLoginSuccess={(userNo) => {
-      // If you need the full object here as well:
-      // (Re-)resolve via your cookie resolver
-      //   import { resolveUserProfilesFromCookies } from './utils/cookie.js';
+      // Optional: if you want to log here as well:
+      // import { resolveUserProfilesFromCookies } from './utils/cookie.js';
       // const [profile] = resolveUserProfilesFromCookies([userNo]);
       // console.log('[EVZ SDK] selected account (signin):', profile);
 
@@ -145,29 +140,70 @@ else if (view === 'signin') content = (
 );
 ```
 
-> Result: when someone picks an account, the console shows:
-> `{ userNo, walletId, owner, email, photo }`
+> Result: when someone picks or signs in, the console shows:
+> `{ userNo, walletId, owner, email, photo }`.
 
 ---
 
-## How the flow decides which modal to show
+## 4) Make the Sign-In modal trigger your auth & cookie set (`src/HasAccountSummary.js`)
+
+Use the **adapter prop** `startAuth` so your sign-in flow runs, sets cookies, and returns the active `userNo`. The SDK will then re-check cookies and continue automatically.
+
+Where you render `<WalletPaymentForm />`, pass:
+
+```jsx
+<WalletPaymentForm
+  /* your existing props */
+  startAuth={async () => {
+    // 1) Run your sign-in UI here (popup/redirect/etc.)
+    // 2) On success, set your cookies so getUserNo(s)FromCookie see them.
+    // 3) Return the active user number:
+    const userNo = window.myAuth?.getActiveUserNo?.(); // your own helper
+    if (!userNo) throw new Error('cancelled'); // closes gracefully
+    return { userNo };
+  }}
+/>
+```
+
+In `HasAccountSummary.js`, ensure it calls `startAuth` if provided (fallbacks remain intact):
+
+```jsx
+// Inside HasAccountSummary component, when "Sign in" is clicked:
+if (typeof startAuth === 'function') {
+  try {
+    const { userNo } = await startAuth();
+    if (userNo) onLoginSuccess?.(userNo);
+  } catch {
+    onClose?.();
+  }
+  return;
+}
+```
+
+> After `onLoginSuccess(userNo)`, the SDK sets the cookie (via its helpers) and restarts the flow.
+> **0 users** → Sign in, **1 user** → Summary, **2+ users** → Account Picker.
+
+---
+
+## 5) How the SDK decides which modal to show (already implemented)
 
 The hook (`useWalletPaymentFlow`) checks cookies and behaves as follows:
 
-* **No user numbers found** → shows **“No account / Sign in”** modal
-* **Exactly 1 user number** → auto-selects and shows **Summary**
-* **2 or more user numbers** → calls `lookupUsersByNo` (your resolver) and shows **Account Picker**
+* **No user numbers found** → shows **“No account / Sign in”** modal.
+* **Exactly 1 user number** → auto-selects and shows **Summary**.
+* **2 or more user numbers** → calls `lookupUsersByNo` (your resolver) and shows **Account Picker**.
 
-You don’t need to change the hook logic—just make sure your cookie utilities:
+You do **not** need to change the hook logic—just make sure:
 
-* return userNos via `getUserNosFromCookie()`, and
-* return **full profiles** via `resolveUserProfilesFromCookies(userNos)`.
+* `getUserNosFromCookie()` returns all userNos.
+* `resolveUserProfilesFromCookies(userNos)` returns full profiles.
 
 ---
 
-## Contract you must keep
+## 6) Contract you must keep
 
-* `resolveUserProfilesFromCookies(userNos)` **must** return an array of objects with:
+* `resolveUserProfilesFromCookies(userNos)` **returns**:
+
 
   ```ts
   [
@@ -192,6 +228,19 @@ You don’t need to change the hook logic—just make sure your cookie utilities
     }
   ]
   ```
-* `getUserNosFromCookie()` **must** return all available userNos in priority order (active first if you prefer).
-* Do not rename these functions or change their return shapes. The UI and flow rely on them.
+
+* `getUserNosFromCookie()` **returns** all available userNos (active first is fine).
+
+* **Do not** rename these functions or change their return shapes.
+
+---
+
+## 7) Quick checklist
+
+* [ ] `getUserNosFromCookie()` returns the list you support.
+* [ ] `getUserNoFromCookie()` returns the active user after sign-in.
+* [ ] `resolveUserProfilesFromCookies(userNos)` yields `{ userNo, walletId, owner, email, photo }`.
+* [ ] `lookupUsersByNo()` delegates to the resolver (no external calls).
+* [ ] `WalletPaymentForm` logs the selected profile on pick (and optionally on sign-in).
+* [ ] `startAuth` is passed to `WalletPaymentForm` and returns `{ userNo }` after your sign-in completes.
 

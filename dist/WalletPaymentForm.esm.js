@@ -3903,8 +3903,8 @@ function HasAccountSummary(_ref) {
     onClose,
     zIndex = 2000,
     width = 520,
-    authOrigin = 'https://allan-sxqyu.ondigitalocean.app',
-    authUrl = 'https://allan-sxqyu.ondigitalocean.app',
+    authOrigin = 'https://accounts.dev.evzone.app',
+    authUrl = 'https://accounts.dev.evzone.app',
     // keep header sizing consistent with ProcessingModal
     brandMaxWidth = 240,
     brandMaxHeight = 54
