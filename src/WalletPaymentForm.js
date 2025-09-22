@@ -11,6 +11,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 import ProcessingModal from './ProcessingModal.js';
 import HasAccountSummary from './HasAccountSummary.js';
 import AccountPickerModal from './AccountPickerModal.js';
+import MobileMoneyFallbackModal from './MobileMoneyFallbackModal.js';
 
 import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
 
@@ -20,13 +21,13 @@ const DEFAULT_PROCESSING_GIF =
   'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
 /**
- * Props (NEW names preferred; legacy still supported):
- *  - publicKey? (NEW) | publishableKey? (legacy)
+ * Props:
+ *  - publicKey? | publishableKey?
  *  - brandId?
- *  - enterpriseNo? (NEW) | enterpriseWalletNo? (legacy)
+ *  - enterpriseNo? | enterpriseWalletNo?
  *  - userWalletId?
  *
- *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
+ *  - amount, type?, particulars?/transactionType?, currency?, merchantName?, merchantLogo?
  *  - processingSrc?: string
  *  - minProcessingMs?: number
  *  - zIndex?: number
@@ -41,6 +42,8 @@ function WalletPaymentForm(props) {
     processingSrc,
     supportEmail,
     supportPhone,
+    onSuccess,
+    minProcessingMs = 1500, // used for MM transition overlay
   } = props;
 
   const {
@@ -48,21 +51,23 @@ function WalletPaymentForm(props) {
     errorMsg,
     quote,
     submitting,
-    processing,
+    processing,        // processing from the hook (quote/charge)
     details,
 
-    // from the upgraded hook
+    // from the hook
     accounts,
     selectAccount,
 
     handleConfirm,
     handleSubmit,
     closeAndReset,
-    restart,       // kept if you want to trigger a manual reboot elsewhere
+    restart,
     goToSummary,
   } = useWalletPaymentFlow(props);
 
   const [passcode, setPasscode] = useState('');
+  const [showMM, setShowMM] = useState(false);
+  const [mmProcessing, setMmProcessing] = useState(false); // local processing only for MM transition
 
   const renderLoading = () => (
     <LoadingOverlay open zIndex={zIndex} brand="EVzone Pay" tip="Preparing secure checkout…" />
@@ -116,25 +121,72 @@ function WalletPaymentForm(props) {
     />
   );
 
-  // If we're processing, show ONLY the processing modal (no stacking)
-  if (processing) {
+  // 1) ALWAYS give priority to the initial loading overlay
+  if (view === 'loading') {
+    return renderLoading();
+  }
+
+  // 2) Show Processing overlay when the hook is processing (quote/charge) OR during MM transition
+  if (processing || mmProcessing) {
     const procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
     return (
       <ProcessingModal
         open
         src={procSrc}
-        message={processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…'}
+        message="Processing…"
         subText="Please wait"
         zIndex={zIndex}
       />
     );
   }
 
-  // Otherwise, render the selected flow modal
+  // Triggered by InsufficientFundsModal -> Pay with another Mobile Money
+  const startMobileMoneyFlow = () => {
+    // show processing first
+    setMmProcessing(true);
+    // small delay to show the animation, then open MM modal independently
+    setTimeout(() => {
+      setMmProcessing(false);
+      setShowMM(true);
+    }, Math.max(0, Number(minProcessingMs) || 1500));
+  };
+
+  // After user submits provider + msisdn in the MM modal
+  const handleAltMobileSubmit = ({ provider, msisdn }) => {
+    try {
+      console.log('[EVZ SDK] alt mobile money:', { provider, msisdn });
+    } catch {}
+    onSuccess?.({
+      transactionId: 'ALT-MM-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: null,
+      user: null,
+      amount: quote?.total ?? details.billedAmount,
+      currency: quote?.currency || details.billedCurrency,
+      type: details.type,
+      particulars: details.particulars,
+      paymentMethod: 'MOBILE_MONEY',
+      paymentMeta: { provider, msisdn },
+    });
+    setShowMM(false);
+    closeAndReset();
+  };
+
+  // Decide a single modal to show (never stack Insufficient + Mobile Money)
   let content = null;
-  if (view === 'loading')       content = renderLoading();
-  else if (view === 'accountPicker') {
-    // Multi-account chooser (Google-style) when multiple userNos are in cookies
+
+  if (showMM) {
+    // Show Mobile Money modal independently
+    content = (
+      <MobileMoneyFallbackModal
+        open
+        onCancel={() => setShowMM(false)}
+        onSubmit={handleAltMobileSubmit}
+        zIndex={zIndex}
+        onClose={closeAndReset}
+      />
+    );
+  } else if (view === 'accountPicker') {
     content = (
       <AccountPickerModal
         open
@@ -142,29 +194,30 @@ function WalletPaymentForm(props) {
         accounts={accounts || []}
         onSelect={(userNo) => {
           setPasscode('');
-          // Hook writes the cookie and restarts the flow
           selectAccount?.(userNo);
         }}
         onClose={closeAndReset}
       />
     );
-  }
-  else if (view === 'signin')   content = (
-    <HasAccountSummary
-      open
-      onLoginSuccess={(userNo) => {
-        setPasscode('');
-        // Use hook’s helper so it stays the single source of truth
-        selectAccount?.(userNo);
-      }}
-      onClose={closeAndReset}
-      zIndex={zIndex}
-    />
-  );
-  else if (view === 'invalid')  content = renderInvalid();
-  else if (view === 'summary')  content = renderSummary();
-  else if (view === 'passcode') content = renderPasscode();
-  else if (view === 'success') {
+  } else if (view === 'signin') {
+    content = (
+      <HasAccountSummary
+        open
+        onLoginSuccess={(userNo) => {
+          setPasscode('');
+          selectAccount?.(userNo);
+        }}
+        onClose={closeAndReset}
+        zIndex={zIndex}
+      />
+    );
+  } else if (view === 'invalid') {
+    content = renderInvalid();
+  } else if (view === 'summary') {
+    content = renderSummary();
+  } else if (view === 'passcode') {
+    content = renderPasscode();
+  } else if (view === 'success') {
     content = (
       <PaymentSuccessModal
         open
@@ -180,7 +233,7 @@ function WalletPaymentForm(props) {
         open
         zIndex={zIndex}
         reason={errorMsg}
-        onClose={goToSummary}
+        onClose={closeAndReset}
       />
     );
   } else if (view === 'insufficient') {
@@ -188,7 +241,8 @@ function WalletPaymentForm(props) {
       <InsufficientFundsModal
         open
         zIndex={zIndex}
-        onClose={goToSummary}
+        onClose={closeAndReset}
+        onOpenAltMobile={startMobileMoneyFlow} // show processing, then MM modal
       />
     );
   }

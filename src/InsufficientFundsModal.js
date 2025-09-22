@@ -1,52 +1,29 @@
 // src/InsufficientFundsModal.js
 import React from 'react';
 import { Modal, Button, Typography, Space } from 'antd';
-import { CloseOutlined, ExclamationCircleFilled } from '@ant-design/icons';
-import { BrandHeader } from './brand.js'; // ← unified brand image header
+import { CloseOutlined } from '@ant-design/icons';
+import { BrandHeader } from './brand.js'; // unified brand image header
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
-// Local colors for this modal
+// Local colors
 const BRAND_ORANGE = '#FF9800';
 const BRAND_RED = '#ff4d4f';
-const PRIMARY_BLUE = '#1677ff';
-const PRIMARY_BLUE_HOVER = '#0958d9';
 
 export default function InsufficientFundsModal({
   open = true,
-  onClose,
-  onAddFunds,
-  onRetry,
+  onClose,            // ← parent should pass a handler that closes the entire flow
+  onOpenAltMobile,    // ← trigger Mobile Money flow
   zIndex = 2000,
   width = 460,
-  currency = 'UGX',
-  balance,
-  requiredTotal,
 }) {
-  const num = (v) => (typeof v === 'number' && !Number.isNaN(v) ? v : null);
-  const bal = num(balance);
-  const req = num(requiredTotal);
-
-  const hasNumbers = bal !== null && req !== null;
-  const shortfall = hasNumbers ? Math.max(req - bal, 0) : null;
-
-  const fmt = (n) =>
-    Number(n || 0).toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
   return (
     <Modal
       open={open}
       centered
       width={width}
       footer={null}
-      onCancel={onClose}
-      zIndex={zIndex}
-      maskClosable={false}
-      title={null}
-      bodyStyle={{ padding: 20 }}
+      closable           // show top-right close icon
       closeIcon={
         <span
           style={{
@@ -64,8 +41,13 @@ export default function InsufficientFundsModal({
           <CloseOutlined />
         </span>
       }
+      onCancel={onClose} // clicking the ✕ closes the flow (parent decides)
+      maskClosable={false}
+      title={null}
+      zIndex={zIndex}
+      bodyStyle={{ padding: 20 }}
     >
-      {/* Brand header (image only, left-aligned, consistent across modals) */}
+      {/* Brand header (image only, left-aligned) */}
       <BrandHeader size="sm" />
 
       {/* dashed separator */}
@@ -76,7 +58,7 @@ export default function InsufficientFundsModal({
         }}
       />
 
-      {/* Big orange warning icon */}
+      {/* Big orange X icon in the center */}
       <div
         style={{
           width: 60,
@@ -91,7 +73,7 @@ export default function InsufficientFundsModal({
         }}
         aria-hidden
       >
-        <ExclamationCircleFilled style={{ color: '#fff', fontSize: 34 }} />
+        <CloseOutlined style={{ color: '#fff', fontSize: 34, fontWeight: 700 }} />
       </div>
 
       <Space direction="vertical" align="center" style={{ width: '100%' }}>
@@ -99,108 +81,21 @@ export default function InsufficientFundsModal({
           Insufficient Funds
         </Title>
 
-        {!hasNumbers ? (
-          <Paragraph style={{ marginTop: 8, textAlign: 'center', color: '#444' }}>
-            The account did not have sufficient funds to cover the transaction amount.
-          </Paragraph>
-        ) : (
-          <>
-            <Paragraph style={{ marginTop: 8, textAlign: 'center', color: '#444' }}>
-              Your wallet balance is lower than the total required for this payment.
-            </Paragraph>
+        <Paragraph style={{ marginTop: 8, textAlign: 'center', color: '#444' }}>
+          The account did not have sufficient funds to cover the transaction amount at the time of the transaction.
+        </Paragraph>
 
-            <div
-              style={{
-                width: '100%',
-                background: '#fffbe6',
-                border: '1px dashed #ffe58f',
-                borderRadius: 10,
-                padding: 12,
-              }}
-            >
-              <Row label="Balance" value={`${currency} ${fmt(bal)}`} />
-              <Row label="Required" value={`${currency} ${fmt(req)}`} />
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr auto',
-                  gap: 8,
-                  paddingTop: 8,
-                  marginTop: 6,
-                  borderTop: '1px solid #fff0b3',
-                }}
-              >
-                <Text strong>Shortfall</Text>
-                <Text strong style={{ color: BRAND_ORANGE }}>
-                  {currency} {fmt(shortfall)}
-                </Text>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Actions */}
-        <Space size="middle" style={{ marginTop: 12 }}>
-          <Button
-            type="primary"
-            shape="round"
-            size="middle"
-            onClick={onAddFunds || onClose}
-            style={{ width: 160 }}
-          >
-            Add Funds
-          </Button>
-
-          {/* Always-visible outlined primary */}
-          <Button
-            type="primary"
-            ghost
-            className="evz-try"
-            shape="round"
-            size="middle"
-            onClick={onRetry || onClose}
-            style={{ width: 160, color: PRIMARY_BLUE, borderColor: PRIMARY_BLUE }}
-          >
-            Try Again
-          </Button>
-        </Space>
+        {/* Single primary action: Pay with Mobile Money */}
+        <Button
+          type="primary"
+          shape="round"
+          size="middle"
+          onClick={onOpenAltMobile}
+          style={{ width: 240, marginTop: 8 }}
+        >
+          Pay with Mobile Money
+        </Button>
       </Space>
-
-      <style>{`
-        /* keep ghost button readable even if global overrides exist */
-        .evz-try.ant-btn {
-          color: ${PRIMARY_BLUE};
-          border-color: ${PRIMARY_BLUE};
-          background: transparent;
-        }
-        .evz-try.ant-btn:hover,
-        .evz-try.ant-btn:focus {
-          color: ${PRIMARY_BLUE_HOVER};
-          border-color: ${PRIMARY_BLUE_HOVER};
-          background: rgba(9,88,217,0.06);
-        }
-        .evz-try.ant-btn:active {
-          color: ${PRIMARY_BLUE_HOVER};
-          border-color: ${PRIMARY_BLUE_HOVER};
-          background: rgba(9,88,217,0.10);
-        }
-      `}</style>
     </Modal>
-  );
-}
-
-function Row({ label, value }) {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto',
-        gap: 8,
-        padding: '4px 0',
-      }}
-    >
-      <Text type="secondary">{label}</Text>
-      <Text>{value}</Text>
-    </div>
   );
 }

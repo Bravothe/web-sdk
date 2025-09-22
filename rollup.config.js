@@ -5,6 +5,11 @@ import babel from '@rollup/plugin-babel';
 import url from '@rollup/plugin-url';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 
+// NEW: CSS pipeline
+import postcss from 'rollup-plugin-postcss';
+import postcssImport from 'postcss-import';
+import autoprefixer from 'autoprefixer';
+
 export default {
   input: 'src/WalletPaymentForm.js',
   output: [
@@ -22,13 +27,23 @@ export default {
         react: 'React',
         'react-dom': 'ReactDOM',
         antd: 'antd',
-        '@ant-design/icons': 'icons', // ensure your UMD host provides this global
+        '@ant-design/icons': 'icons',
       },
     },
   ],
   external: ['react', 'react-dom', 'antd', '@ant-design/icons'],
   plugins: [
-    // 1) Assets (gif/mp4/etc.) before anything else
+    // 0) CSS: handles `import 'react-international-phone/style.css'`
+   postcss({
+  config: true,          // will load the ESM postcss.config.js
+  extract: 'styles.css',
+  minimize: true,
+  sourceMap: true,
+  extensions: ['.css'],
+}),
+
+
+    // 1) Assets (gif/mp4/etc.)
     url({
       include: [
         '**/*.mp4', '**/*.webm', '**/*.mp3',
@@ -44,7 +59,7 @@ export default {
       extensions: ['.mjs', '.js', '.jsx', '.json'],
     }),
 
-    // 3) Transpile JSX before CommonJS touches modules
+    // 3) Transpile JSX
     babel({
       babelHelpers: 'bundled',
       extensions: ['.js', '.jsx'],
@@ -63,7 +78,7 @@ export default {
       ],
     }),
 
-    // 4) CommonJS only for node_modules
+    // 4) CommonJS for node_modules
     commonjs({
       include: /node_modules/,
     }),

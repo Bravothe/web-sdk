@@ -1,6 +1,6 @@
-import require$$0, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { Typography, Modal, Space, Avatar, Button, Input, List } from 'antd';
-import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled, ExclamationCircleFilled, CheckCircleTwoTone } from '@ant-design/icons';
+import H, { useRef, useEffect, useState, forwardRef, useImperativeHandle, useCallback, useMemo } from 'react';
+import { Typography, Modal, Space, Avatar, Button, Input, List, Select } from 'antd';
+import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled, CheckCircleTwoTone } from '@ant-design/icons';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1311,7 +1311,7 @@ var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? functio
   };
 }() : undefined);
 
-var $$c = _export;
+var $$d = _export;
 var call$d = functionCall;
 var FunctionName = functionName;
 var isCallable$9 = isCallable$m;
@@ -1399,7 +1399,7 @@ var iteratorDefine = function (Iterable, NAME, IteratorConstructor, next, DEFAUL
       if (BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME || !(KEY in IterablePrototype)) {
         defineBuiltIn$5(IterablePrototype, KEY, methods[KEY]);
       }
-    } else $$c({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
+    } else $$d({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
   }
 
   // define iterator
@@ -1965,7 +1965,7 @@ function requireReactJsxRuntime_development () {
 	        node._store &&
 	        (node._store.validated = 1);
 	    }
-	    var React = require$$0,
+	    var React = H,
 	      REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"),
 	      REACT_PORTAL_TYPE = Symbol.for("react.portal"),
 	      REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"),
@@ -2121,7 +2121,7 @@ function BrandHeader(_ref) {
 }
 
 var {
-  Title: Title$9,
+  Title: Title$a,
   Text: Text$9
 } = Typography;
 var BRAND_GREEN$2 = '#02CD8D'; // EVzone green
@@ -2209,7 +2209,7 @@ function TransactionSummary(_ref) {
       }) : /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
         size: 56,
         children: (d.merchantName || 'E')[0]
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$9, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$a, {
         level: 4,
         style: {
           margin: 0
@@ -2221,7 +2221,7 @@ function TransactionSummary(_ref) {
           marginTop: -4
         },
         children: "Total Billing"
-      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$9, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$a, {
         level: 3,
         style: {
           margin: 0,
@@ -2233,7 +2233,7 @@ function TransactionSummary(_ref) {
       style: {
         marginTop: 8
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$9, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$a, {
         level: 5,
         style: {
           marginBottom: 8
@@ -2379,7 +2379,7 @@ var stringRepeat = function repeat(count) {
   return result;
 };
 
-var $$b = _export;
+var $$c = _export;
 var uncurryThis$c = functionUncurryThis;
 var toIntegerOrInfinity$2 = toIntegerOrInfinity$6;
 var thisNumberValue = thisNumberValue$1;
@@ -2453,7 +2453,7 @@ var FORCED$1 = fails$d(function () {
 
 // `Number.prototype.toFixed` method
 // https://tc39.es/ecma262/#sec-number.prototype.tofixed
-$$b({ target: 'Number', proto: true, forced: FORCED$1 }, {
+$$c({ target: 'Number', proto: true, forced: FORCED$1 }, {
   toFixed: function toFixed(fractionDigits) {
     var number = thisNumberValue(this);
     var fractDigits = toIntegerOrInfinity$2(fractionDigits);
@@ -2699,12 +2699,12 @@ if (PATCH) {
 
 var regexpExec$2 = patchedExec;
 
-var $$a = _export;
+var $$b = _export;
 var exec$2 = regexpExec$2;
 
 // `RegExp.prototype.exec` method
 // https://tc39.es/ecma262/#sec-regexp.prototype.exec
-$$a({ target: 'RegExp', proto: true, forced: /./.exec !== exec$2 }, {
+$$b({ target: 'RegExp', proto: true, forced: /./.exec !== exec$2 }, {
   exec: exec$2
 });
 
@@ -3047,7 +3047,7 @@ fixRegExpWellKnownSymbolLogic$1('replace', function (_, nativeReplace, maybeCall
 }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
 var {
-  Title: Title$8,
+  Title: Title$9,
   Text: Text$8
 } = Typography;
 var BRAND_GREEN$1 = '#02CD8D';
@@ -3129,7 +3129,7 @@ function EnterPasscode(_ref) {
         borderTop: '1px dashed #e5e7eb',
         margin: '12px -20px 16px'
       }
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$9, {
       level: 4,
       style: {
         marginTop: 0,
@@ -3266,7 +3266,7 @@ function EnterPasscode(_ref) {
 
 // src/PaymentSuccessModal.js
 var {
-  Title: Title$7,
+  Title: Title$8,
   Text: Text$7
 } = Typography;
 
@@ -3333,7 +3333,7 @@ function PaymentSuccessModal(_ref) {
           strokeLinejoin: "round"
         })
       })
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
       level: 3,
       style: {
         marginTop: 14,
@@ -3373,11 +3373,11 @@ function PaymentSuccessModal(_ref) {
 
 // src/PaymentFailedModal.js
 var {
-  Title: Title$6,
+  Title: Title$7,
   Paragraph: Paragraph$1,
   Text: Text$6
 } = Typography;
-var BRAND_RED$2 = '#ff4d4f';
+var BRAND_RED$3 = '#ff4d4f';
 function PaymentFailedModal(_ref) {
   var {
     open = true,
@@ -3407,7 +3407,7 @@ function PaymentFailedModal(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$2,
+        background: BRAND_RED$3,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3429,7 +3429,7 @@ function PaymentFailedModal(_ref) {
         width: 60,
         height: 60,
         borderRadius: '50%',
-        background: BRAND_RED$2,
+        background: BRAND_RED$3,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3450,11 +3450,11 @@ function PaymentFailedModal(_ref) {
       style: {
         width: '100%'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
         level: 3,
         style: {
           margin: 0,
-          color: BRAND_RED$2
+          color: BRAND_RED$3
         },
         children: "Payment Failed"
       }), /*#__PURE__*/jsxRuntimeExports.jsxs(Paragraph$1, {
@@ -3489,55 +3489,36 @@ function PaymentFailedModal(_ref) {
 
 // src/InsufficientFundsModal.js
 var {
-  Title: Title$5,
-  Paragraph,
-  Text: Text$5
+  Title: Title$6,
+  Paragraph
 } = Typography;
 
-// Local colors for this modal
+// Local colors
 var BRAND_ORANGE = '#FF9800';
-var BRAND_RED$1 = '#ff4d4f';
-var PRIMARY_BLUE = '#1677ff';
-var PRIMARY_BLUE_HOVER = '#0958d9';
+var BRAND_RED$2 = '#ff4d4f';
 function InsufficientFundsModal(_ref) {
   var {
     open = true,
     onClose,
-    onAddFunds,
-    onRetry,
+    // ← parent should pass a handler that closes the entire flow
+    onOpenAltMobile,
+    // ← trigger Mobile Money flow
     zIndex = 2000,
-    width = 460,
-    currency = 'UGX',
-    balance,
-    requiredTotal
+    width = 460
   } = _ref;
-  var num = v => typeof v === 'number' && !Number.isNaN(v) ? v : null;
-  var bal = num(balance);
-  var req = num(requiredTotal);
-  var hasNumbers = bal !== null && req !== null;
-  var shortfall = hasNumbers ? Math.max(req - bal, 0) : null;
-  var fmt = n => Number(n || 0).toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
   return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
     centered: true,
     width: width,
     footer: null,
-    onCancel: onClose,
-    zIndex: zIndex,
-    maskClosable: false,
-    title: null,
-    bodyStyle: {
-      padding: 20
-    },
+    closable: true // show top-right close icon
+    ,
     closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
       style: {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$1,
+        background: BRAND_RED$2,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3546,6 +3527,14 @@ function InsufficientFundsModal(_ref) {
       },
       children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
     }),
+    onCancel: onClose // clicking the ✕ closes the flow (parent decides)
+    ,
+    maskClosable: false,
+    title: null,
+    zIndex: zIndex,
+    bodyStyle: {
+      padding: 20
+    },
     children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
       size: "sm"
     }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
@@ -3566,10 +3555,11 @@ function InsufficientFundsModal(_ref) {
         boxShadow: '0 6px 16px rgba(255,152,0,0.28)'
       },
       "aria-hidden": true,
-      children: /*#__PURE__*/jsxRuntimeExports.jsx(ExclamationCircleFilled, {
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {
         style: {
           color: '#fff',
-          fontSize: 34
+          fontSize: 34,
+          fontWeight: 700
         }
       })
     }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
@@ -3578,122 +3568,39 @@ function InsufficientFundsModal(_ref) {
       style: {
         width: '100%'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
         level: 3,
         style: {
           margin: 0,
           color: BRAND_ORANGE
         },
         children: "Insufficient Funds"
-      }), !hasNumbers ? /*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
         style: {
           marginTop: 8,
           textAlign: 'center',
           color: '#444'
         },
-        children: "The account did not have sufficient funds to cover the transaction amount."
-      }) : /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
-          style: {
-            marginTop: 8,
-            textAlign: 'center',
-            color: '#444'
-          },
-          children: "Your wallet balance is lower than the total required for this payment."
-        }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-          style: {
-            width: '100%',
-            background: '#fffbe6',
-            border: '1px dashed #ffe58f',
-            borderRadius: 10,
-            padding: 12
-          },
-          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Row, {
-            label: "Balance",
-            value: "".concat(currency, " ").concat(fmt(bal))
-          }), /*#__PURE__*/jsxRuntimeExports.jsx(Row, {
-            label: "Required",
-            value: "".concat(currency, " ").concat(fmt(req))
-          }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-            style: {
-              display: 'grid',
-              gridTemplateColumns: '1fr auto',
-              gap: 8,
-              paddingTop: 8,
-              marginTop: 6,
-              borderTop: '1px solid #fff0b3'
-            },
-            children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
-              strong: true,
-              children: "Shortfall"
-            }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$5, {
-              strong: true,
-              style: {
-                color: BRAND_ORANGE
-              },
-              children: [currency, " ", fmt(shortfall)]
-            })]
-          })]
-        })]
-      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+        children: "The account did not have sufficient funds to cover the transaction amount at the time of the transaction."
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+        type: "primary",
+        shape: "round",
         size: "middle",
+        onClick: onOpenAltMobile,
         style: {
-          marginTop: 12
+          width: 240,
+          marginTop: 8
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Button, {
-          type: "primary",
-          shape: "round",
-          size: "middle",
-          onClick: onAddFunds || onClose,
-          style: {
-            width: 160
-          },
-          children: "Add Funds"
-        }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
-          type: "primary",
-          ghost: true,
-          className: "evz-try",
-          shape: "round",
-          size: "middle",
-          onClick: onRetry || onClose,
-          style: {
-            width: 160,
-            color: PRIMARY_BLUE,
-            borderColor: PRIMARY_BLUE
-          },
-          children: "Try Again"
-        })]
+        children: "Pay with Mobile Money"
       })]
-    }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
-      children: "\n        /* keep ghost button readable even if global overrides exist */\n        .evz-try.ant-btn {\n          color: ".concat(PRIMARY_BLUE, ";\n          border-color: ").concat(PRIMARY_BLUE, ";\n          background: transparent;\n        }\n        .evz-try.ant-btn:hover,\n        .evz-try.ant-btn:focus {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.06);\n        }\n        .evz-try.ant-btn:active {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.10);\n        }\n      ")
-    })]
-  });
-}
-function Row(_ref2) {
-  var {
-    label,
-    value
-  } = _ref2;
-  return /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '1fr auto',
-      gap: 8,
-      padding: '4px 0'
-    },
-    children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
-      type: "secondary",
-      children: label
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
-      children: value
     })]
   });
 }
 
 // src/LoadingOverlay.jsx
 var {
-  Title: Title$4,
-  Text: Text$4
+  Title: Title$5,
+  Text: Text$5
 } = Typography;
 
 /**
@@ -3749,7 +3656,7 @@ var LoadingOverlay = _ref => {
             background: '#fff'
           }
         })
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
         level: 3,
         style: {
           margin: '6px 0 0',
@@ -3760,7 +3667,7 @@ var LoadingOverlay = _ref => {
           animation: "evzBlink ".concat(blinkMs, "ms ease-in-out infinite")
         },
         children: brand
-      }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
+      }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
         className: "evz-tip",
         children: tip
       }) : null]
@@ -3771,8 +3678,8 @@ var LoadingOverlay = _ref => {
 };
 
 var {
-  Title: Title$3,
-  Text: Text$3
+  Title: Title$4,
+  Text: Text$4
 } = Typography;
 var BLUE_START = '#2EA1FF';
 var BLUE_END = '#1B8CFF';
@@ -3879,13 +3786,13 @@ function ProcessingModal(_ref) {
       style: {
         padding: '0 16px 16px'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
         level: 5,
         style: {
           margin: '0 0 2px'
         },
         children: message
-      }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+      }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
         type: "secondary",
         style: {
           display: 'block',
@@ -3899,10 +3806,10 @@ function ProcessingModal(_ref) {
 
 // src/HasAccountSummary.js
 var {
-  Title: Title$2,
-  Text: Text$2
+  Title: Title$3,
+  Text: Text$3
 } = Typography;
-var BRAND_RED = '#ff4d4f';
+var BRAND_RED$1 = '#ff4d4f';
 function HasAccountSummary(_ref) {
   var {
     open = true,
@@ -3987,7 +3894,7 @@ function HasAccountSummary(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED,
+        background: BRAND_RED$1,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -4032,7 +3939,7 @@ function HasAccountSummary(_ref) {
         style: {
           width: '100%'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
           level: 4,
           style: {
             margin: 0
@@ -4053,7 +3960,7 @@ function HasAccountSummary(_ref) {
               fontSize: 18,
               lineHeight: '20px'
             }
-          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
+          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
             children: "EVzone needs you to sign in to continue with this payment."
           })]
         }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
@@ -4583,7 +4490,7 @@ newPromiseCapability$2.f = function (C) {
   return new PromiseCapability(C);
 };
 
-var $$9 = _export;
+var $$a = _export;
 var IS_NODE = environmentIsNode;
 var globalThis$2 = globalThis_1;
 var call$7 = functionCall;
@@ -4865,7 +4772,7 @@ if (FORCED_PROMISE_CONSTRUCTOR$4) {
 
 // `Promise` constructor
 // https://tc39.es/ecma262/#sec-promise-executor
-$$9({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
+$$a({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
   Promise: PromiseConstructor
 });
 
@@ -5053,7 +4960,7 @@ var promiseStaticsIncorrectIteration = FORCED_PROMISE_CONSTRUCTOR$3 || !checkCor
   NativePromiseConstructor$1.all(iterable).then(undefined, function () { /* empty */ });
 });
 
-var $$8 = _export;
+var $$9 = _export;
 var call$3 = functionCall;
 var aCallable$2 = aCallable$9;
 var newPromiseCapabilityModule$2 = newPromiseCapability$2;
@@ -5063,7 +4970,7 @@ var PROMISE_STATICS_INCORRECT_ITERATION$1 = promiseStaticsIncorrectIteration;
 
 // `Promise.all` method
 // https://tc39.es/ecma262/#sec-promise.all
-$$8({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
+$$9({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
   all: function all(iterable) {
     var C = this;
     var capability = newPromiseCapabilityModule$2.f(C);
@@ -5092,7 +4999,7 @@ $$8({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION
   }
 });
 
-var $$7 = _export;
+var $$8 = _export;
 var FORCED_PROMISE_CONSTRUCTOR$2 = promiseConstructorDetection.CONSTRUCTOR;
 var NativePromiseConstructor = promiseNativeConstructor;
 var getBuiltIn$1 = getBuiltIn$7;
@@ -5103,7 +5010,7 @@ var NativePromisePrototype = NativePromiseConstructor && NativePromiseConstructo
 
 // `Promise.prototype.catch` method
 // https://tc39.es/ecma262/#sec-promise.prototype.catch
-$$7({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
+$$8({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
   'catch': function (onRejected) {
     return this.then(undefined, onRejected);
   }
@@ -5117,7 +5024,7 @@ if (isCallable$1(NativePromiseConstructor)) {
   }
 }
 
-var $$6 = _export;
+var $$7 = _export;
 var call$2 = functionCall;
 var aCallable$1 = aCallable$9;
 var newPromiseCapabilityModule$1 = newPromiseCapability$2;
@@ -5127,7 +5034,7 @@ var PROMISE_STATICS_INCORRECT_ITERATION = promiseStaticsIncorrectIteration;
 
 // `Promise.race` method
 // https://tc39.es/ecma262/#sec-promise.race
-$$6({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
+$$7({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
   race: function race(iterable) {
     var C = this;
     var capability = newPromiseCapabilityModule$1.f(C);
@@ -5143,13 +5050,13 @@ $$6({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION
   }
 });
 
-var $$5 = _export;
+var $$6 = _export;
 var newPromiseCapabilityModule = newPromiseCapability$2;
 var FORCED_PROMISE_CONSTRUCTOR$1 = promiseConstructorDetection.CONSTRUCTOR;
 
 // `Promise.reject` method
 // https://tc39.es/ecma262/#sec-promise.reject
-$$5({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
+$$6({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
   reject: function reject(r) {
     var capability = newPromiseCapabilityModule.f(this);
     var capabilityReject = capability.reject;
@@ -5171,7 +5078,7 @@ var promiseResolve$1 = function (C, x) {
   return promiseCapability.promise;
 };
 
-var $$4 = _export;
+var $$5 = _export;
 var getBuiltIn = getBuiltIn$7;
 var FORCED_PROMISE_CONSTRUCTOR = promiseConstructorDetection.CONSTRUCTOR;
 var promiseResolve = promiseResolve$1;
@@ -5180,7 +5087,7 @@ getBuiltIn('Promise');
 
 // `Promise.resolve` method
 // https://tc39.es/ecma262/#sec-promise.resolve
-$$4({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
+$$5({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
   resolve: function resolve(x) {
     return promiseResolve(this, x);
   }
@@ -5226,8 +5133,8 @@ if (NOT_GENERIC || INCORRECT_NAME) {
 }
 
 var {
-  Title: Title$1,
-  Text: Text$1
+  Title: Title$2,
+  Text: Text$2
 } = Typography;
 var BRAND_GREEN = '#02CD8D';
 
@@ -5302,14 +5209,14 @@ function AccountPickerModal(_ref) {
         borderTop: '1px dashed #e5e7eb',
         margin: '12px -20px 16px'
       }
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
       level: 4,
       style: {
         marginTop: 0,
         color: BRAND_GREEN
       },
       children: "Choose an account"
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
       type: "secondary",
       style: {
         display: 'block',
@@ -5370,12 +5277,12 @@ function AccountPickerModal(_ref) {
                 lineHeight: 1.4
               },
               children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
                   type: "secondary",
                   children: "Email:"
                 }), " ", acct.email || '—']
               }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
                   type: "secondary",
                   children: "Wallet ID:"
                 }), ' ', /*#__PURE__*/jsxRuntimeExports.jsx("span", {
@@ -5405,94 +5312,224 @@ function AccountPickerModal(_ref) {
   });
 }
 
-var $$3 = _export;
-var $includes = arrayIncludes.includes;
-var fails$4 = fails$o;
-var addToUnscopables = addToUnscopables$2;
+// a string of all valid unicode whitespaces
+var whitespaces$2 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
+  '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
-// FF99+ bug
-var BROKEN_ON_SPARSE = fails$4(function () {
-  // eslint-disable-next-line es/no-array-prototype-includes -- detection
-  return !Array(1).includes();
-});
-
-// `Array.prototype.includes` method
-// https://tc39.es/ecma262/#sec-array.prototype.includes
-$$3({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables('includes');
-
-var isObject$1 = isObject$c;
-var classof = classofRaw$2;
-var wellKnownSymbol$2 = wellKnownSymbol$j;
-
-var MATCH$2 = wellKnownSymbol$2('match');
-
-// `IsRegExp` abstract operation
-// https://tc39.es/ecma262/#sec-isregexp
-var isRegexp = function (it) {
-  var isRegExp;
-  return isObject$1(it) && ((isRegExp = it[MATCH$2]) !== undefined ? !!isRegExp : classof(it) === 'RegExp');
-};
-
-var isRegExp$1 = isRegexp;
-
-var $TypeError$1 = TypeError;
-
-var notARegexp = function (it) {
-  if (isRegExp$1(it)) {
-    throw new $TypeError$1("The method doesn't accept regular expressions");
-  } return it;
-};
-
-var wellKnownSymbol$1 = wellKnownSymbol$j;
-
-var MATCH$1 = wellKnownSymbol$1('match');
-
-var correctIsRegexpLogic = function (METHOD_NAME) {
-  var regexp = /./;
-  try {
-    '/./'[METHOD_NAME](regexp);
-  } catch (error1) {
-    try {
-      regexp[MATCH$1] = false;
-      return '/./'[METHOD_NAME](regexp);
-    } catch (error2) { /* empty */ }
-  } return false;
-};
-
-var $$2 = _export;
 var uncurryThis$3 = functionUncurryThis;
-var notARegExp = notARegexp;
 var requireObjectCoercible$2 = requireObjectCoercible$9;
 var toString$4 = toString$9;
-var correctIsRegExpLogic = correctIsRegexpLogic;
+var whitespaces$1 = whitespaces$2;
 
-var stringIndexOf$1 = uncurryThis$3(''.indexOf);
+var replace$1 = uncurryThis$3(''.replace);
+var ltrim = RegExp('^[' + whitespaces$1 + ']+');
+var rtrim = RegExp('(^|[^' + whitespaces$1 + '])[' + whitespaces$1 + ']+$');
 
-// `String.prototype.includes` method
-// https://tc39.es/ecma262/#sec-string.prototype.includes
-$$2({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~stringIndexOf$1(
-      toString$4(requireObjectCoercible$2(this)),
-      toString$4(notARegExp(searchString)),
-      arguments.length > 1 ? arguments[1] : undefined
-    );
+// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+var createMethod = function (TYPE) {
+  return function ($this) {
+    var string = toString$4(requireObjectCoercible$2($this));
+    if (TYPE & 1) string = replace$1(string, ltrim, '');
+    if (TYPE & 2) string = replace$1(string, rtrim, '$1');
+    return string;
+  };
+};
+
+var stringTrim = {
+  // `String.prototype.trim` method
+  // https://tc39.es/ecma262/#sec-string.prototype.trim
+  trim: createMethod(3)
+};
+
+var PROPER_FUNCTION_NAME = functionName.PROPER;
+var fails$4 = fails$o;
+var whitespaces = whitespaces$2;
+
+var non = '\u200B\u0085\u180E';
+
+// check that a method works with the correct list
+// of whitespaces and has a correct name
+var stringTrimForced = function (METHOD_NAME) {
+  return fails$4(function () {
+    return !!whitespaces[METHOD_NAME]()
+      || non[METHOD_NAME]() !== non
+      || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
+  });
+};
+
+var $$4 = _export;
+var $trim = stringTrim.trim;
+var forcedStringTrimMethod = stringTrimForced;
+
+// `String.prototype.trim` method
+// https://tc39.es/ecma262/#sec-string.prototype.trim
+$$4({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
+  trim: function trim() {
+    return $trim(this);
   }
 });
+
+var _=[["Afghanistan","af","93"],["Albania","al","355"],["Algeria","dz","213"],["Andorra","ad","376"],["Angola","ao","244"],["Antigua and Barbuda","ag","1268"],["Argentina","ar","54","(..) ........",0],["Armenia","am","374",".. ......"],["Aruba","aw","297"],["Australia","au","61",{default:". .... ....","/^4/":"... ... ...","/^5(?!50)/":"... ... ...","/^1(3|8)00/":".... ... ...","/^13/":".. .. ..","/^180/":"... ...."},0,[]],["Austria","at","43"],["Azerbaijan","az","994","(..) ... .. .."],["Bahamas","bs","1242"],["Bahrain","bh","973"],["Bangladesh","bd","880"],["Barbados","bb","1246"],["Belarus","by","375","(..) ... .. .."],["Belgium","be","32","... .. .. .."],["Belize","bz","501"],["Benin","bj","229"],["Bhutan","bt","975"],["Bolivia","bo","591"],["Bosnia and Herzegovina","ba","387"],["Botswana","bw","267"],["Brazil","br","55","(..) .....-...."],["British Indian Ocean Territory","io","246"],["Brunei","bn","673"],["Bulgaria","bg","359"],["Burkina Faso","bf","226"],["Burundi","bi","257"],["Cambodia","kh","855"],["Cameroon","cm","237"],["Canada","ca","1","(...) ...-....",1,["204","226","236","249","250","289","306","343","365","387","403","416","418","431","437","438","450","506","514","519","548","579","581","587","604","613","639","647","672","705","709","742","778","780","782","807","819","825","867","873","902","905"]],["Cape Verde","cv","238"],["Caribbean Netherlands","bq","599","",1],["Cayman Islands","ky","1","... ... ....",4,["345"]],["Central African Republic","cf","236"],["Chad","td","235"],["Chile","cl","56"],["China","cn","86","... .... ...."],["Colombia","co","57","... ... ...."],["Comoros","km","269"],["Congo","cd","243"],["Congo","cg","242"],["Costa Rica","cr","506","....-...."],["C\xF4te d'Ivoire","ci","225",".. .. .. .. .."],["Croatia","hr","385"],["Cuba","cu","53"],["Cura\xE7ao","cw","599","",0],["Cyprus","cy","357",".. ......"],["Czech Republic","cz","420","... ... ..."],["Denmark","dk","45",".. .. .. .."],["Djibouti","dj","253",".. .. ...."],["Dominica","dm","1767"],["Dominican Republic","do","1","(...) ...-....",2,["809","829","849"]],["Ecuador","ec","593"],["Egypt","eg","20"],["El Salvador","sv","503","....-...."],["Equatorial Guinea","gq","240"],["Eritrea","er","291"],["Estonia","ee","372",".... ......"],["Ethiopia","et","251",".. ... ...."],["Faroe Islands","fo","298",".. .. .."],["Fiji","fj","679"],["Finland","fi","358",".. ... .. .."],["France","fr","33",". .. .. .. .."],["French Guiana","gf","594","... .. .. .."],["French Polynesia","pf","689",{"/^44/":".. .. ..","/^80[0-5]/":"... .. .. ..",default:".. .. .. .."}],["Gabon","ga","241"],["Gambia","gm","220"],["Georgia","ge","995"],["Germany","de","49","... ........."],["Ghana","gh","233"],["Greece","gr","30"],["Greenland","gl","299",".. .. .."],["Grenada","gd","1473"],["Guadeloupe","gp","590","... .. .. ..",0],["Guam","gu","1671"],["Guatemala","gt","502","....-...."],["Guinea","gn","224"],["Guinea-Bissau","gw","245"],["Guyana","gy","592"],["Haiti","ht","509","....-...."],["Honduras","hn","504"],["Hong Kong","hk","852",".... ...."],["Hungary","hu","36"],["Iceland","is","354","... ...."],["India","in","91",".....-....."],["Indonesia","id","62"],["Iran","ir","98","... ... ...."],["Iraq","iq","964"],["Ireland","ie","353",".. ......."],["Israel","il","972","... ... ...."],["Italy","it","39","... .......",0],["Jamaica","jm","1876"],["Japan","jp","81",".. .... ...."],["Jordan","jo","962"],["Kazakhstan","kz","7","... ...-..-..",0],["Kenya","ke","254"],["Kiribati","ki","686"],["Kosovo","xk","383"],["Kuwait","kw","965"],["Kyrgyzstan","kg","996","... ... ..."],["Laos","la","856"],["Latvia","lv","371",".. ... ..."],["Lebanon","lb","961"],["Lesotho","ls","266"],["Liberia","lr","231"],["Libya","ly","218"],["Liechtenstein","li","423"],["Lithuania","lt","370"],["Luxembourg","lu","352"],["Macau","mo","853"],["Macedonia","mk","389"],["Madagascar","mg","261"],["Malawi","mw","265"],["Malaysia","my","60","..-....-...."],["Maldives","mv","960"],["Mali","ml","223"],["Malta","mt","356"],["Marshall Islands","mh","692"],["Martinique","mq","596","... .. .. .."],["Mauritania","mr","222"],["Mauritius","mu","230"],["Mayotte","yt","262","... .. .. ..",1,["269","639"]],["Mexico","mx","52","... ... ....",0],["Micronesia","fm","691"],["Moldova","md","373","(..) ..-..-.."],["Monaco","mc","377"],["Mongolia","mn","976"],["Montenegro","me","382"],["Morocco","ma","212"],["Mozambique","mz","258"],["Myanmar","mm","95"],["Namibia","na","264"],["Nauru","nr","674"],["Nepal","np","977"],["Netherlands","nl","31",{"/^06/":"(.). .........","/^6/":". .........","/^0(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":"(.).. ........","/^(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":".. ........","/^0/":"(.)... .......",default:"... ......."}],["New Caledonia","nc","687"],["New Zealand","nz","64","...-...-...."],["Nicaragua","ni","505"],["Niger","ne","227"],["Nigeria","ng","234"],["North Korea","kp","850"],["Norway","no","47","... .. ..."],["Oman","om","968"],["Pakistan","pk","92","...-......."],["Palau","pw","680"],["Palestine","ps","970"],["Panama","pa","507"],["Papua New Guinea","pg","675"],["Paraguay","py","595"],["Peru","pe","51"],["Philippines","ph","63","... ... ...."],["Poland","pl","48","...-...-..."],["Portugal","pt","351"],["Puerto Rico","pr","1","(...) ...-....",3,["787","939"]],["Qatar","qa","974"],["R\xE9union","re","262","... .. .. ..",0],["Romania","ro","40"],["Russia","ru","7","(...) ...-..-..",1],["Rwanda","rw","250"],["Saint Kitts and Nevis","kn","1869"],["Saint Lucia","lc","1758"],["Saint Pierre & Miquelon","pm","508",{"/^708/":"... ... ...","/^8/":"... .. .. ..",default:".. .. .."}],["Saint Vincent and the Grenadines","vc","1784"],["Samoa","ws","685"],["San Marino","sm","378"],["S\xE3o Tom\xE9 and Pr\xEDncipe","st","239"],["Saudi Arabia","sa","966"],["Senegal","sn","221"],["Serbia","rs","381"],["Seychelles","sc","248"],["Sierra Leone","sl","232"],["Singapore","sg","65","....-...."],["Slovakia","sk","421"],["Slovenia","si","386"],["Solomon Islands","sb","677"],["Somalia","so","252"],["South Africa","za","27"],["South Korea","kr","82","... .... ...."],["South Sudan","ss","211"],["Spain","es","34","... ... ..."],["Sri Lanka","lk","94"],["Sudan","sd","249"],["Suriname","sr","597"],["Swaziland","sz","268"],["Sweden","se","46","... ... ..."],["Switzerland","ch","41",".. ... .. .."],["Syria","sy","963"],["Taiwan","tw","886"],["Tajikistan","tj","992"],["Tanzania","tz","255"],["Thailand","th","66"],["Timor-Leste","tl","670"],["Togo","tg","228"],["Tonga","to","676"],["Trinidad and Tobago","tt","1868"],["Tunisia","tn","216"],["Turkey","tr","90","... ... .. .."],["Turkmenistan","tm","993"],["Tuvalu","tv","688"],["Uganda","ug","256"],["Ukraine","ua","380","(..) ... .. .."],["United Arab Emirates","ae","971"],["United Kingdom","gb","44",".... ......"],["United States","us","1","(...) ...-....",0],["Uruguay","uy","598"],["Uzbekistan","uz","998",".. ... .. .."],["Vanuatu","vu","678"],["Vatican City","va","39",".. .... ....",1],["Venezuela","ve","58"],["Vietnam","vn","84"],["Wallis & Futuna","wf","681",".. .. .."],["Yemen","ye","967"],["Zambia","zm","260"],["Zimbabwe","zw","263"]];var xe="react-international-phone-",se=(...t)=>t.filter(e=>!!e).join(" ").trim(),Se=(...t)=>se(...t).split(" ").map(e=>`${xe}${e}`).join(" "),P=({addPrefix:t,rawClassNames:e})=>se(Se(...t),...e);var le=({value:t,mask:e,maskSymbol:a,offset:s=0,trimNonMaskCharsLeftover:r=false})=>{if(t.length<s)return t;let n=t.slice(0,s),c=t.slice(s),i=n,o=0;for(let l of e.split("")){if(o>=c.length){if(!r&&l!==a){i+=l;continue}break}l===a?(i+=c[o],o+=1):i+=l;}return i};var F=t=>t?/^\d+$/.test(t):false;var z=t=>t.replace(/\D/g,"");var ue=(t,e)=>{let a=t.style.display;a!=="block"&&(t.style.display="block");let s=t.getBoundingClientRect(),r=e.getBoundingClientRect(),n=r.top-s.top,c=s.bottom-r.bottom;n>=0&&c>=0||(Math.abs(n)<Math.abs(c)?t.scrollTop+=n:t.scrollTop-=c),t.style.display=a;};var de=()=>typeof window>"u"?false:window.navigator.userAgent.toLowerCase().includes("macintosh");var pe=(t,e)=>{let a=e.disableDialCodeAndPrefix?false:e.forceDialCode,s=e.disableDialCodeAndPrefix?false:e.insertDialCodeOnEmpty,r=t,n=l=>e.trimNonDigitsEnd?l.trim():l;if(!r)return s&&!r.length||a?n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`):n(r);if(r=z(r),r===e.dialCode&&!e.disableDialCodeAndPrefix)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(e.dialCode.startsWith(r)&&!e.disableDialCodeAndPrefix)return n(a?`${e.prefix}${e.dialCode}${e.charAfterDialCode}`:`${e.prefix}${r}`);if(!r.startsWith(e.dialCode)&&!e.disableDialCodeAndPrefix){if(a)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(r.length<e.dialCode.length)return n(`${e.prefix}${r}`)}let c=()=>{let l=e.dialCode.length,d=r.slice(0,l),m=r.slice(l);return {phoneLeftSide:d,phoneRightSide:m}},{phoneLeftSide:i,phoneRightSide:o}=c();return i=`${e.prefix}${i}${e.charAfterDialCode}`,o=le({value:o,mask:e.mask,maskSymbol:e.maskChar,trimNonMaskCharsLeftover:e.trimNonDigitsEnd||e.disableDialCodeAndPrefix&&o.length===0}),e.disableDialCodeAndPrefix&&(i=""),n(`${i}${o}`)};var me=({phoneBeforeInput:t,phoneAfterInput:e,phoneAfterFormatted:a,cursorPositionAfterInput:s,leftOffset:r=0,deletion:n})=>{if(s<r)return r;if(!t)return a.length;let c=null;for(let d=s-1;d>=0;d-=1)if(F(e[d])){c=d;break}if(c===null){for(let d=0;d<e.length;d+=1)if(F(a[d]))return d;return e.length}let i=0;for(let d=0;d<c;d+=1)F(e[d])&&(i+=1);let o=0,l=0;for(let d=0;d<a.length&&(o+=1,F(a[d])&&(l+=1),!(l>=i+1));d+=1);if(n!=="backward")for(;!F(a[o])&&o<a.length;)o+=1;return o};var O=({phone:t,prefix:e})=>t?`${e}${z(t)}`:"";function W({value:t,country:e,insertDialCodeOnEmpty:a,trimNonDigitsEnd:s,countries:r,prefix:n,charAfterDialCode:c,forceDialCode:i,disableDialCodeAndPrefix:o,defaultMask:l,countryGuessingEnabled:d,disableFormatting:m}){let f=t;o&&(f=f.startsWith(`${n}`)?f:`${n}${e.dialCode}${f}`);let g=d?X({phone:f,countries:r,currentCountryIso2:e?.iso2}):void 0,S=g?.country??e,p=pe(f,{prefix:n,mask:Q({phone:f,country:S,defaultMask:l,disableFormatting:m}),maskChar:J,dialCode:S.dialCode,trimNonDigitsEnd:s,charAfterDialCode:c,forceDialCode:i,insertDialCodeOnEmpty:a,disableDialCodeAndPrefix:o}),C=d&&!g?.fullDialCodeMatch?e:S;return {phone:O({phone:o?`${C.dialCode}${p}`:p,prefix:n}),inputValue:p,country:C}}var Ie=t=>{if(t?.toLocaleLowerCase().includes("delete")??false)return t?.toLocaleLowerCase().includes("forward")?"forward":"backward"},fe=(t,{country:e,insertDialCodeOnEmpty:a,phoneBeforeInput:s,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,countryGuessingEnabled:o,defaultMask:l,disableFormatting:d,countries:m})=>{let f=t.nativeEvent,g=f.inputType,S=Ie(g),p=!!g?.startsWith("insertFrom"),C=g==="insertText",D=f?.data||void 0,I=t.target.value,A=t.target.selectionStart??0;if(g?.includes("history"))return {inputValue:s,phone:O({phone:s,prefix:r}),cursorPosition:s.length,country:e};if(C&&!F(D)&&I!==r)return {inputValue:s,phone:O({phone:i?`${e.dialCode}${s}`:s,prefix:r}),cursorPosition:A-(D?.length??0),country:e};if(c&&!I.startsWith(`${r}${e.dialCode}`)&&!p){let b=I?s:`${r}${e.dialCode}${n}`;return {inputValue:b,phone:O({phone:b,prefix:r}),cursorPosition:r.length+e.dialCode.length+n.length,country:e}}let{phone:N,inputValue:u,country:h}=W({value:I,country:e,trimNonDigitsEnd:S==="backward",insertDialCodeOnEmpty:a,countryGuessingEnabled:o,countries:m,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,disableFormatting:d,defaultMask:l}),y=me({cursorPositionAfterInput:A,phoneBeforeInput:s,phoneAfterInput:I,phoneAfterFormatted:u,leftOffset:c?r.length+e.dialCode.length+n.length:0,deletion:S});return {phone:N,inputValue:u,cursorPosition:y,country:h}};var Ce=(t,e)=>{let a=Object.keys(t),s=Object.keys(e);if(a.length!==s.length)return  false;for(let r of a)if(t[r]!==e[r])return  false;return  true};var ye=()=>{let t=useRef(),e=useRef(Date.now());return {check:()=>{let s=Date.now(),r=t.current?s-e.current:void 0;return t.current=e.current,e.current=s,r}}};var ke={size:20,overrideLastItemDebounceMS:-1};function ge(t,e){let{size:a,overrideLastItemDebounceMS:s,onChange:r}={...ke,...e},[n,c]=useState(t),[i,o]=useState([n]),[l,d]=useState(0),m=ye();return [n,(p,C)=>{if(typeof p=="object"&&typeof n=="object"&&Ce(p,n)||p===n)return;let k=s>0,D=m.check(),I=k&&D!==void 0?D>s:true;if(C?.overrideLastItem!==void 0?C.overrideLastItem:!I)o(N=>[...N.slice(0,l),p]);else {let N=i.length>=a;o(u=>[...u.slice(N?1:0,l+1),p]),N||d(u=>u+1);}c(p),r?.(p);},()=>{if(l<=0)return {success:false};let p=i[l-1];return c(p),d(C=>C-1),r?.(p),{success:true,value:p}},()=>{if(l+1>=i.length)return {success:false};let p=i[l+1];return c(p),d(C=>C+1),r?.(p),{success:true,value:p}}]}var J=".",E={defaultCountry:"us",value:"",prefix:"+",defaultMask:"............",charAfterDialCode:" ",historySaveDebounceMS:200,disableCountryGuess:false,disableDialCodePrefill:false,forceDialCode:false,disableDialCodeAndPrefix:false,disableFormatting:false,countries:_},ee=({defaultCountry:t=E.defaultCountry,value:e=E.value,countries:a=E.countries,prefix:s=E.prefix,defaultMask:r=E.defaultMask,charAfterDialCode:n=E.charAfterDialCode,historySaveDebounceMS:c=E.historySaveDebounceMS,disableCountryGuess:i=E.disableCountryGuess,disableDialCodePrefill:o=E.disableDialCodePrefill,forceDialCode:l=E.forceDialCode,disableDialCodeAndPrefix:d=E.disableDialCodeAndPrefix,disableFormatting:m=E.disableFormatting,onChange:f,inputRef:g})=>{let C={countries:a,prefix:s,charAfterDialCode:n,forceDialCode:d?false:l,disableDialCodeAndPrefix:d,defaultMask:r,countryGuessingEnabled:!i,disableFormatting:m},k=useRef(null),D=g||k,I=w=>{Promise.resolve().then(()=>{typeof window>"u"||D.current!==document?.activeElement||D.current?.setSelectionRange(w,w);});},[{phone:A,inputValue:N,country:u},h,y,b]=ge(()=>{let w=$$3({value:t,field:"iso2",countries:a});w||console.error(`[react-international-phone]: can not find a country with "${t}" iso2 code`);let T=w||$$3({value:"us",field:"iso2",countries:a}),{phone:x,inputValue:L,country:U}=W({value:e,country:T,insertDialCodeOnEmpty:!o,...C});return I(L.length),{phone:x,inputValue:L,country:U.iso2}},{overrideLastItemDebounceMS:c,onChange:({inputValue:w,phone:T,country:x})=>{if(!f)return;let L=v(x);f({phone:T,inputValue:w,country:L});}}),v=useCallback(w=>$$3({value:w,field:"iso2",countries:a}),[a]),R=useMemo(()=>v(u),[u,v]);useEffect(()=>{let w=D.current;if(!w)return;let T=x=>{if(!x.key)return;let L=x.ctrlKey,U=x.metaKey,ve=x.shiftKey;if(x.key.toLowerCase()==="z"){if(de()){if(!U)return}else if(!L)return;ve?b():y();}};return w.addEventListener("keydown",T),()=>{w.removeEventListener("keydown",T);}},[D,y,b]);let V=w=>{w.preventDefault();let{phone:T,inputValue:x,country:L,cursorPosition:U}=fe(w,{country:R,phoneBeforeInput:N,insertDialCodeOnEmpty:false,...C});return h({inputValue:x,phone:T,country:L.iso2}),I(U),e},K=(w,T={focusOnInput:false})=>{let x=$$3({value:w,field:"iso2",countries:a});if(!x){console.error(`[react-international-phone]: can not find a country with "${w}" iso2 code`);return}let L=d?"":`${s}${x.dialCode}${n}`;h({inputValue:L,phone:`${s}${x.dialCode}`,country:x.iso2}),T.focusOnInput&&Promise.resolve().then(()=>{D.current?.focus();});},[G,j]=useState(false);return useEffect(()=>{if(!G){j(true),e!==A&&f?.({inputValue:N,phone:A,country:R});return}if(e===A)return;let{phone:w,inputValue:T,country:x}=W({value:e,country:R,insertDialCodeOnEmpty:!o,...C});h({phone:w,inputValue:T,country:x.iso2});},[e]),{phone:A,inputValue:N,country:R,setCountry:K,handlePhoneValueChange:V,inputRef:D}};var Q=({phone:t,country:e,defaultMask:a="............",disableFormatting:s=false})=>{let r=e.format,n=i=>s?i.replace(new RegExp(`[^${J}]`,"g"),""):i;if(!r)return n(a);if(typeof r=="string")return n(r);if(!r.default)return console.error(`[react-international-phone]: default mask for ${e.iso2} is not provided`),n(a);let c=Object.keys(r).find(i=>{if(i==="default")return  false;if(!(i.charAt(0)==="/"&&i.charAt(i.length-1)==="/"))return console.error(`[react-international-phone]: format regex "${i}" for ${e.iso2} is not valid`),false;let l=new RegExp(i.substring(1,i.length-1)),d=t.replace(e.dialCode,"");return l.test(z(d))});return n(c?r[c]:r.default)};var M=t=>{let[e,a,s,r,n,c]=t;return {name:e,iso2:a,dialCode:s,format:r,priority:n,areaCodes:c}};var Ae=t=>`Field "${t}" is not supported`,$$3=({field:t,value:e,countries:a=_})=>{if(["priority"].includes(t))throw new Error(Ae(t));let s=a.find(r=>{let n=M(r);return e===n[t]});if(s)return M(s)};var X=({phone:t,countries:e=_,currentCountryIso2:a})=>{let s={country:void 0,fullDialCodeMatch:false};if(!t)return s;let r=z(t);if(!r)return s;let n=s,c=({country:i,fullDialCodeMatch:o})=>{let l=i.dialCode===n.country?.dialCode,d=(i.priority??0)<(n.country?.priority??0);(!l||d)&&(n={country:i,fullDialCodeMatch:o});};for(let i of e){let o=M(i),{dialCode:l,areaCodes:d}=o;if(r.startsWith(l)){let m=n.country?Number(l)>=Number(n.country.dialCode):true;if(d){let f=r.substring(l.length);for(let g of d)if(f.startsWith(g))return {country:o,fullDialCodeMatch:true}}(m||l===r||!n.fullDialCodeMatch)&&c({country:o,fullDialCodeMatch:true});}n.fullDialCodeMatch||r.length<l.length&&l.startsWith(r)&&(!n.country||Number(l)<=Number(n.country.dialCode))&&c({country:o,fullDialCodeMatch:false});}if(a){let i=$$3({value:a,field:"iso2",countries:e});if(!i)return n;let l=i?(m=>{if(!m?.areaCodes)return  false;let f=r.substring(m.dialCode.length);return m.areaCodes.some(g=>g.startsWith(f))})(i):false;!!n&&n.country?.dialCode===i.dialCode&&n.country!==i&&n.fullDialCodeMatch&&(!i.areaCodes||l)&&(n={country:i,fullDialCodeMatch:true});}return n};var Te=(t,e)=>{let a=parseInt(t,16);return Number(a+e).toString(16)},Ee="abcdefghijklmnopqrstuvwxyz",Le="1f1e6",Pe=Ee.split("").reduce((t,e,a)=>({...t,[e]:Te(Le,a)}),{}),$e=t=>[Pe[t[0]],Pe[t[1]]].join("-"),q=({iso2:t,size:e,src:a,protocol:s="https",disableLazyLoading:r,className:n,style:c,...i})=>{if(!t)return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),width:e,height:e,...i});let o=()=>{if(a)return a;let l=$e(t);return `${s}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${l}.svg`};return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),src:o(),width:e,height:e,draggable:false,"data-country":t,loading:r?void 0:"lazy",style:{width:e,height:e,...c},alt:"",...i})};var He=1e3,ne=({show:t,dialCodePrefix:e="+",selectedCountry:a,countries:s=_,preferredCountries:r=[],flags:n,onSelect:c,onClose:i,...o})=>{let l=useRef(null),d=useRef(),m=useMemo(()=>{if(!r||!r.length)return s;let u=[],h=[...s];for(let y of r){let b=h.findIndex(v=>M(v).iso2===y);if(b!==-1){let v=h.splice(b,1)[0];u.push(v);}}return u.concat(h)},[s,r]),f=useRef({updatedAt:void 0,value:""}),g=u=>{let h=f.current.updatedAt&&new Date().getTime()-f.current.updatedAt.getTime()>He;f.current={value:h?u:`${f.current.value}${u}`,updatedAt:new Date};let y=m.findIndex(b=>M(b).name.toLowerCase().startsWith(f.current.value));y!==-1&&C(y);},S=useCallback(u=>m.findIndex(h=>M(h).iso2===u),[m]),[p,C]=useState(S(a)),k=()=>{d.current!==a&&C(S(a));},D=useCallback(u=>{C(S(u.iso2)),c?.(u);},[c,S]),I=u=>{let h=m.length-1,y=b=>u==="prev"?b-1:u==="next"?b+1:u==="last"?h:0;C(b=>{let v=y(b);return v<0?0:v>h?h:v});},A=u=>{if(u.stopPropagation(),u.key==="Enter"){u.preventDefault();let h=M(m[p]);D(h);return}if(u.key==="Escape"){i?.();return}if(u.key==="ArrowUp"){u.preventDefault(),I("prev");return}if(u.key==="ArrowDown"){u.preventDefault(),I("next");return}if(u.key==="PageUp"){u.preventDefault(),I("first");return}if(u.key==="PageDown"){u.preventDefault(),I("last");return}u.key===" "&&u.preventDefault(),u.key.length===1&&!u.altKey&&!u.ctrlKey&&!u.metaKey&&g(u.key.toLocaleLowerCase());},N=useCallback(()=>{if(!l.current||p===void 0)return;let u=M(m[p]).iso2;if(u===d.current)return;let h=l.current.querySelector(`[data-country="${u}"]`);h&&(ue(l.current,h),d.current=u);},[p,m]);return useEffect(()=>{N();},[p,N]),useEffect(()=>{l.current&&(t?l.current.focus():k());},[t]),useEffect(()=>{k();},[a]),H.createElement("ul",{ref:l,role:"listbox",className:P({addPrefix:["country-selector-dropdown"],rawClassNames:[o.className]}),style:{display:t?"block":"none",...o.style},onKeyDown:A,onBlur:i,tabIndex:-1,"aria-activedescendant":`react-international-phone__${M(m[p]).iso2}-option`},m.map((u,h)=>{let y=M(u),b=y.iso2===a,v=h===p,R=r.includes(y.iso2),V=h===r.length-1,K=n?.find(G=>G.iso2===y.iso2);return H.createElement(H.Fragment,{key:y.iso2},H.createElement("li",{"data-country":y.iso2,role:"option","aria-selected":b,"aria-label":`${y.name} ${e}${y.dialCode}`,id:`react-international-phone__${y.iso2}-option`,className:P({addPrefix:["country-selector-dropdown__list-item",R&&"country-selector-dropdown__list-item--preferred",b&&"country-selector-dropdown__list-item--selected",v&&"country-selector-dropdown__list-item--focused"],rawClassNames:[o.listItemClassName,R&&o.listItemPreferredClassName,b&&o.listItemSelectedClassName,v&&o.listItemFocusedClassName]}),onClick:()=>D(y),style:o.listItemStyle,title:y.name},H.createElement(q,{iso2:y.iso2,src:K?.src,className:P({addPrefix:["country-selector-dropdown__list-item-flag-emoji"],rawClassNames:[o.listItemFlagClassName]}),style:o.listItemFlagStyle}),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-country-name"],rawClassNames:[o.listItemCountryNameClassName]}),style:o.listItemCountryNameStyle},y.name),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-dial-code"],rawClassNames:[o.listItemDialCodeClassName]}),style:o.listItemDialCodeStyle},e,y.dialCode)),V?H.createElement("hr",{className:P({addPrefix:["country-selector-dropdown__preferred-list-divider"],rawClassNames:[o.preferredListDividerClassName]}),style:o.preferredListDividerStyle}):null)}))};var ae=({selectedCountry:t,onSelect:e,disabled:a,hideDropdown:s,countries:r=_,preferredCountries:n=[],flags:c,renderButtonWrapper:i,...o})=>{let[l,d]=useState(false),m=useMemo(()=>{if(t)return $$3({value:t,field:"iso2",countries:r})},[r,t]),f=useRef(null),g=p=>{p.key&&["ArrowUp","ArrowDown"].includes(p.key)&&(p.preventDefault(),d(true));},S=()=>{let p={title:m?.name,onClick:()=>d(k=>!k),onMouseDown:k=>k.preventDefault(),onKeyDown:g,disabled:s||a,role:"combobox","aria-label":"Country selector","aria-haspopup":"listbox","aria-expanded":l},C=H.createElement("div",{className:P({addPrefix:["country-selector-button__button-content"],rawClassNames:[o.buttonContentWrapperClassName]}),style:o.buttonContentWrapperStyle},H.createElement(q,{iso2:t,src:c?.find(k=>k.iso2===t)?.src,className:P({addPrefix:["country-selector-button__flag-emoji",a&&"country-selector-button__flag-emoji--disabled"],rawClassNames:[o.flagClassName]}),style:{visibility:t?"visible":"hidden",...o.flagStyle}}),!s&&H.createElement("div",{className:P({addPrefix:["country-selector-button__dropdown-arrow",a&&"country-selector-button__dropdown-arrow--disabled",l&&"country-selector-button__dropdown-arrow--active"],rawClassNames:[o.dropdownArrowClassName]}),style:o.dropdownArrowStyle}));return i?i({children:C,rootProps:p}):H.createElement("button",{...p,type:"button",className:P({addPrefix:["country-selector-button",l&&"country-selector-button--active",a&&"country-selector-button--disabled",s&&"country-selector-button--hide-dropdown"],rawClassNames:[o.buttonClassName]}),"data-country":t,style:o.buttonStyle},C)};return H.createElement("div",{className:P({addPrefix:["country-selector"],rawClassNames:[o.className]}),style:o.style,ref:f},S(),H.createElement(ne,{show:l,countries:r,preferredCountries:n,flags:c,onSelect:p=>{d(false),e?.(p);},selectedCountry:t,onClose:()=>{d(false);},...o.dropdownStyleProps}))};var ie=({dialCode:t,prefix:e,disabled:a,style:s,className:r})=>H.createElement("div",{className:P({addPrefix:["dial-code-preview",a&&"dial-code-preview--disabled"],rawClassNames:[r]}),style:s},`${e}${t}`);var Ue=forwardRef(({value:t,onChange:e,countries:a=_,preferredCountries:s=[],hideDropdown:r,showDisabledDialCodeAndPrefix:n,disableFocusAfterCountrySelect:c,flags:i,style:o,className:l,inputStyle:d,inputClassName:m,countrySelectorStyleProps:f,dialCodePreviewStyleProps:g,inputProps:S,placeholder:p,disabled:C,name:k,onFocus:D,onBlur:I,required:A,autoFocus:N,...u},h)=>{let{phone:y,inputValue:b,inputRef:v,country:R,setCountry:V,handlePhoneValueChange:K}=ee({value:t,countries:a,...u,onChange:j=>{e?.(j.phone,{country:j.country,inputValue:j.inputValue});}}),G=u.disableDialCodeAndPrefix&&n&&R?.dialCode;return useImperativeHandle(h,()=>v.current?Object.assign(v.current,{setCountry:V,state:{phone:y,inputValue:b,country:R}}):null,[v,V,y,b,R]),H.createElement("div",{ref:h,className:P({addPrefix:["input-container"],rawClassNames:[l]}),style:o},H.createElement(ae,{onSelect:j=>V(j.iso2,{focusOnInput:!c}),flags:i,selectedCountry:R.iso2,countries:a,preferredCountries:s,disabled:C,hideDropdown:r,...f}),G&&H.createElement(ie,{dialCode:R.dialCode,prefix:u.prefix??"+",disabled:C,...g}),H.createElement("input",{onChange:K,value:b,type:"tel",ref:v,className:P({addPrefix:["input",C&&"input--disabled"],rawClassNames:[m]}),placeholder:p,disabled:C,style:d,name:k,onFocus:D,onBlur:I,autoFocus:N,required:A,...S}))});
+
+var {
+  Title: Title$1,
+  Text: Text$1
+} = Typography;
+var BRAND_RED = '#ff4d4f';
+var PROVIDERS = [{
+  label: 'MTN',
+  value: 'MTN'
+}, {
+  label: 'Airtel',
+  value: 'Airtel'
+}, {
+  label: 'M-Pesa',
+  value: 'M-Pesa'
+}];
+function MobileMoneyFallbackModal(_ref) {
+  var {
+    open = false,
+    onCancel,
+    onSubmit,
+    // (payload) => void ; payload = { provider, msisdn }
+    zIndex = 2100,
+    width = 520,
+    defaultCountry = 'ug' // ← use ISO-2 country for PhoneInput default
+  } = _ref;
+  var [provider, setProvider] = useState(null);
+  var [phone, setPhone] = useState(''); // E.164 like +2567...
+
+  var canSubmit = useMemo(() => {
+    // very light validation: must have a provider + at least 8 digits
+    var digits = (phone || '').replace(/\D+/g, '');
+    return !!provider && digits.length >= 8;
+  }, [provider, phone]);
+  var handleSubmit = () => {
+    if (!canSubmit) return;
+    onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit({
+      provider,
+      msisdn: phone.trim()
+    });
+  };
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
+    open: open,
+    centered: true,
+    width: width,
+    footer: null,
+    onCancel: onCancel,
+    zIndex: zIndex,
+    maskClosable: false,
+    title: null,
+    bodyStyle: {
+      padding: 20
+    },
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
+      style: {
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        background: BRAND_RED,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+      size: "sm"
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+        level: 4,
+        style: {
+          margin: 0
+        },
+        children: "Pay with Mobile Money"
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        type: "secondary",
+        children: "Choose a provider and enter the mobile number to continue."
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Provider"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Select, {
+          style: {
+            width: '100%',
+            marginTop: 6
+          },
+          placeholder: "Select a provider",
+          options: PROVIDERS,
+          value: provider,
+          onChange: setProvider,
+          showSearch: true,
+          optionFilterProp: "label"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Mobile Number"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+          style: {
+            marginTop: 6
+          },
+          children: /*#__PURE__*/jsxRuntimeExports.jsx(Ue, {
+            defaultCountry: defaultCountry // e.g. 'ug'
+            ,
+            value: phone,
+            onChange: setPhone
+            // allow editing with country selector & formatting
+            ,
+            inputStyle: {
+              width: '100%'
+            },
+            style: {
+              width: '100%'
+            }
+          })
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          display: 'flex',
+          gap: 12,
+          justifyContent: 'flex-end',
+          marginTop: 16
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          onClick: onCancel,
+          shape: "round",
+          children: "Cancel"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          type: "primary",
+          shape: "round",
+          onClick: handleSubmit,
+          disabled: !canSubmit,
+          children: "Continue"
+        })]
+      })]
+    })]
+  });
+}
 
 var tryToString = tryToString$5;
 
-var $TypeError = TypeError;
+var $TypeError$1 = TypeError;
 
 var deletePropertyOrThrow$1 = function (O, P) {
-  if (!delete O[P]) throw new $TypeError('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O));
+  if (!delete O[P]) throw new $TypeError$1('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O));
 };
 
 var arraySlice = arraySlice$2;
@@ -5563,7 +5600,7 @@ var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
 
 var environmentWebkitVersion = !!webkit && +webkit[1];
 
-var $$1 = _export;
+var $$2 = _export;
 var uncurryThis$2 = functionUncurryThis;
 var aCallable = aCallable$9;
 var toObject = toObject$4;
@@ -5641,7 +5678,7 @@ var getSortCompare = function (comparefn) {
 
 // `Array.prototype.sort` method
 // https://tc39.es/ecma262/#sec-array.prototype.sort
-$$1({ target: 'Array', proto: true, forced: FORCED }, {
+$$2({ target: 'Array', proto: true, forced: FORCED }, {
   sort: function sort(comparefn) {
     if (comparefn !== undefined) aCallable(comparefn);
 
@@ -5670,7 +5707,7 @@ $$1({ target: 'Array', proto: true, forced: FORCED }, {
 });
 
 var isCallable = isCallable$m;
-var isObject = isObject$c;
+var isObject$1 = isObject$c;
 var setPrototypeOf = objectSetPrototypeOf;
 
 // makes subclassing work correct for wrapped built-ins
@@ -5682,10 +5719,23 @@ var inheritIfRequired$1 = function ($this, dummy, Wrapper) {
     // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
     isCallable(NewTarget = dummy.constructor) &&
     NewTarget !== Wrapper &&
-    isObject(NewTargetPrototype = NewTarget.prototype) &&
+    isObject$1(NewTargetPrototype = NewTarget.prototype) &&
     NewTargetPrototype !== Wrapper.prototype
   ) setPrototypeOf($this, NewTargetPrototype);
   return $this;
+};
+
+var isObject = isObject$c;
+var classof = classofRaw$2;
+var wellKnownSymbol$2 = wellKnownSymbol$j;
+
+var MATCH$2 = wellKnownSymbol$2('match');
+
+// `IsRegExp` abstract operation
+// https://tc39.es/ecma262/#sec-isregexp
+var isRegexp = function (it) {
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH$2]) !== undefined ? !!isRegExp : classof(it) === 'RegExp');
 };
 
 var defineProperty = objectDefineProperty.f;
@@ -5707,7 +5757,7 @@ var createNonEnumerableProperty = createNonEnumerableProperty$6;
 var create = objectCreate;
 var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 var isPrototypeOf = objectIsPrototypeOf;
-var isRegExp = isRegexp;
+var isRegExp$1 = isRegexp;
 var toString$2 = toString$9;
 var getRegExpFlags = regexpGetFlags;
 var stickyHelpers = regexpStickyHelpers;
@@ -5717,18 +5767,18 @@ var fails$1 = fails$o;
 var hasOwn = hasOwnProperty_1;
 var enforceInternalState = internalState.enforce;
 var setSpecies = setSpecies$2;
-var wellKnownSymbol = wellKnownSymbol$j;
+var wellKnownSymbol$1 = wellKnownSymbol$j;
 var UNSUPPORTED_DOT_ALL = regexpUnsupportedDotAll;
 var UNSUPPORTED_NCG = regexpUnsupportedNcg;
 
-var MATCH = wellKnownSymbol('match');
+var MATCH$1 = wellKnownSymbol$1('match');
 var NativeRegExp = globalThis$1.RegExp;
 var RegExpPrototype = NativeRegExp.prototype;
 var SyntaxError = globalThis$1.SyntaxError;
 var exec = uncurryThis$1(RegExpPrototype.exec);
 var charAt = uncurryThis$1(''.charAt);
-var replace$1 = uncurryThis$1(''.replace);
-var stringIndexOf = uncurryThis$1(''.indexOf);
+var replace = uncurryThis$1(''.replace);
+var stringIndexOf$1 = uncurryThis$1(''.indexOf);
 var stringSlice = uncurryThis$1(''.slice);
 // TODO: Use only proper RegExpIdentifierName
 var IS_NCG = /^\?<[^\s\d!#%&*+<=>@^][^\s!#%&*+<=>@^]*>/;
@@ -5743,7 +5793,7 @@ var UNSUPPORTED_Y = stickyHelpers.UNSUPPORTED_Y;
 
 var BASE_FORCED = DESCRIPTORS &&
   (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG || fails$1(function () {
-    re2[MATCH] = false;
+    re2[MATCH$1] = false;
     // RegExp constructor can alter flags and IsRegExp works correct with @@match
     // eslint-disable-next-line sonarjs/inconsistent-function-call -- required for testing
     return NativeRegExp(re1) !== re1 || NativeRegExp(re2) === re2 || String(NativeRegExp(re1, 'i')) !== '/a/i';
@@ -5826,7 +5876,7 @@ var handleNCG = function (string) {
 if (isForced('RegExp', BASE_FORCED)) {
   var RegExpWrapper = function RegExp(pattern, flags) {
     var thisIsRegExp = isPrototypeOf(RegExpPrototype, this);
-    var patternIsRegExp = isRegExp(pattern);
+    var patternIsRegExp = isRegExp$1(pattern);
     var flagsAreUndefined = flags === undefined;
     var groups = [];
     var rawPattern = pattern;
@@ -5846,15 +5896,15 @@ if (isForced('RegExp', BASE_FORCED)) {
     rawPattern = pattern;
 
     if (UNSUPPORTED_DOT_ALL && 'dotAll' in re1) {
-      dotAll = !!flags && stringIndexOf(flags, 's') > -1;
-      if (dotAll) flags = replace$1(flags, /s/g, '');
+      dotAll = !!flags && stringIndexOf$1(flags, 's') > -1;
+      if (dotAll) flags = replace(flags, /s/g, '');
     }
 
     rawFlags = flags;
 
     if (MISSED_STICKY && 'sticky' in re1) {
-      sticky = !!flags && stringIndexOf(flags, 'y') > -1;
-      if (sticky && UNSUPPORTED_Y) flags = replace$1(flags, /y/g, '');
+      sticky = !!flags && stringIndexOf$1(flags, 'y') > -1;
+      if (sticky && UNSUPPORTED_Y) flags = replace(flags, /y/g, '');
     }
 
     if (UNSUPPORTED_NCG) {
@@ -5941,63 +5991,6 @@ fixRegExpWellKnownSymbolLogic('match', function (MATCH, nativeMatch, maybeCallNa
       return n === 0 ? null : A;
     }
   ];
-});
-
-// a string of all valid unicode whitespaces
-var whitespaces$2 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
-  '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
-
-var uncurryThis = functionUncurryThis;
-var requireObjectCoercible = requireObjectCoercible$9;
-var toString = toString$9;
-var whitespaces$1 = whitespaces$2;
-
-var replace = uncurryThis(''.replace);
-var ltrim = RegExp('^[' + whitespaces$1 + ']+');
-var rtrim = RegExp('(^|[^' + whitespaces$1 + '])[' + whitespaces$1 + ']+$');
-
-// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
-var createMethod = function (TYPE) {
-  return function ($this) {
-    var string = toString(requireObjectCoercible($this));
-    if (TYPE & 1) string = replace(string, ltrim, '');
-    if (TYPE & 2) string = replace(string, rtrim, '$1');
-    return string;
-  };
-};
-
-var stringTrim = {
-  // `String.prototype.trim` method
-  // https://tc39.es/ecma262/#sec-string.prototype.trim
-  trim: createMethod(3)
-};
-
-var PROPER_FUNCTION_NAME = functionName.PROPER;
-var fails = fails$o;
-var whitespaces = whitespaces$2;
-
-var non = '\u200B\u0085\u180E';
-
-// check that a method works with the correct list
-// of whitespaces and has a correct name
-var stringTrimForced = function (METHOD_NAME) {
-  return fails(function () {
-    return !!whitespaces[METHOD_NAME]()
-      || non[METHOD_NAME]() !== non
-      || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
-  });
-};
-
-var $ = _export;
-var $trim = stringTrim.trim;
-var forcedStringTrimMethod = stringTrimForced;
-
-// `String.prototype.trim` method
-// https://tc39.es/ecma262/#sec-string.prototype.trim
-$({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
-  trim: function trim() {
-    return $trim(this);
-  }
 });
 
 // src/utils/cookie.js
@@ -6289,6 +6282,127 @@ function makeFallbackProfile(userNo) {
   };
 }
 
+// src/hooks/flow/transitions.js
+
+var wait = ms => new Promise(r => setTimeout(r, ms));
+
+/**
+ * Creates view/processing helpers that keep the ProcessingModal consistent.
+ * - withMinProcessing(kind, task)
+ * - transitionTo(nextView, reason='ui')
+ */
+function createTransitions(minProcessingMs, setProcessing, setView) {
+  function withMinProcessing(_x, _x2) {
+    return _withMinProcessing.apply(this, arguments);
+  }
+  function _withMinProcessing() {
+    _withMinProcessing = _asyncToGenerator(function* (kind, task) {
+      setProcessing(kind); // 'quote' | 'charge' | 'ui'
+      var start = Date.now();
+      try {
+        return yield task();
+      } finally {
+        var elapsed = Date.now() - start;
+        var remain = Math.max(0, Number(minProcessingMs) - elapsed);
+        if (remain > 0) yield wait(remain);
+        setProcessing(null);
+      }
+    });
+    return _withMinProcessing.apply(this, arguments);
+  }
+  function transitionTo(_x3) {
+    return _transitionTo.apply(this, arguments);
+  }
+  function _transitionTo() {
+    _transitionTo = _asyncToGenerator(function* (nextView) {
+      var reason = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ui';
+      setProcessing(reason);
+      try {
+        yield wait(Number(minProcessingMs) || 0);
+      } finally {
+        setProcessing(null);
+      }
+      setView(nextView);
+    });
+    return _transitionTo.apply(this, arguments);
+  }
+  return {
+    withMinProcessing,
+    transitionTo
+  };
+}
+
+var $$1 = _export;
+var $includes = arrayIncludes.includes;
+var fails = fails$o;
+var addToUnscopables = addToUnscopables$2;
+
+// FF99+ bug
+var BROKEN_ON_SPARSE = fails(function () {
+  // eslint-disable-next-line es/no-array-prototype-includes -- detection
+  return !Array(1).includes();
+});
+
+// `Array.prototype.includes` method
+// https://tc39.es/ecma262/#sec-array.prototype.includes
+$$1({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
+  includes: function includes(el /* , fromIndex = 0 */) {
+    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+addToUnscopables('includes');
+
+var isRegExp = isRegexp;
+
+var $TypeError = TypeError;
+
+var notARegexp = function (it) {
+  if (isRegExp(it)) {
+    throw new $TypeError("The method doesn't accept regular expressions");
+  } return it;
+};
+
+var wellKnownSymbol = wellKnownSymbol$j;
+
+var MATCH = wellKnownSymbol('match');
+
+var correctIsRegexpLogic = function (METHOD_NAME) {
+  var regexp = /./;
+  try {
+    '/./'[METHOD_NAME](regexp);
+  } catch (error1) {
+    try {
+      regexp[MATCH] = false;
+      return '/./'[METHOD_NAME](regexp);
+    } catch (error2) { /* empty */ }
+  } return false;
+};
+
+var $ = _export;
+var uncurryThis = functionUncurryThis;
+var notARegExp = notARegexp;
+var requireObjectCoercible = requireObjectCoercible$9;
+var toString = toString$9;
+var correctIsRegExpLogic = correctIsRegexpLogic;
+
+var stringIndexOf = uncurryThis(''.indexOf);
+
+// `String.prototype.includes` method
+// https://tc39.es/ecma262/#sec-string.prototype.includes
+$({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {
+  includes: function includes(searchString /* , position = 0 */) {
+    return !!~stringIndexOf(
+      toString(requireObjectCoercible(this)),
+      toString(notARegExp(searchString)),
+      arguments.length > 1 ? arguments[1] : undefined
+    );
+  }
+});
+
+// src/hooks/flow/constants.js
+
 // Dummy platform knobs (match your server-ish math)
 var CHARGES = {
   taxPct: 0.025,
@@ -6296,7 +6410,6 @@ var CHARGES = {
 };
 
 // Local demo user state (balance, currency, passcode)
-// You can tweak these safely; UI will reflect them.
 var DUMMY_USER_STATE = {
   'U-000789': {
     balance: 50000,
@@ -6337,290 +6450,232 @@ function nowIso() {
   return new Date().toISOString();
 }
 
-/**
- * Encapsulates all checkout/session/quote/charge logic (OFFLINE).
- * UI components subscribe to this hook and render based on its state.
- */
-function useWalletPaymentFlow(_ref) {
-  var _session$enterprise3, _session$enterprise4;
+function dedupe(arr) {
+  return Array.from(new Set(arr || []));
+}
+function buildPlaceholderAccounts(userNos) {
+  return userNos.map(u => ({
+    userNo: u,
+    walletId: null,
+    owner: "User ".concat(String(u).slice(-3)),
+    email: "".concat(String(u).toLowerCase().replace(/[^a-z0-9]+/g, ''), "@example.com"),
+    photo: "https://i.pravatar.cc/80?u=".concat(encodeURIComponent(u))
+  }));
+}
+function makeLocalSession(_ref) {
   var {
-    // preferred + legacy identifiers (still required by your UI)
-    publicKey,
-    publishableKey,
-    brandId,
-    enterpriseNo,
-    enterpriseWalletNo,
-    userWalletId,
-    // if you force it, we skip cookie flow
-
-    // transaction display fields
-    amount,
-    type,
-    particulars,
-    currency,
+    entNo,
+    chosenUserNo,
     merchantName,
-    merchantLogo,
-    // timings
-    minProcessingMs = 5000,
-    // callbacks
-    onClose,
-    onSuccess
+    currency,
+    getUsersForPicker
   } = _ref;
-  // Resolve effective identifiers (prefer NEW names)
-  var key = publicKey || publishableKey || null; // still validated for UX messages
-  var ent = enterpriseNo || enterpriseWalletNo || null; // used to display enterpriseNo
+  var userState = DUMMY_USER_STATE[chosenUserNo] || DEFAULT_USER_STATE;
+  var pool = getUsersForPicker();
+  var prof = Array.isArray(pool) ? pool.find(u => u.userNo === chosenUserNo) || {} : {};
+  return {
+    sessionId: 'sess_' + Math.random().toString(36).slice(2),
+    enterprise: {
+      walletNo: entNo,
+      name: merchantName || 'Demo Enterprise',
+      currency: 'UGX'
+    },
+    user: {
+      walletId: prof.walletId || 'W-256-' + Math.floor(1000000 + Math.random() * 8999999),
+      name: prof.owner || 'User ' + String(chosenUserNo).slice(-3),
+      email: prof.email || null,
+      balance: userState.balance,
+      currency: userState.currency,
+      userNo: chosenUserNo
+    },
+    billingCurrency: currency || userState.currency || 'UGX',
+    rates: {
+      CHARGES
+    },
+    expiresAt: new Date(Date.now() + 15 * 60000).toISOString(),
+    createdAt: nowIso()
+  };
+}
 
-  // ---------- State ----------
-  // views: loading | accountPicker | signin | invalid | summary | passcode | success | failed | insufficient
-  var [view, setView] = useState('loading');
-  var [errorMsg, setErrorMsg] = useState('');
-
-  // Local "session"
-  var [session, setSession] = useState(null); // { sessionId, enterprise:{...}, user:{...}, billingCurrency, expiresAt }
-  var [quote, setQuote] = useState(null); // { quoteId, total, currency, breakdown, ... }
-  var [accounts, setAccounts] = useState([]); // [{userNo, walletId, owner, email, photo}]
-
-  var [submitting, setSubmitting] = useState(false);
-  var [processing, setProcessing] = useState(null); // 'quote' | 'charge' | null
-
-  // Remember a pick during this flow so we don't re-show the picker until the component is reopened
-  var [pickedUserNoThisFlow, setPickedUserNoThisFlow] = useState(null);
-
-  // A one-shot "force this user on next boot" flag to avoid double-click
-  var forceUserNoRef = useRef(null);
-
-  // ---------- Derived ----------
-  var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
-  var wait = ms => new Promise(r => setTimeout(r, ms));
-
-  // Enforce minimum visible duration for the processing animation
-  function withMinProcessing(_x, _x2) {
-    return _withMinProcessing.apply(this, arguments);
-  } // Build a local "session" object from a chosen userNo (no server calls)
-  function _withMinProcessing() {
-    _withMinProcessing = _asyncToGenerator(function* (kind, task) {
-      setProcessing(kind);
-      var start = Date.now();
-      try {
-        return yield task();
-      } finally {
-        var elapsed = Date.now() - start;
-        var remain = Math.max(0, Number(minProcessingMs) - elapsed);
-        if (remain > 0) yield wait(remain);
-        setProcessing(null);
-      }
-    });
-    return _withMinProcessing.apply(this, arguments);
-  }
-  function makeLocalSession(entNo, chosenUserNo) {
-    var userState = DUMMY_USER_STATE[chosenUserNo] || DEFAULT_USER_STATE;
-
-    // find a display profile (email/photo/owner) from cookie utils fallback
-    var pool = getUsersForPicker();
-    var prof = Array.isArray(pool) ? pool.find(u => u.userNo === chosenUserNo) || {} : {};
-    return {
-      sessionId: 'sess_' + Math.random().toString(36).slice(2),
-      enterprise: {
-        walletNo: entNo,
-        name: merchantName || 'Demo Enterprise',
-        // prefer the merchantName prop if present
-        currency: 'UGX' // demo enterprise currency
-      },
-      user: {
-        walletId: prof.walletId || 'W-256-' + Math.floor(1000000 + Math.random() * 8999999),
-        name: prof.owner || 'User ' + String(chosenUserNo).slice(-3),
-        email: prof.email || null,
-        balance: userState.balance,
-        currency: userState.currency,
-        userNo: chosenUserNo // keep locally
-      },
-      billingCurrency: currency || userState.currency || 'UGX',
-      rates: {
-        CHARGES
-      },
-      expiresAt: new Date(Date.now() + 15 * 60000).toISOString(),
-      // 15 min
-      createdAt: nowIso()
-    };
-  }
-
-  // ---------- Boot / init session (OFFLINE) ----------
-  var boot = useCallback(/*#__PURE__*/_asyncToGenerator(function* () {
-    var _opts$forceUserNo;
-    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    setErrorMsg('');
-    setQuote(null);
-    setAccounts([]);
-    var forceUserNo = (_opts$forceUserNo = opts.forceUserNo) !== null && _opts$forceUserNo !== void 0 ? _opts$forceUserNo : forceUserNoRef.current;
-    // consume the one-shot flag immediately so we don't reuse it accidentally
-    forceUserNoRef.current = null;
-    if (!key) {
-      setErrorMsg('Missing publicKey/publishableKey');
-      setView('invalid');
-      return;
-    }
-    if (!ent) {
-      setView('signin'); // enterpriseNo missing → show "Has account?" modal
-      return;
-    }
-    if (!amountValid) {
-      setErrorMsg('Invalid amount');
-      setView('invalid');
-      return;
-    }
-
-    // If caller didn't force a specific wallet, check cookies/accounts first
-    var cookieUserNo = !userWalletId ? getUserNoFromCookie() || null : null;
-    if (!userWalletId) {
-      // Merge all known sources (primary/list/enumerated)
-      var userNos = dedupe([...getUserNosFromCookie()]).filter(Boolean);
-      if (forceUserNo) {
-        // If we were told to force a specific user, ensure cookie is set and skip the picker
-        if (!cookieUserNo || cookieUserNo !== forceUserNo) {
-          try {
-            setUserNoCookie(forceUserNo);
-          } catch (_unused) {}
-        }
-        cookieUserNo = forceUserNo;
-        if (!userNos.includes(forceUserNo)) userNos.push(forceUserNo);
-      }
-      if (userNos.length === 0) {
-        setView('signin');
+/**
+ * Build the boot function (kept pure here; setters + utils are injected).
+ */
+function createBoot(_ref2) {
+  var {
+    key,
+    ent,
+    amountValid,
+    userWalletId,
+    pickedUserNoThisFlow,
+    getUserNoFromCookie,
+    getUserNosFromCookie,
+    setUserNoCookie,
+    getUsersForPicker,
+    setErrorMsg,
+    setQuote,
+    setAccounts,
+    setSession,
+    transitionTo,
+    currency,
+    merchantName
+  } = _ref2;
+  return /*#__PURE__*/function () {
+    var _boot = _asyncToGenerator(function* () {
+      var {
+        forceUserNo
+      } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      setErrorMsg('');
+      setQuote(null);
+      setAccounts([]);
+      if (!key) {
+        setErrorMsg('Missing publicKey/publishableKey');
+        yield transitionTo('invalid');
         return;
       }
-      if (!forceUserNo) {
-        if (userNos.length === 1) {
-          // 1 account -> auto-select and proceed (ensure cookie set)
-          var only = userNos[0];
-          if (!cookieUserNo || cookieUserNo !== only) {
+      if (!ent) {
+        yield transitionTo('signin');
+        return;
+      }
+      if (!amountValid) {
+        setErrorMsg('Invalid amount');
+        yield transitionTo('invalid');
+        return;
+      }
+      var cookieUserNo = !userWalletId ? getUserNoFromCookie() || null : null;
+      if (!userWalletId) {
+        // Merge all known sources (primary/list/enumerated)
+        var userNos = dedupe([...getUserNosFromCookie()]).filter(Boolean);
+        if (forceUserNo) {
+          if (!cookieUserNo || cookieUserNo !== forceUserNo) {
             try {
-              setUserNoCookie(only);
-            } catch (_unused2) {}
-            cookieUserNo = only;
+              setUserNoCookie(forceUserNo);
+            } catch (_unused) {}
           }
-        } else if (userNos.length > 1) {
-          // 2+ accounts -> show picker *unless* we already picked earlier in this flow
-          if (!pickedUserNoThisFlow) {
-            try {
-              var list = getUsersForPicker();
-              setAccounts(Array.isArray(list) && list.length ? list : buildPlaceholderAccounts(userNos));
-            } catch (_unused3) {
-              setAccounts(buildPlaceholderAccounts(userNos));
+          cookieUserNo = forceUserNo;
+          if (!userNos.includes(forceUserNo)) userNos.push(forceUserNo);
+        }
+        if (userNos.length === 0) {
+          yield transitionTo('signin');
+          return;
+        }
+        if (!forceUserNo) {
+          if (userNos.length === 1) {
+            var only = userNos[0];
+            if (!cookieUserNo || cookieUserNo !== only) {
+              try {
+                setUserNoCookie(only);
+              } catch (_unused2) {}
+              cookieUserNo = only;
             }
-            setView('accountPicker');
-            return; // wait for user to pick, then restart({ forceUserNo })
+          } else if (userNos.length > 1) {
+            if (!pickedUserNoThisFlow) {
+              try {
+                var list = getUsersForPicker();
+                setAccounts(Array.isArray(list) && list.length ? list : buildPlaceholderAccounts(userNos));
+              } catch (_unused3) {
+                setAccounts(buildPlaceholderAccounts(userNos));
+              }
+              yield transitionTo('accountPicker');
+              return;
+            }
+            cookieUserNo = pickedUserNoThisFlow || cookieUserNo || null;
           }
-          cookieUserNo = pickedUserNoThisFlow || cookieUserNo || null;
         }
       }
-    }
-
-    // At this point we either have a forced userWalletId or a cookieUserNo
-    if (!userWalletId && !cookieUserNo) {
-      setView('signin');
-      return;
-    }
-
-    // Simulate a little prep time (keeps UI parity)
-    yield wait(700);
-
-    // Build local session immediately (no server)
-    var chosen = userWalletId ? null : cookieUserNo;
-    if (chosen) {
-      try {
-        console.log('[evzone-sdk] selected userNo:', chosen);
-      } catch (_unused4) {}
-    }
-    var sess = makeLocalSession(ent, chosen || 'U-LOCAL');
-    setSession(sess);
-    setView('summary');
-  }), [key, ent, userWalletId, amountValid, pickedUserNoThisFlow, currency, merchantName]);
-
-  // Auto-boot on mount / when inputs change
-  useEffect(() => {
-    setView('loading');
-    var cancelled = false;
-    _asyncToGenerator(function* () {
-      if (!cancelled) yield boot();
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [boot]);
-
-  // Allow the UI to trigger a fresh boot; optionally force a specific userNo
-  var restart = useCallback(forceUserNo => {
-    if (forceUserNo) {
-      forceUserNoRef.current = forceUserNo; // one-shot
-    }
-    setView('loading');
-    boot({
-      forceUserNo
+      if (!userWalletId && !cookieUserNo) {
+        yield transitionTo('signin');
+        return;
+      }
+      yield wait(700);
+      var chosen = userWalletId ? null : cookieUserNo;
+      if (chosen) {
+        try {
+          console.log('[evzone-sdk] selected userNo:', chosen);
+        } catch (_unused4) {}
+      }
+      var sess = makeLocalSession({
+        entNo: ent,
+        chosenUserNo: chosen || 'U-LOCAL',
+        merchantName,
+        currency,
+        getUsersForPicker
+      });
+      setSession(sess);
+      yield transitionTo('summary');
     });
-  }, [boot]);
-
-  // ---------- Details for display ----------
-  var details = useMemo(() => {
-    var _session$enterprise, _session$enterprise2, _quote$total;
-    var billingCurrency = (session === null || session === void 0 ? void 0 : session.billingCurrency) || currency || 'UGX';
-    var mName = merchantName || (session === null || session === void 0 ? void 0 : (_session$enterprise = session.enterprise) === null || _session$enterprise === void 0 ? void 0 : _session$enterprise.name) || 'Unknown Merchant';
-    var toId = (session === null || session === void 0 ? void 0 : (_session$enterprise2 = session.enterprise) === null || _session$enterprise2 === void 0 ? void 0 : _session$enterprise2.walletNo) || '—';
-    return {
-      type: type || 'Booking',
-      id: toId,
-      particulars: particulars || 'Payment',
-      billedCurrency: billingCurrency,
-      billedAmount: amount,
-      totalBilling: (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : amount,
-      merchantName: mName,
-      merchantLogo: merchantLogo || ''
-    };
-  }, [amount, currency, merchantLogo, merchantName, particulars, quote === null || quote === void 0 ? void 0 : quote.total, session === null || session === void 0 ? void 0 : session.billingCurrency, session === null || session === void 0 ? void 0 : (_session$enterprise3 = session.enterprise) === null || _session$enterprise3 === void 0 ? void 0 : _session$enterprise3.name, session === null || session === void 0 ? void 0 : (_session$enterprise4 = session.enterprise) === null || _session$enterprise4 === void 0 ? void 0 : _session$enterprise4.walletNo, type]);
-
-  // ---------- Actions (OFFLINE) ----------
-  var handleConfirm = useCallback(/*#__PURE__*/_asyncToGenerator(function* () {
-    if (!session) return;
-    setSubmitting(true);
-    setErrorMsg('');
-    try {
-      var _session$user;
-      var q = yield withMinProcessing('quote', /*#__PURE__*/_asyncToGenerator(function* () {
-        // local "quote"
-        var subtotal = rnd(amount);
-        var breakdown = buildBreakdown(subtotal);
-        var q = {
-          quoteId: 'qt_' + Math.random().toString(36).slice(2),
-          total: subtotal,
-          currency: session.billingCurrency || 'UGX',
-          breakdown,
-          createdAt: nowIso(),
-          expiresAt: new Date(Date.now() + 5 * 60000).toISOString()
-        };
-        return q;
-      }));
-      setQuote(q);
-      var balance = Number((session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.balance) || 0);
-      if (balance < Number(q.total || 0)) setView('insufficient');else setView('passcode');
-    } catch (e) {
-      try {
-        console.error('quote failed (offline):', e);
-      } catch (_unused5) {}
-      setErrorMsg('Could not prepare quote.');
-      setView('failed');
-    } finally {
-      setSubmitting(false);
+    function boot() {
+      return _boot.apply(this, arguments);
     }
-  }), [session, amount]);
-  var handleSubmit = useCallback(/*#__PURE__*/function () {
+    return boot;
+  }();
+}
+
+/**
+ * Build action handlers (confirm, submit, selectAccount, etc.)
+ */
+function createActions(_ref3) {
+  var {
+    amount,
+    sessionRef,
+    // getter: () => session
+    quoteRef,
+    // getter: () => quote
+    setSession,
+    setQuote,
+    setErrorMsg,
+    setPickedUserNoThisFlow,
+    withMinProcessing,
+    transitionTo,
+    onSuccess,
+    detailsRef,
+    // getter: () => details
+    setUserNoCookie,
+    restart
+  } = _ref3;
+  var handleConfirm = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator(function* () {
+      var session = sessionRef();
+      if (!session) return;
+      setErrorMsg('');
+      try {
+        var _session$user;
+        var q = yield withMinProcessing('quote', /*#__PURE__*/_asyncToGenerator(function* () {
+          var subtotal = rnd(amount);
+          var breakdown = buildBreakdown(subtotal);
+          return {
+            quoteId: 'qt_' + Math.random().toString(36).slice(2),
+            total: subtotal,
+            currency: session.billingCurrency || 'UGX',
+            breakdown,
+            createdAt: nowIso(),
+            expiresAt: new Date(Date.now() + 5 * 60000).toISOString()
+          };
+        }));
+        setQuote(q);
+        var balance = Number((session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.balance) || 0);
+        if (balance < Number(q.total || 0)) yield transitionTo('insufficient');else yield transitionTo('passcode');
+      } catch (e) {
+        try {
+          console.error('quote failed (offline):', e);
+        } catch (_unused5) {}
+        setErrorMsg('Could not prepare quote.');
+        yield transitionTo('failed');
+      }
+    });
+    return function handleConfirm() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  var handleSubmit = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator(function* (passcode) {
+      var session = sessionRef();
+      var quote = quoteRef();
       if (!session || !quote) return;
       if (!passcode || String(passcode).length !== 6) return;
-      setSubmitting(true);
       setErrorMsg('');
       try {
         var res = yield withMinProcessing('charge', /*#__PURE__*/_asyncToGenerator(function* () {
           var _session$user2;
-          // validate passcode against our local dummy state
           var uNo = session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.userNo;
           var state = uNo && DUMMY_USER_STATE[uNo] || DEFAULT_USER_STATE;
           if (String(passcode) !== String(state.passcode)) {
@@ -6635,11 +6690,7 @@ function useWalletPaymentFlow(_ref) {
             _err.code = 'INSUFFICIENT_FUNDS';
             throw _err;
           }
-
-          // "post" it locally: reduce balance, build receipt
           var newBal = rnd(currBalance - total);
-
-          // reflect it in session for UI
           var nextSess = _objectSpread2(_objectSpread2({}, session), {}, {
             user: _objectSpread2(_objectSpread2({}, session.user), {}, {
               balance: newBal
@@ -6670,12 +6721,13 @@ function useWalletPaymentFlow(_ref) {
             }
           };
         }));
-        setView('success');
+        yield transitionTo('success');
+        var details = detailsRef();
         onSuccess === null || onSuccess === void 0 ? void 0 : onSuccess({
           transactionId: (res === null || res === void 0 ? void 0 : res.chargeId) || (quote === null || quote === void 0 ? void 0 : quote.quoteId),
-          sessionId: session.sessionId,
-          enterprise: session.enterprise,
-          user: session.user,
+          sessionId: sessionRef().sessionId,
+          enterprise: sessionRef().enterprise,
+          user: sessionRef().user,
           amount: quote.total,
           currency: quote.currency || details.billedCurrency,
           type: details.type,
@@ -6683,40 +6735,176 @@ function useWalletPaymentFlow(_ref) {
           receipt: res === null || res === void 0 ? void 0 : res.receipt
         });
       } catch (e) {
-        if ((e === null || e === void 0 ? void 0 : e.code) === 'INSUFFICIENT_FUNDS') setView('insufficient');else {
+        if ((e === null || e === void 0 ? void 0 : e.code) === 'INSUFFICIENT_FUNDS') yield transitionTo('insufficient');else {
           try {
             console.error('charge failed (offline):', e);
           } catch (_unused6) {}
           setErrorMsg((e === null || e === void 0 ? void 0 : e.message) || 'Payment failed.');
-          setView('failed');
+          yield transitionTo('failed');
         }
-      } finally {
-        setSubmitting(false);
       }
     });
-    return function (_x3) {
+    return function handleSubmit(_x) {
       return _ref6.apply(this, arguments);
     };
-  }(), [session, quote, details, onSuccess]);
-  var closeAndReset = useCallback(() => {
-    setQuote(null);
-    setView('summary');
-    onClose === null || onClose === void 0 ? void 0 : onClose();
-  }, [onClose]);
-  var goToSummary = useCallback(() => setView('summary'), []);
-
-  // When user chooses an account from the picker: set primary cookie, remember pick, and restart *forcing* that user
-  var selectAccount = useCallback(userNo => {
+  }();
+  var selectAccount = userNo => {
     try {
       if (userNo) setUserNoCookie(userNo);
     } catch (_unused7) {}
     setPickedUserNoThisFlow(userNo);
-    // Important: LOG the userNo so your teammate can capture it in their flow.
     try {
       console.log('[evzone-sdk] user picked (cookie primary):', userNo);
     } catch (_unused8) {}
-    restart(userNo); // force next boot to use this user directly (prevents the second picker)
-  }, [restart]);
+    restart(userNo);
+  };
+  var closeAndReset = onClose => {
+    setQuote(null);
+    // Don’t spin here—close immediately; parent usually unmounts the form.
+    onClose === null || onClose === void 0 ? void 0 : onClose();
+  };
+  var goToSummary = () => transitionTo('summary');
+  return {
+    handleConfirm,
+    handleSubmit,
+    selectAccount,
+    closeAndReset,
+    goToSummary
+  };
+}
+
+function useWalletPaymentFlow(_ref) {
+  var _session$enterprise3, _session$enterprise4;
+  var {
+    publicKey,
+    publishableKey,
+    brandId,
+    // reserved
+    enterpriseNo,
+    enterpriseWalletNo,
+    userWalletId,
+    amount,
+    type,
+    particulars,
+    currency,
+    merchantName,
+    merchantLogo,
+    minProcessingMs = 5000,
+    onClose,
+    onSuccess
+  } = _ref;
+  var key = publicKey || publishableKey || null;
+  var ent = enterpriseNo || enterpriseWalletNo || null;
+
+  // views: loading | accountPicker | signin | invalid | summary | passcode | success | failed | insufficient
+  var [view, setView] = useState('loading');
+  var [errorMsg, setErrorMsg] = useState('');
+  var [session, setSession] = useState(null);
+  var [quote, setQuote] = useState(null);
+  var [accounts, setAccounts] = useState([]);
+  var [submitting, setSubmitting] = useState(false);
+  var [processing, setProcessing] = useState(null); // 'quote' | 'charge' | 'ui' | null
+
+  var [pickedUserNoThisFlow, setPickedUserNoThisFlow] = useState(null);
+  var forceUserNoRef = useRef(null);
+  var amountValid = typeof amount === 'number' && isFinite(amount) && amount > 0;
+  var {
+    withMinProcessing,
+    transitionTo
+  } = useMemo(() => createTransitions(minProcessingMs, setProcessing, setView), [minProcessingMs]);
+
+  // Build the boot function from the core (inject deps/setters)
+  var boot = useMemo(() => createBoot({
+    key,
+    ent,
+    amountValid,
+    userWalletId,
+    pickedUserNoThisFlow,
+    getUserNoFromCookie,
+    getUserNosFromCookie,
+    setUserNoCookie,
+    getUsersForPicker,
+    setErrorMsg,
+    setQuote,
+    setAccounts,
+    setSession,
+    transitionTo,
+    currency,
+    merchantName
+  }), [key, ent, amountValid, userWalletId, pickedUserNoThisFlow, transitionTo, currency, merchantName]);
+
+  // Compose details (kept here—small and UI-friendly)
+  var details = useMemo(() => {
+    var _session$enterprise, _session$enterprise2, _quote$total;
+    var billingCurrency = (session === null || session === void 0 ? void 0 : session.billingCurrency) || currency || 'UGX';
+    var mName = merchantName || (session === null || session === void 0 ? void 0 : (_session$enterprise = session.enterprise) === null || _session$enterprise === void 0 ? void 0 : _session$enterprise.name) || 'Unknown Merchant';
+    var toId = (session === null || session === void 0 ? void 0 : (_session$enterprise2 = session.enterprise) === null || _session$enterprise2 === void 0 ? void 0 : _session$enterprise2.walletNo) || '—';
+    return {
+      type: type || 'Booking',
+      id: toId,
+      particulars: particulars || 'Payment',
+      billedCurrency: billingCurrency,
+      billedAmount: amount,
+      totalBilling: (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : amount,
+      merchantName: mName,
+      merchantLogo: merchantLogo || ''
+    };
+  }, [amount, currency, merchantLogo, merchantName, particulars, quote === null || quote === void 0 ? void 0 : quote.total, session === null || session === void 0 ? void 0 : session.billingCurrency, session === null || session === void 0 ? void 0 : (_session$enterprise3 = session.enterprise) === null || _session$enterprise3 === void 0 ? void 0 : _session$enterprise3.name, session === null || session === void 0 ? void 0 : (_session$enterprise4 = session.enterprise) === null || _session$enterprise4 === void 0 ? void 0 : _session$enterprise4.walletNo, type]);
+
+  // Action handlers from core (inject lightweight getters)
+  var {
+    handleConfirm,
+    handleSubmit,
+    selectAccount,
+    closeAndReset: _closeAndReset,
+    goToSummary
+  } = useMemo(() => createActions({
+    amount,
+    sessionRef: () => session,
+    quoteRef: () => quote,
+    setSession,
+    setQuote,
+    setErrorMsg,
+    setPickedUserNoThisFlow,
+    withMinProcessing,
+    transitionTo,
+    onSuccess,
+    detailsRef: () => details,
+    setUserNoCookie,
+    restart: forceUserNo => {
+      if (forceUserNo) forceUserNoRef.current = forceUserNo;
+      setView('loading');
+      boot({
+        forceUserNo
+      });
+    }
+  }), [amount, session, quote, withMinProcessing, transitionTo, onSuccess, details, boot]);
+
+  // Public wrapper to close and notify parent
+  var closeAndReset = useCallback(() => {
+    _closeAndReset(onClose);
+  }, [_closeAndReset, onClose]);
+
+  // Auto-boot
+  useEffect(() => {
+    setView('loading');
+    var cancelled = false;
+    _asyncToGenerator(function* () {
+      if (!cancelled) yield boot({});
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [boot]);
+
+  // External restart (optional)
+  var restart = useCallback(forceUserNo => {
+    if (forceUserNo) forceUserNoRef.current = forceUserNo;
+    setView('loading');
+    boot({
+      forceUserNo
+    });
+  }, [boot]);
   return {
     // state
     view,
@@ -6739,21 +6927,6 @@ function useWalletPaymentFlow(_ref) {
   };
 }
 
-/* ---------- helpers (local to this file) ---------- */
-
-function dedupe(arr) {
-  return Array.from(new Set(arr || []));
-}
-function buildPlaceholderAccounts(userNos) {
-  return userNos.map(u => ({
-    userNo: u,
-    walletId: null,
-    owner: "User ".concat(String(u).slice(-3)),
-    email: "".concat(String(u).toLowerCase().replace(/[^a-z0-9]+/g, ''), "@example.com"),
-    photo: "https://i.pravatar.cc/80?u=".concat(encodeURIComponent(u))
-  }));
-}
-
 var {
   Title,
   Text
@@ -6761,13 +6934,13 @@ var {
 var DEFAULT_PROCESSING_GIF = 'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
 /**
- * Props (NEW names preferred; legacy still supported):
- *  - publicKey? (NEW) | publishableKey? (legacy)
+ * Props:
+ *  - publicKey? | publishableKey?
  *  - brandId?
- *  - enterpriseNo? (NEW) | enterpriseWalletNo? (legacy)
+ *  - enterpriseNo? | enterpriseWalletNo?
  *  - userWalletId?
  *
- *  - amount, type?, particulars?, currency?, merchantName?, merchantLogo?
+ *  - amount, type?, particulars?/transactionType?, currency?, merchantName?, merchantLogo?
  *  - processingSrc?: string
  *  - minProcessingMs?: number
  *  - zIndex?: number
@@ -6781,7 +6954,9 @@ function WalletPaymentForm(props) {
     zIndex = 2000,
     processingSrc,
     supportEmail,
-    supportPhone
+    supportPhone,
+    onSuccess,
+    minProcessingMs = 1500 // used for MM transition overlay
   } = props;
   var {
     view,
@@ -6789,17 +6964,20 @@ function WalletPaymentForm(props) {
     quote,
     submitting,
     processing,
+    // processing from the hook (quote/charge)
     details,
-    // from the upgraded hook
+    // from the hook
     accounts,
     selectAccount,
     handleConfirm,
     handleSubmit,
     closeAndReset,
-    // kept if you want to trigger a manual reboot elsewhere
     goToSummary
   } = useWalletPaymentFlow(props);
   var [passcode, setPasscode] = useState('');
+  var [showMM, setShowMM] = useState(false);
+  var [mmProcessing, setMmProcessing] = useState(false); // local processing only for MM transition
+
   var renderLoading = () => /*#__PURE__*/jsxRuntimeExports.jsx(LoadingOverlay, {
     open: true,
     zIndex: zIndex,
@@ -6864,47 +7042,109 @@ function WalletPaymentForm(props) {
     quote: quote
   });
 
-  // If we're processing, show ONLY the processing modal (no stacking)
-  if (processing) {
+  // 1) ALWAYS give priority to the initial loading overlay
+  if (view === 'loading') {
+    return renderLoading();
+  }
+
+  // 2) Show Processing overlay when the hook is processing (quote/charge) OR during MM transition
+  if (processing || mmProcessing) {
     var procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
     return /*#__PURE__*/jsxRuntimeExports.jsx(ProcessingModal, {
       open: true,
       src: procSrc,
-      message: processing === 'quote' ? 'Hang tight—almost ready…' : 'Processing payment…',
+      message: "Processing\u2026",
       subText: "Please wait",
       zIndex: zIndex
     });
   }
 
-  // Otherwise, render the selected flow modal
+  // Triggered by InsufficientFundsModal -> Pay with another Mobile Money
+  var startMobileMoneyFlow = () => {
+    // show processing first
+    setMmProcessing(true);
+    // small delay to show the animation, then open MM modal independently
+    setTimeout(() => {
+      setMmProcessing(false);
+      setShowMM(true);
+    }, Math.max(0, Number(minProcessingMs) || 1500));
+  };
+
+  // After user submits provider + msisdn in the MM modal
+  var handleAltMobileSubmit = _ref => {
+    var _quote$total;
+    var {
+      provider,
+      msisdn
+    } = _ref;
+    try {
+      console.log('[EVZ SDK] alt mobile money:', {
+        provider,
+        msisdn
+      });
+    } catch (_unused) {}
+    onSuccess === null || onSuccess === void 0 ? void 0 : onSuccess({
+      transactionId: 'ALT-MM-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: null,
+      user: null,
+      amount: (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : details.billedAmount,
+      currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
+      type: details.type,
+      particulars: details.particulars,
+      paymentMethod: 'MOBILE_MONEY',
+      paymentMeta: {
+        provider,
+        msisdn
+      }
+    });
+    setShowMM(false);
+    closeAndReset();
+  };
+
+  // Decide a single modal to show (never stack Insufficient + Mobile Money)
   var content = null;
-  if (view === 'loading') content = renderLoading();else if (view === 'accountPicker') {
-    // Multi-account chooser (Google-style) when multiple userNos are in cookies
+  if (showMM) {
+    // Show Mobile Money modal independently
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(MobileMoneyFallbackModal, {
+      open: true,
+      onCancel: () => setShowMM(false),
+      onSubmit: handleAltMobileSubmit,
+      zIndex: zIndex,
+      onClose: closeAndReset
+    });
+  } else if (view === 'accountPicker') {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(AccountPickerModal, {
       open: true,
       zIndex: zIndex,
       accounts: accounts || [],
       onSelect: userNo => {
         setPasscode('');
-        // Hook writes the cookie and restarts the flow
         selectAccount === null || selectAccount === void 0 ? void 0 : selectAccount(userNo);
       },
       onClose: closeAndReset
     });
-  } else if (view === 'signin') content = /*#__PURE__*/jsxRuntimeExports.jsx(HasAccountSummary, {
-    open: true,
-    onLoginSuccess: userNo => {
-      setPasscode('');
-      // Use hook’s helper so it stays the single source of truth
-      selectAccount === null || selectAccount === void 0 ? void 0 : selectAccount(userNo);
-    },
-    onClose: closeAndReset,
-    zIndex: zIndex
-  });else if (view === 'invalid') content = renderInvalid();else if (view === 'summary') content = renderSummary();else if (view === 'passcode') content = renderPasscode();else if (view === 'success') {
-    var _quote$total;
+  } else if (view === 'signin') {
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(HasAccountSummary, {
+      open: true,
+      onLoginSuccess: userNo => {
+        setPasscode('');
+        selectAccount === null || selectAccount === void 0 ? void 0 : selectAccount(userNo);
+      },
+      onClose: closeAndReset,
+      zIndex: zIndex
+    });
+  } else if (view === 'invalid') {
+    content = renderInvalid();
+  } else if (view === 'summary') {
+    content = renderSummary();
+  } else if (view === 'passcode') {
+    content = renderPasscode();
+  } else if (view === 'success') {
+    var _quote$total2;
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
       open: true,
-      amount: (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : details.billedAmount,
+      amount: (_quote$total2 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total2 !== void 0 ? _quote$total2 : details.billedAmount,
       currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
       zIndex: zIndex,
       onClose: closeAndReset
@@ -6914,13 +7154,14 @@ function WalletPaymentForm(props) {
       open: true,
       zIndex: zIndex,
       reason: errorMsg,
-      onClose: goToSummary
+      onClose: closeAndReset
     });
   } else if (view === 'insufficient') {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(InsufficientFundsModal, {
       open: true,
       zIndex: zIndex,
-      onClose: goToSummary
+      onClose: closeAndReset,
+      onOpenAltMobile: startMobileMoneyFlow // show processing, then MM modal
     });
   }
   return content;
