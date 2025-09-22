@@ -1,6 +1,6 @@
 import require$$0, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { Typography, Modal, Space, Avatar, Button, Input, List } from 'antd';
-import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled, CheckCircleTwoTone } from '@ant-design/icons';
+import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled, ExclamationCircleFilled, CheckCircleTwoTone } from '@ant-design/icons';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -2120,7 +2120,6 @@ function BrandHeader(_ref) {
   });
 }
 
-// src/TransactionSummary.jsx
 var {
   Title: Title$9,
   Text: Text$9
@@ -2130,7 +2129,12 @@ var BRAND_GREEN$2 = '#02CD8D'; // EVzone green
 /**
  * Props:
  *  - transactionDetails: {
- *      merchantName, merchantLogo, billedCurrency, totalBilling, billedAmount, type, id, particulars
+ *      merchantName, merchantLogo, billedCurrency, totalBilling, billedAmount,
+ *      id,
+ *      // NEW
+ *      transactionType,
+ *      // Back-compat fallbacks (no need to pass these going forward):
+ *      type, particulars
  *    }
  *  - onConfirm: () => void
  *  - onCancel?: () => void
@@ -2151,6 +2155,9 @@ function TransactionSummary(_ref) {
   var d = transactionDetails || {};
   var currency = d.billedCurrency || 'UGX';
   var total = (_ref2 = (_d$totalBilling = d.totalBilling) !== null && _d$totalBilling !== void 0 ? _d$totalBilling : d.billedAmount) !== null && _ref2 !== void 0 ? _ref2 : 0;
+
+  // Prefer the new field; fall back to old props for compatibility
+  var txType = d.transactionType || d.type || d.particulars || 'Purchase';
   var amountStr = v => Number(v || 0).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
@@ -2233,14 +2240,11 @@ function TransactionSummary(_ref) {
         },
         children: "Transaction Details"
       }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
-        label: "Type",
-        value: d.type || 'Booking'
+        label: "Transaction Type",
+        value: txType
       }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
         label: "To",
         value: d.id
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
-        label: "Particulars",
-        value: d.particulars || 'Hotel Booking'
       }), /*#__PURE__*/jsxRuntimeExports.jsx(KV, {
         label: "Billed Currency",
         value: currency
@@ -3507,8 +3511,11 @@ function InsufficientFundsModal(_ref) {
     balance,
     requiredTotal
   } = _ref;
-  var hasNumbers = typeof balance === 'number' && !Number.isNaN(balance) && typeof requiredTotal === 'number' && !Number.isNaN(requiredTotal);
-  var shortfall = hasNumbers ? Math.max(requiredTotal - balance, 0) : null;
+  var num = v => typeof v === 'number' && !Number.isNaN(v) ? v : null;
+  var bal = num(balance);
+  var req = num(requiredTotal);
+  var hasNumbers = bal !== null && req !== null;
+  var shortfall = hasNumbers ? Math.max(req - bal, 0) : null;
   var fmt = n => Number(n || 0).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
@@ -3558,11 +3565,11 @@ function InsufficientFundsModal(_ref) {
         margin: '0 auto 12px',
         boxShadow: '0 6px 16px rgba(255,152,0,0.28)'
       },
-      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {
+      "aria-hidden": true,
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(ExclamationCircleFilled, {
         style: {
           color: '#fff',
-          fontSize: 34,
-          fontWeight: 700
+          fontSize: 34
         }
       })
     }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
@@ -3584,7 +3591,7 @@ function InsufficientFundsModal(_ref) {
           textAlign: 'center',
           color: '#444'
         },
-        children: "The account did not have sufficient funds to cover the transaction amount at the time of the transaction."
+        children: "The account did not have sufficient funds to cover the transaction amount."
       }) : /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
         children: [/*#__PURE__*/jsxRuntimeExports.jsx(Paragraph, {
           style: {
@@ -3603,10 +3610,10 @@ function InsufficientFundsModal(_ref) {
           },
           children: [/*#__PURE__*/jsxRuntimeExports.jsx(Row, {
             label: "Balance",
-            value: "".concat(currency, " ").concat(fmt(balance))
+            value: "".concat(currency, " ").concat(fmt(bal))
           }), /*#__PURE__*/jsxRuntimeExports.jsx(Row, {
             label: "Required",
-            value: "".concat(currency, " ").concat(fmt(requiredTotal))
+            value: "".concat(currency, " ").concat(fmt(req))
           }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
             style: {
               display: 'grid',
@@ -3658,7 +3665,7 @@ function InsufficientFundsModal(_ref) {
         })]
       })]
     }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
-      children: "\n        /* ensure ghost button text/border stay visible even if a global .ant-btn { color:#fff } exists */\n        .evz-try.ant-btn {\n          color: ".concat(PRIMARY_BLUE, ";\n          border-color: ").concat(PRIMARY_BLUE, ";\n          background: transparent;\n        }\n        .evz-try.ant-btn:hover,\n        .evz-try.ant-btn:focus {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.06);\n        }\n        .evz-try.ant-btn:active {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.10);\n        }\n      ")
+      children: "\n        /* keep ghost button readable even if global overrides exist */\n        .evz-try.ant-btn {\n          color: ".concat(PRIMARY_BLUE, ";\n          border-color: ").concat(PRIMARY_BLUE, ";\n          background: transparent;\n        }\n        .evz-try.ant-btn:hover,\n        .evz-try.ant-btn:focus {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.06);\n        }\n        .evz-try.ant-btn:active {\n          color: ").concat(PRIMARY_BLUE_HOVER, ";\n          border-color: ").concat(PRIMARY_BLUE_HOVER, ";\n          background: rgba(9,88,217,0.10);\n        }\n      ")
     })]
   });
 }

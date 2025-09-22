@@ -1,7 +1,7 @@
 // src/InsufficientFundsModal.js
 import React from 'react';
 import { Modal, Button, Typography, Space } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import { BrandHeader } from './brand.js'; // ← unified brand image header
 
 const { Title, Paragraph, Text } = Typography;
@@ -23,13 +23,12 @@ export default function InsufficientFundsModal({
   balance,
   requiredTotal,
 }) {
-  const hasNumbers =
-    typeof balance === 'number' &&
-    !Number.isNaN(balance) &&
-    typeof requiredTotal === 'number' &&
-    !Number.isNaN(requiredTotal);
+  const num = (v) => (typeof v === 'number' && !Number.isNaN(v) ? v : null);
+  const bal = num(balance);
+  const req = num(requiredTotal);
 
-  const shortfall = hasNumbers ? Math.max(requiredTotal - balance, 0) : null;
+  const hasNumbers = bal !== null && req !== null;
+  const shortfall = hasNumbers ? Math.max(req - bal, 0) : null;
 
   const fmt = (n) =>
     Number(n || 0).toLocaleString(undefined, {
@@ -77,7 +76,7 @@ export default function InsufficientFundsModal({
         }}
       />
 
-      {/* Big orange icon */}
+      {/* Big orange warning icon */}
       <div
         style={{
           width: 60,
@@ -90,8 +89,9 @@ export default function InsufficientFundsModal({
           margin: '0 auto 12px',
           boxShadow: '0 6px 16px rgba(255,152,0,0.28)',
         }}
+        aria-hidden
       >
-        <CloseOutlined style={{ color: '#fff', fontSize: 34, fontWeight: 700 }} />
+        <ExclamationCircleFilled style={{ color: '#fff', fontSize: 34 }} />
       </div>
 
       <Space direction="vertical" align="center" style={{ width: '100%' }}>
@@ -101,8 +101,7 @@ export default function InsufficientFundsModal({
 
         {!hasNumbers ? (
           <Paragraph style={{ marginTop: 8, textAlign: 'center', color: '#444' }}>
-            The account did not have sufficient funds to cover the transaction
-            amount at the time of the transaction.
+            The account did not have sufficient funds to cover the transaction amount.
           </Paragraph>
         ) : (
           <>
@@ -119,8 +118,8 @@ export default function InsufficientFundsModal({
                 padding: 12,
               }}
             >
-              <Row label="Balance" value={`${currency} ${fmt(balance)}`} />
-              <Row label="Required" value={`${currency} ${fmt(requiredTotal)}`} />
+              <Row label="Balance" value={`${currency} ${fmt(bal)}`} />
+              <Row label="Required" value={`${currency} ${fmt(req)}`} />
               <div
                 style={{
                   display: 'grid',
@@ -168,7 +167,7 @@ export default function InsufficientFundsModal({
       </Space>
 
       <style>{`
-        /* ensure ghost button text/border stay visible even if a global .ant-btn { color:#fff } exists */
+        /* keep ghost button readable even if global overrides exist */
         .evz-try.ant-btn {
           color: ${PRIMARY_BLUE};
           border-color: ${PRIMARY_BLUE};

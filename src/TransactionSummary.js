@@ -1,4 +1,3 @@
-// src/TransactionSummary.jsx
 import React from 'react';
 import { Modal, Typography, Space, Avatar, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
@@ -11,7 +10,12 @@ const BRAND_GREEN = '#02CD8D'; // EVzone green
 /**
  * Props:
  *  - transactionDetails: {
- *      merchantName, merchantLogo, billedCurrency, totalBilling, billedAmount, type, id, particulars
+ *      merchantName, merchantLogo, billedCurrency, totalBilling, billedAmount,
+ *      id,
+ *      // NEW
+ *      transactionType,
+ *      // Back-compat fallbacks (no need to pass these going forward):
+ *      type, particulars
  *    }
  *  - onConfirm: () => void
  *  - onCancel?: () => void
@@ -30,6 +34,10 @@ export default function TransactionSummary({
   const d = transactionDetails || {};
   const currency = d.billedCurrency || 'UGX';
   const total = d.totalBilling ?? d.billedAmount ?? 0;
+
+  // Prefer the new field; fall back to old props for compatibility
+  const txType =
+    d.transactionType || d.type || d.particulars || 'Purchase';
 
   const amountStr = (v) =>
     Number(v || 0).toLocaleString(undefined, {
@@ -104,9 +112,9 @@ export default function TransactionSummary({
           Transaction Details
         </Title>
 
-        <KV label="Type" value={d.type || 'Booking'} />
+        {/* Single, clear field now */}
+        <KV label="Transaction Type" value={txType} />
         <KV label="To" value={d.id} />
-        <KV label="Particulars" value={d.particulars || 'Hotel Booking'} />
         <KV label="Billed Currency" value={currency} />
         <KV
           label="Billed Amount"
