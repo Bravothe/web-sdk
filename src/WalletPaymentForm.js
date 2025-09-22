@@ -12,6 +12,7 @@ import ProcessingModal from './ProcessingModal.js';
 import HasAccountSummary from './HasAccountSummary.js';
 import AccountPickerModal from './AccountPickerModal.js';
 import MobileMoneyFallbackModal from './MobileMoneyFallbackModal.js';
+import CardPaymentModal from './CardPaymentModal.js';           // ← NEW
 
 import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
 
@@ -20,22 +21,6 @@ const { Title, Text } = Typography;
 const DEFAULT_PROCESSING_GIF =
   'https://res.cloudinary.com/dlfa42ans/image/upload/v1757746859/processing_bugsoo.gif';
 
-/**
- * Props:
- *  - publicKey? | publishableKey?
- *  - brandId?
- *  - enterpriseNo? | enterpriseWalletNo?
- *  - userWalletId?
- *
- *  - amount, type?, particulars?/transactionType?, currency?, merchantName?, merchantLogo?
- *  - processingSrc?: string
- *  - minProcessingMs?: number
- *  - zIndex?: number
- *  - onClose?: () => void
- *  - onSuccess?: (payload) => void
- *  - supportEmail?: string
- *  - supportPhone?: string
- */
 function WalletPaymentForm(props) {
   const {
     zIndex = 2000,
@@ -43,7 +28,7 @@ function WalletPaymentForm(props) {
     supportEmail,
     supportPhone,
     onSuccess,
-    minProcessingMs = 1500, // used for MM transition overlay
+    minProcessingMs = 1500,
   } = props;
 
   const {
@@ -51,13 +36,10 @@ function WalletPaymentForm(props) {
     errorMsg,
     quote,
     submitting,
-    processing,        // processing from the hook (quote/charge)
+    processing,
     details,
-
-    // from the hook
     accounts,
     selectAccount,
-
     handleConfirm,
     handleSubmit,
     closeAndReset,
@@ -66,14 +48,16 @@ function WalletPaymentForm(props) {
   } = useWalletPaymentFlow(props);
 
   const [passcode, setPasscode] = useState('');
+
+  // Alternate-payment modals (independent of wallet flow)
   const [showMM, setShowMM] = useState(false);
-  const [mmProcessing, setMmProcessing] = useState(false); // local processing only for MM transition
+  const [showCard, setShowCard] = useState(false);
+  const [altProcessing, setAltProcessing] = useState(false);
 
   const renderLoading = () => (
     <LoadingOverlay open zIndex={zIndex} brand="EVzone Pay" tip="Preparing secure checkout…" />
   );
 
-  // FRIENDLY: do not leak server error; show platform contact instead
   const renderInvalid = () => {
     const contactLine =
       supportEmail && supportPhone
@@ -86,12 +70,7 @@ function WalletPaymentForm(props) {
           <Title level={4} style={{ margin: 0 }}>Cannot Continue</Title>
           <Text type="secondary" style={{ textAlign: 'center' }}>
             We couldn’t start the checkout right now. No charge was made.
-            {contactLine ? (
-              <>
-                <br />
-                For help, please contact <b>{contactLine}</b>.
-              </>
-            ) : null}
+            {contactLine ? (<><br />For help, please contact <b>{contactLine}</b>.</>) : null}
           </Text>
           <Button type="primary" onClick={closeAndReset}>Close</Button>
         </Space>
@@ -121,41 +100,39 @@ function WalletPaymentForm(props) {
     />
   );
 
-  // 1) ALWAYS give priority to the initial loading overlay
-  if (view === 'loading') {
-    return renderLoading();
-  }
+  // Priority overlays
+  if (view === 'loading') return renderLoading();
 
-  // 2) Show Processing overlay when the hook is processing (quote/charge) OR during MM transition
-  if (processing || mmProcessing) {
+  if (processing || altProcessing) {
     const procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
-    return (
-      <ProcessingModal
-        open
-        src={procSrc}
-        message="Processing…"
-        subText="Please wait"
-        zIndex={zIndex}
-      />
-    );
+    return <ProcessingModal open src={procSrc} message="Processing…" subText="Please wait" zIndex={zIndex} />;
   }
 
-  // Triggered by InsufficientFundsModal -> Pay with another Mobile Money
+  // ---------- Alternate method transitions ----------
+  const delay = Math.max(0, Number(minProcessingMs) || 1500);
+
   const startMobileMoneyFlow = () => {
-    // show processing first
-    setMmProcessing(true);
-    // small delay to show the animation, then open MM modal independently
-    setTimeout(() => {
-      setMmProcessing(false);
-      setShowMM(true);
-    }, Math.max(0, Number(minProcessingMs) || 1500));
+    setAltProcessing(true);
+    setTimeout(() => { setAltProcessing(false); setShowMM(true); setShowCard(false); }, delay);
   };
 
-  // After user submits provider + msisdn in the MM modal
-  const handleAltMobileSubmit = ({ provider, msisdn }) => {
-    try {
-      console.log('[EVZ SDK] alt mobile money:', { provider, msisdn });
-    } catch {}
+  const startCardFlow = () => {
+    setAltProcessing(true);
+    setTimeout(() => { setAltProcessing(false); setShowCard(true); setShowMM(false); }, delay);
+  };
+
+  const startBankFlow = () => {
+    // stub so the tile shows; replace with your bank modal/redirect when ready
+    setAltProcessing(true);
+    setTimeout(() => {
+      setAltProcessing(false);
+      console.log('[EVZ SDK] Bank transfer flow not implemented yet.');
+    }, delay);
+  };
+
+  // ---------- Alt method submit handlers ----------
+  const handleAltMobileSubmit = ({ msisdn, e164, country }) => {
+    try { console.log('[EVZ SDK] alt mobile money:', { msisdn, e164, country }); } catch {}
     onSuccess?.({
       transactionId: 'ALT-MM-' + Math.floor(Math.random() * 1e9),
       sessionId: null,
@@ -166,24 +143,61 @@ function WalletPaymentForm(props) {
       type: details.type,
       particulars: details.particulars,
       paymentMethod: 'MOBILE_MONEY',
-      paymentMeta: { provider, msisdn },
+      paymentMeta: { msisdn, e164, country },
     });
     setShowMM(false);
     closeAndReset();
   };
 
-  // Decide a single modal to show (never stack Insufficient + Mobile Money)
+  const handleCardSubmit = (card) => {
+    try {
+      console.log('[EVZ SDK] card payload (masked):', {
+        ...card,
+        cardNumber: String(card.cardNumber || '').slice(-4).padStart(12, '*'),
+        cvv: '***',
+      });
+    } catch {}
+    onSuccess?.({
+      transactionId: 'CARD-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: null,
+      user: null,
+      amount: quote?.total ?? details.billedAmount,
+      currency: quote?.currency || details.billedCurrency,
+      type: details.type,
+      particulars: details.particulars,
+      paymentMethod: 'CARD',
+      paymentMeta: {
+        brand: card.brand || null,
+        last4: String(card.cardNumber || '').slice(-4),
+        save: !!card.save,
+        phone: card.phone || null,
+        discountCode: card.discountCode || null,
+      },
+    });
+    setShowCard(false);
+    closeAndReset();
+  };
+
+  // ---------- Single active modal ----------
   let content = null;
 
   if (showMM) {
-    // Show Mobile Money modal independently
     content = (
       <MobileMoneyFallbackModal
         open
         onCancel={() => setShowMM(false)}
         onSubmit={handleAltMobileSubmit}
         zIndex={zIndex}
-        onClose={closeAndReset}
+      />
+    );
+  } else if (showCard) {
+    content = (
+      <CardPaymentModal
+        open
+        onCancel={() => setShowCard(false)}
+        onSubmit={handleCardSubmit}
+        zIndex={zIndex}
       />
     );
   } else if (view === 'accountPicker') {
@@ -192,10 +206,7 @@ function WalletPaymentForm(props) {
         open
         zIndex={zIndex}
         accounts={accounts || []}
-        onSelect={(userNo) => {
-          setPasscode('');
-          selectAccount?.(userNo);
-        }}
+        onSelect={(userNo) => { setPasscode(''); selectAccount?.(userNo); }}
         onClose={closeAndReset}
       />
     );
@@ -203,10 +214,7 @@ function WalletPaymentForm(props) {
     content = (
       <HasAccountSummary
         open
-        onLoginSuccess={(userNo) => {
-          setPasscode('');
-          selectAccount?.(userNo);
-        }}
+        onLoginSuccess={(userNo) => { setPasscode(''); selectAccount?.(userNo); }}
         onClose={closeAndReset}
         zIndex={zIndex}
       />
@@ -242,7 +250,9 @@ function WalletPaymentForm(props) {
         open
         zIndex={zIndex}
         onClose={closeAndReset}
-        onOpenAltMobile={startMobileMoneyFlow} // show processing, then MM modal
+        onOpenAltMobile={startMobileMoneyFlow} // shows MM
+        onOpenCard={startCardFlow}            // ← wire Card tile
+        onOpenBank={startBankFlow}            // ← optional stub so Bank tile appears
       />
     );
   }
