@@ -12,7 +12,8 @@ import ProcessingModal from './ProcessingModal.js';
 import HasAccountSummary from './HasAccountSummary.js';
 import AccountPickerModal from './AccountPickerModal.js';
 import MobileMoneyFallbackModal from './MobileMoneyFallbackModal.js';
-import CardPaymentModal from './CardPaymentModal.js';           // ← NEW
+import CardPaymentModal from './CardPaymentModal.js';
+import BankPaymentModal from './BankPaymentModal.js';            // ← NEW
 
 import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
 
@@ -28,7 +29,7 @@ function WalletPaymentForm(props) {
     supportEmail,
     supportPhone,
     onSuccess,
-    minProcessingMs = 1500,
+    minProcessingMs = 1500, // used for alternate-method transition overlay
   } = props;
 
   const {
@@ -36,7 +37,7 @@ function WalletPaymentForm(props) {
     errorMsg,
     quote,
     submitting,
-    processing,
+    processing,        // processing from the hook (quote/charge)
     details,
     accounts,
     selectAccount,
@@ -52,6 +53,7 @@ function WalletPaymentForm(props) {
   // Alternate-payment modals (independent of wallet flow)
   const [showMM, setShowMM] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [showBank, setShowBank] = useState(false);              // ← NEW
   const [altProcessing, setAltProcessing] = useState(false);
 
   const renderLoading = () => (
@@ -113,20 +115,31 @@ function WalletPaymentForm(props) {
 
   const startMobileMoneyFlow = () => {
     setAltProcessing(true);
-    setTimeout(() => { setAltProcessing(false); setShowMM(true); setShowCard(false); }, delay);
+    setTimeout(() => {
+      setAltProcessing(false);
+      setShowMM(true);
+      setShowCard(false);
+      setShowBank(false);
+    }, delay);
   };
 
   const startCardFlow = () => {
     setAltProcessing(true);
-    setTimeout(() => { setAltProcessing(false); setShowCard(true); setShowMM(false); }, delay);
+    setTimeout(() => {
+      setAltProcessing(false);
+      setShowCard(true);
+      setShowMM(false);
+      setShowBank(false);
+    }, delay);
   };
 
   const startBankFlow = () => {
-    // stub so the tile shows; replace with your bank modal/redirect when ready
     setAltProcessing(true);
     setTimeout(() => {
       setAltProcessing(false);
-      console.log('[EVZ SDK] Bank transfer flow not implemented yet.');
+      setShowBank(true);
+      setShowMM(false);
+      setShowCard(false);
     }, delay);
   };
 
@@ -179,6 +192,24 @@ function WalletPaymentForm(props) {
     closeAndReset();
   };
 
+  const handleBankSubmit = (bankPayload) => {
+    try { console.log('[EVZ SDK] bank payload:', bankPayload); } catch {}
+    onSuccess?.({
+      transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: null,
+      user: null,
+      amount: quote?.total ?? details.billedAmount,
+      currency: quote?.currency || details.billedCurrency,
+      type: details.type,
+      particulars: details.particulars,
+      paymentMethod: 'BANK',
+      paymentMeta: bankPayload, // { country, bank, accountNumber, accountName, branch?, reference? }
+    });
+    setShowBank(false);
+    closeAndReset();
+  };
+
   // ---------- Single active modal ----------
   let content = null;
 
@@ -197,6 +228,15 @@ function WalletPaymentForm(props) {
         open
         onCancel={() => setShowCard(false)}
         onSubmit={handleCardSubmit}
+        zIndex={zIndex}
+      />
+    );
+  } else if (showBank) {
+    content = (
+      <BankPaymentModal
+        open
+        onCancel={() => setShowBank(false)}
+        onSubmit={handleBankSubmit}
         zIndex={zIndex}
       />
     );
@@ -250,9 +290,9 @@ function WalletPaymentForm(props) {
         open
         zIndex={zIndex}
         onClose={closeAndReset}
-        onOpenAltMobile={startMobileMoneyFlow} // shows MM
-        onOpenCard={startCardFlow}            // ← wire Card tile
-        onOpenBank={startBankFlow}            // ← optional stub so Bank tile appears
+        onOpenAltMobile={startMobileMoneyFlow} // Mobile Money
+        onOpenCard={startCardFlow}            // Card
+        onOpenBank={startBankFlow}            // Bank
       />
     );
   }

@@ -1,5 +1,5 @@
 import H, { useRef, useEffect, useState, forwardRef, useImperativeHandle, useCallback, useMemo } from 'react';
-import { Typography, Modal, Space, Avatar, Button, Input, List } from 'antd';
+import { Typography, Modal, Space, Avatar, Button, Input, List, Select } from 'antd';
 import { CloseOutlined, EyeTwoTone, EyeInvisibleOutlined, InfoCircleFilled, PhoneOutlined, CreditCardOutlined, BankOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 
 function asyncGeneratorStep(n, t, e, r, o, a, c) {
@@ -2235,8 +2235,8 @@ function BrandHeader(_ref) {
 }
 
 var {
-  Title: Title$b,
-  Text: Text$a
+  Title: Title$c,
+  Text: Text$b
 } = Typography;
 var BRAND_GREEN$2 = '#02CD8D'; // EVzone green
 
@@ -2323,19 +2323,19 @@ function TransactionSummary(_ref) {
       }) : /*#__PURE__*/jsxRuntimeExports.jsx(Avatar, {
         size: 56,
         children: (d.merchantName || 'E')[0]
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$b, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$c, {
         level: 4,
         style: {
           margin: 0
         },
         children: d.merchantName || 'Unknown Merchant'
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$b, {
         type: "secondary",
         style: {
           marginTop: -4
         },
         children: "Total Billing"
-      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$b, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Title$c, {
         level: 3,
         style: {
           margin: 0,
@@ -2347,7 +2347,7 @@ function TransactionSummary(_ref) {
       style: {
         marginTop: 8
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$b, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$c, {
         level: 5,
         style: {
           marginBottom: 8
@@ -2408,14 +2408,14 @@ function KV(_ref3) {
       padding: '8px 4px',
       borderTop: withTopBorder ? '1px solid #eee' : undefined
     },
-    children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$b, {
       type: "secondary",
       children: label
     }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
       style: {
         textAlign: 'right'
       },
-      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$b, {
         children: value
       })
     })]
@@ -3096,8 +3096,8 @@ fixRegExpWellKnownSymbolLogic$1('replace', function (_, nativeReplace, maybeCall
 }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
 var {
-  Title: Title$a,
-  Text: Text$9
+  Title: Title$b,
+  Text: Text$a
 } = Typography;
 var BRAND_GREEN$1 = '#02CD8D';
 
@@ -3178,7 +3178,7 @@ function EnterPasscode(_ref) {
         borderTop: '1px dashed #e5e7eb',
         margin: '12px -20px 16px'
       }
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$a, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$b, {
       level: 4,
       style: {
         marginTop: 0,
@@ -3207,7 +3207,7 @@ function EnterPasscode(_ref) {
               fontWeight: 600
             },
             children: d.merchantName || 'Unknown Merchant'
-          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$9, {
+          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
             type: "secondary",
             style: {
               fontSize: 12
@@ -3219,7 +3219,7 @@ function EnterPasscode(_ref) {
         style: {
           textAlign: 'right'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$9, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
           type: "secondary",
           style: {
             display: 'block',
@@ -3237,7 +3237,7 @@ function EnterPasscode(_ref) {
       style: {
         margin: '6px 0 6px'
       },
-      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$9, {
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(Text$a, {
         children: "Enter Passcode"
       })
     }), /*#__PURE__*/jsxRuntimeExports.jsx(Input.Password, {
@@ -3271,7 +3271,7 @@ function EnterPasscode(_ref) {
           fontSize: 18,
           lineHeight: '20px'
         }
-      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$9, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$a, {
         style: {
           color: '#1f1f1f'
         },
@@ -3315,8 +3315,8 @@ function EnterPasscode(_ref) {
 
 // src/PaymentSuccessModal.js
 var {
-  Title: Title$9,
-  Text: Text$8
+  Title: Title$a,
+  Text: Text$9
 } = Typography;
 
 // Smooth blue palette (sampled from your reference)
@@ -3382,7 +3382,7 @@ function PaymentSuccessModal(_ref) {
           strokeLinejoin: "round"
         })
       })
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$9, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$a, {
       level: 3,
       style: {
         marginTop: 14,
@@ -3399,7 +3399,7 @@ function PaymentSuccessModal(_ref) {
         fontWeight: 600
       },
       children: fmtAmount(amount, currency)
-    }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$8, {
+    }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$9, {
       type: "secondary",
       style: {
         display: 'block',
@@ -3422,11 +3422,11 @@ function PaymentSuccessModal(_ref) {
 
 // src/PaymentFailedModal.js
 var {
-  Title: Title$8,
+  Title: Title$9,
   Paragraph: Paragraph$1,
-  Text: Text$7
+  Text: Text$8
 } = Typography;
-var BRAND_RED$4 = '#ff4d4f';
+var BRAND_RED$5 = '#ff4d4f';
 function PaymentFailedModal(_ref) {
   var {
     open = true,
@@ -3456,7 +3456,7 @@ function PaymentFailedModal(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$4,
+        background: BRAND_RED$5,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3478,7 +3478,7 @@ function PaymentFailedModal(_ref) {
         width: 60,
         height: 60,
         borderRadius: '50%',
-        background: BRAND_RED$4,
+        background: BRAND_RED$5,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3499,11 +3499,11 @@ function PaymentFailedModal(_ref) {
       style: {
         width: '100%'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$9, {
         level: 3,
         style: {
           margin: 0,
-          color: BRAND_RED$4
+          color: BRAND_RED$5
         },
         children: "Payment Failed"
       }), /*#__PURE__*/jsxRuntimeExports.jsxs(Paragraph$1, {
@@ -3513,7 +3513,7 @@ function PaymentFailedModal(_ref) {
           color: '#444'
         },
         children: ["We couldn\u2019t complete the payment. Please check your wallet for more details and try again.", reason ? /*#__PURE__*/jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
-          children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$7, {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx("br", {}), /*#__PURE__*/jsxRuntimeExports.jsxs(Text$8, {
             type: "secondary",
             style: {
               fontSize: 12
@@ -3538,13 +3538,13 @@ function PaymentFailedModal(_ref) {
 
 // src/InsufficientFundsModal.js
 var {
-  Title: Title$7,
+  Title: Title$8,
   Paragraph
 } = Typography;
 
 // Local colors
 var BRAND_ORANGE = '#FF9800';
-var BRAND_RED$3 = '#ff4d4f';
+var BRAND_RED$4 = '#ff4d4f';
 
 // A single, reusable tile for each payment option
 function PayTile(_ref) {
@@ -3630,7 +3630,7 @@ function InsufficientFundsModal(_ref2) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$3,
+        background: BRAND_RED$4,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -3677,7 +3677,7 @@ function InsufficientFundsModal(_ref2) {
       style: {
         textAlign: 'center'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$8, {
         level: 3,
         style: {
           margin: 0,
@@ -3732,8 +3732,8 @@ function InsufficientFundsModal(_ref2) {
 
 // src/LoadingOverlay.jsx
 var {
-  Title: Title$6,
-  Text: Text$6
+  Title: Title$7,
+  Text: Text$7
 } = Typography;
 
 /**
@@ -3789,7 +3789,7 @@ var LoadingOverlay = _ref => {
             background: '#fff'
           }
         })
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$7, {
         level: 3,
         style: {
           margin: '6px 0 0',
@@ -3800,7 +3800,7 @@ var LoadingOverlay = _ref => {
           animation: "evzBlink ".concat(blinkMs, "ms ease-in-out infinite")
         },
         children: brand
-      }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
+      }), tip ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$7, {
         className: "evz-tip",
         children: tip
       }) : null]
@@ -3811,8 +3811,8 @@ var LoadingOverlay = _ref => {
 };
 
 var {
-  Title: Title$5,
-  Text: Text$5
+  Title: Title$6,
+  Text: Text$6
 } = Typography;
 var BLUE_START = '#2EA1FF';
 var BLUE_END = '#1B8CFF';
@@ -3919,13 +3919,13 @@ function ProcessingModal(_ref) {
       style: {
         padding: '0 16px 16px'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$6, {
         level: 5,
         style: {
           margin: '0 0 2px'
         },
         children: message
-      }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
+      }), subText ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$6, {
         type: "secondary",
         style: {
           display: 'block',
@@ -3939,10 +3939,10 @@ function ProcessingModal(_ref) {
 
 // src/HasAccountSummary.js
 var {
-  Title: Title$4,
-  Text: Text$4
+  Title: Title$5,
+  Text: Text$5
 } = Typography;
-var BRAND_RED$2 = '#ff4d4f';
+var BRAND_RED$3 = '#ff4d4f';
 function HasAccountSummary(_ref) {
   var {
     open = true,
@@ -4027,7 +4027,7 @@ function HasAccountSummary(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$2,
+        background: BRAND_RED$3,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -4072,7 +4072,7 @@ function HasAccountSummary(_ref) {
         style: {
           width: '100%'
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$5, {
           level: 4,
           style: {
             margin: 0
@@ -4093,7 +4093,7 @@ function HasAccountSummary(_ref) {
               fontSize: 18,
               lineHeight: '20px'
             }
-          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
+          }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$5, {
             children: "EVzone needs you to sign in to continue with this payment."
           })]
         }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
@@ -5266,8 +5266,8 @@ if (NOT_GENERIC || INCORRECT_NAME) {
 }
 
 var {
-  Title: Title$3,
-  Text: Text$3
+  Title: Title$4,
+  Text: Text$4
 } = Typography;
 var BRAND_GREEN = '#02CD8D';
 
@@ -5342,14 +5342,14 @@ function AccountPickerModal(_ref) {
         borderTop: '1px dashed #e5e7eb',
         margin: '12px -20px 16px'
       }
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Title$4, {
       level: 4,
       style: {
         marginTop: 0,
         color: BRAND_GREEN
       },
       children: "Choose an account"
-    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+    }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
       type: "secondary",
       style: {
         display: 'block',
@@ -5410,12 +5410,12 @@ function AccountPickerModal(_ref) {
                 lineHeight: 1.4
               },
               children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
                   type: "secondary",
                   children: "Email:"
                 }), " ", acct.email || '—']
               }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+                children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$4, {
                   type: "secondary",
                   children: "Wallet ID:"
                 }), ' ', /*#__PURE__*/jsxRuntimeExports.jsx("span", {
@@ -5566,41 +5566,141 @@ $$5({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_RE
 var _=[["Afghanistan","af","93"],["Albania","al","355"],["Algeria","dz","213"],["Andorra","ad","376"],["Angola","ao","244"],["Antigua and Barbuda","ag","1268"],["Argentina","ar","54","(..) ........",0],["Armenia","am","374",".. ......"],["Aruba","aw","297"],["Australia","au","61",{default:". .... ....","/^4/":"... ... ...","/^5(?!50)/":"... ... ...","/^1(3|8)00/":".... ... ...","/^13/":".. .. ..","/^180/":"... ...."},0,[]],["Austria","at","43"],["Azerbaijan","az","994","(..) ... .. .."],["Bahamas","bs","1242"],["Bahrain","bh","973"],["Bangladesh","bd","880"],["Barbados","bb","1246"],["Belarus","by","375","(..) ... .. .."],["Belgium","be","32","... .. .. .."],["Belize","bz","501"],["Benin","bj","229"],["Bhutan","bt","975"],["Bolivia","bo","591"],["Bosnia and Herzegovina","ba","387"],["Botswana","bw","267"],["Brazil","br","55","(..) .....-...."],["British Indian Ocean Territory","io","246"],["Brunei","bn","673"],["Bulgaria","bg","359"],["Burkina Faso","bf","226"],["Burundi","bi","257"],["Cambodia","kh","855"],["Cameroon","cm","237"],["Canada","ca","1","(...) ...-....",1,["204","226","236","249","250","289","306","343","365","387","403","416","418","431","437","438","450","506","514","519","548","579","581","587","604","613","639","647","672","705","709","742","778","780","782","807","819","825","867","873","902","905"]],["Cape Verde","cv","238"],["Caribbean Netherlands","bq","599","",1],["Cayman Islands","ky","1","... ... ....",4,["345"]],["Central African Republic","cf","236"],["Chad","td","235"],["Chile","cl","56"],["China","cn","86","... .... ...."],["Colombia","co","57","... ... ...."],["Comoros","km","269"],["Congo","cd","243"],["Congo","cg","242"],["Costa Rica","cr","506","....-...."],["C\xF4te d'Ivoire","ci","225",".. .. .. .. .."],["Croatia","hr","385"],["Cuba","cu","53"],["Cura\xE7ao","cw","599","",0],["Cyprus","cy","357",".. ......"],["Czech Republic","cz","420","... ... ..."],["Denmark","dk","45",".. .. .. .."],["Djibouti","dj","253",".. .. ...."],["Dominica","dm","1767"],["Dominican Republic","do","1","(...) ...-....",2,["809","829","849"]],["Ecuador","ec","593"],["Egypt","eg","20"],["El Salvador","sv","503","....-...."],["Equatorial Guinea","gq","240"],["Eritrea","er","291"],["Estonia","ee","372",".... ......"],["Ethiopia","et","251",".. ... ...."],["Faroe Islands","fo","298",".. .. .."],["Fiji","fj","679"],["Finland","fi","358",".. ... .. .."],["France","fr","33",". .. .. .. .."],["French Guiana","gf","594","... .. .. .."],["French Polynesia","pf","689",{"/^44/":".. .. ..","/^80[0-5]/":"... .. .. ..",default:".. .. .. .."}],["Gabon","ga","241"],["Gambia","gm","220"],["Georgia","ge","995"],["Germany","de","49","... ........."],["Ghana","gh","233"],["Greece","gr","30"],["Greenland","gl","299",".. .. .."],["Grenada","gd","1473"],["Guadeloupe","gp","590","... .. .. ..",0],["Guam","gu","1671"],["Guatemala","gt","502","....-...."],["Guinea","gn","224"],["Guinea-Bissau","gw","245"],["Guyana","gy","592"],["Haiti","ht","509","....-...."],["Honduras","hn","504"],["Hong Kong","hk","852",".... ...."],["Hungary","hu","36"],["Iceland","is","354","... ...."],["India","in","91",".....-....."],["Indonesia","id","62"],["Iran","ir","98","... ... ...."],["Iraq","iq","964"],["Ireland","ie","353",".. ......."],["Israel","il","972","... ... ...."],["Italy","it","39","... .......",0],["Jamaica","jm","1876"],["Japan","jp","81",".. .... ...."],["Jordan","jo","962"],["Kazakhstan","kz","7","... ...-..-..",0],["Kenya","ke","254"],["Kiribati","ki","686"],["Kosovo","xk","383"],["Kuwait","kw","965"],["Kyrgyzstan","kg","996","... ... ..."],["Laos","la","856"],["Latvia","lv","371",".. ... ..."],["Lebanon","lb","961"],["Lesotho","ls","266"],["Liberia","lr","231"],["Libya","ly","218"],["Liechtenstein","li","423"],["Lithuania","lt","370"],["Luxembourg","lu","352"],["Macau","mo","853"],["Macedonia","mk","389"],["Madagascar","mg","261"],["Malawi","mw","265"],["Malaysia","my","60","..-....-...."],["Maldives","mv","960"],["Mali","ml","223"],["Malta","mt","356"],["Marshall Islands","mh","692"],["Martinique","mq","596","... .. .. .."],["Mauritania","mr","222"],["Mauritius","mu","230"],["Mayotte","yt","262","... .. .. ..",1,["269","639"]],["Mexico","mx","52","... ... ....",0],["Micronesia","fm","691"],["Moldova","md","373","(..) ..-..-.."],["Monaco","mc","377"],["Mongolia","mn","976"],["Montenegro","me","382"],["Morocco","ma","212"],["Mozambique","mz","258"],["Myanmar","mm","95"],["Namibia","na","264"],["Nauru","nr","674"],["Nepal","np","977"],["Netherlands","nl","31",{"/^06/":"(.). .........","/^6/":". .........","/^0(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":"(.).. ........","/^(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":".. ........","/^0/":"(.)... .......",default:"... ......."}],["New Caledonia","nc","687"],["New Zealand","nz","64","...-...-...."],["Nicaragua","ni","505"],["Niger","ne","227"],["Nigeria","ng","234"],["North Korea","kp","850"],["Norway","no","47","... .. ..."],["Oman","om","968"],["Pakistan","pk","92","...-......."],["Palau","pw","680"],["Palestine","ps","970"],["Panama","pa","507"],["Papua New Guinea","pg","675"],["Paraguay","py","595"],["Peru","pe","51"],["Philippines","ph","63","... ... ...."],["Poland","pl","48","...-...-..."],["Portugal","pt","351"],["Puerto Rico","pr","1","(...) ...-....",3,["787","939"]],["Qatar","qa","974"],["R\xE9union","re","262","... .. .. ..",0],["Romania","ro","40"],["Russia","ru","7","(...) ...-..-..",1],["Rwanda","rw","250"],["Saint Kitts and Nevis","kn","1869"],["Saint Lucia","lc","1758"],["Saint Pierre & Miquelon","pm","508",{"/^708/":"... ... ...","/^8/":"... .. .. ..",default:".. .. .."}],["Saint Vincent and the Grenadines","vc","1784"],["Samoa","ws","685"],["San Marino","sm","378"],["S\xE3o Tom\xE9 and Pr\xEDncipe","st","239"],["Saudi Arabia","sa","966"],["Senegal","sn","221"],["Serbia","rs","381"],["Seychelles","sc","248"],["Sierra Leone","sl","232"],["Singapore","sg","65","....-...."],["Slovakia","sk","421"],["Slovenia","si","386"],["Solomon Islands","sb","677"],["Somalia","so","252"],["South Africa","za","27"],["South Korea","kr","82","... .... ...."],["South Sudan","ss","211"],["Spain","es","34","... ... ..."],["Sri Lanka","lk","94"],["Sudan","sd","249"],["Suriname","sr","597"],["Swaziland","sz","268"],["Sweden","se","46","... ... ..."],["Switzerland","ch","41",".. ... .. .."],["Syria","sy","963"],["Taiwan","tw","886"],["Tajikistan","tj","992"],["Tanzania","tz","255"],["Thailand","th","66"],["Timor-Leste","tl","670"],["Togo","tg","228"],["Tonga","to","676"],["Trinidad and Tobago","tt","1868"],["Tunisia","tn","216"],["Turkey","tr","90","... ... .. .."],["Turkmenistan","tm","993"],["Tuvalu","tv","688"],["Uganda","ug","256"],["Ukraine","ua","380","(..) ... .. .."],["United Arab Emirates","ae","971"],["United Kingdom","gb","44",".... ......"],["United States","us","1","(...) ...-....",0],["Uruguay","uy","598"],["Uzbekistan","uz","998",".. ... .. .."],["Vanuatu","vu","678"],["Vatican City","va","39",".. .... ....",1],["Venezuela","ve","58"],["Vietnam","vn","84"],["Wallis & Futuna","wf","681",".. .. .."],["Yemen","ye","967"],["Zambia","zm","260"],["Zimbabwe","zw","263"]];var xe="react-international-phone-",se=(...t)=>t.filter(e=>!!e).join(" ").trim(),Se=(...t)=>se(...t).split(" ").map(e=>`${xe}${e}`).join(" "),P=({addPrefix:t,rawClassNames:e})=>se(Se(...t),...e);var le=({value:t,mask:e,maskSymbol:a,offset:s=0,trimNonMaskCharsLeftover:r=false})=>{if(t.length<s)return t;let n=t.slice(0,s),c=t.slice(s),i=n,o=0;for(let l of e.split("")){if(o>=c.length){if(!r&&l!==a){i+=l;continue}break}l===a?(i+=c[o],o+=1):i+=l;}return i};var F=t=>t?/^\d+$/.test(t):false;var z=t=>t.replace(/\D/g,"");var ue=(t,e)=>{let a=t.style.display;a!=="block"&&(t.style.display="block");let s=t.getBoundingClientRect(),r=e.getBoundingClientRect(),n=r.top-s.top,c=s.bottom-r.bottom;n>=0&&c>=0||(Math.abs(n)<Math.abs(c)?t.scrollTop+=n:t.scrollTop-=c),t.style.display=a;};var de=()=>typeof window>"u"?false:window.navigator.userAgent.toLowerCase().includes("macintosh");var pe=(t,e)=>{let a=e.disableDialCodeAndPrefix?false:e.forceDialCode,s=e.disableDialCodeAndPrefix?false:e.insertDialCodeOnEmpty,r=t,n=l=>e.trimNonDigitsEnd?l.trim():l;if(!r)return s&&!r.length||a?n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`):n(r);if(r=z(r),r===e.dialCode&&!e.disableDialCodeAndPrefix)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(e.dialCode.startsWith(r)&&!e.disableDialCodeAndPrefix)return n(a?`${e.prefix}${e.dialCode}${e.charAfterDialCode}`:`${e.prefix}${r}`);if(!r.startsWith(e.dialCode)&&!e.disableDialCodeAndPrefix){if(a)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(r.length<e.dialCode.length)return n(`${e.prefix}${r}`)}let c=()=>{let l=e.dialCode.length,d=r.slice(0,l),m=r.slice(l);return {phoneLeftSide:d,phoneRightSide:m}},{phoneLeftSide:i,phoneRightSide:o}=c();return i=`${e.prefix}${i}${e.charAfterDialCode}`,o=le({value:o,mask:e.mask,maskSymbol:e.maskChar,trimNonMaskCharsLeftover:e.trimNonDigitsEnd||e.disableDialCodeAndPrefix&&o.length===0}),e.disableDialCodeAndPrefix&&(i=""),n(`${i}${o}`)};var me=({phoneBeforeInput:t,phoneAfterInput:e,phoneAfterFormatted:a,cursorPositionAfterInput:s,leftOffset:r=0,deletion:n})=>{if(s<r)return r;if(!t)return a.length;let c=null;for(let d=s-1;d>=0;d-=1)if(F(e[d])){c=d;break}if(c===null){for(let d=0;d<e.length;d+=1)if(F(a[d]))return d;return e.length}let i=0;for(let d=0;d<c;d+=1)F(e[d])&&(i+=1);let o=0,l=0;for(let d=0;d<a.length&&(o+=1,F(a[d])&&(l+=1),!(l>=i+1));d+=1);if(n!=="backward")for(;!F(a[o])&&o<a.length;)o+=1;return o};var O=({phone:t,prefix:e})=>t?`${e}${z(t)}`:"";function W({value:t,country:e,insertDialCodeOnEmpty:a,trimNonDigitsEnd:s,countries:r,prefix:n,charAfterDialCode:c,forceDialCode:i,disableDialCodeAndPrefix:o,defaultMask:l,countryGuessingEnabled:d,disableFormatting:m}){let f=t;o&&(f=f.startsWith(`${n}`)?f:`${n}${e.dialCode}${f}`);let g=d?X({phone:f,countries:r,currentCountryIso2:e?.iso2}):void 0,S=g?.country??e,p=pe(f,{prefix:n,mask:Q({phone:f,country:S,defaultMask:l,disableFormatting:m}),maskChar:J,dialCode:S.dialCode,trimNonDigitsEnd:s,charAfterDialCode:c,forceDialCode:i,insertDialCodeOnEmpty:a,disableDialCodeAndPrefix:o}),C=d&&!g?.fullDialCodeMatch?e:S;return {phone:O({phone:o?`${C.dialCode}${p}`:p,prefix:n}),inputValue:p,country:C}}var Ie=t=>{if(t?.toLocaleLowerCase().includes("delete")??false)return t?.toLocaleLowerCase().includes("forward")?"forward":"backward"},fe=(t,{country:e,insertDialCodeOnEmpty:a,phoneBeforeInput:s,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,countryGuessingEnabled:o,defaultMask:l,disableFormatting:d,countries:m})=>{let f=t.nativeEvent,g=f.inputType,S=Ie(g),p=!!g?.startsWith("insertFrom"),C=g==="insertText",D=f?.data||void 0,I=t.target.value,A=t.target.selectionStart??0;if(g?.includes("history"))return {inputValue:s,phone:O({phone:s,prefix:r}),cursorPosition:s.length,country:e};if(C&&!F(D)&&I!==r)return {inputValue:s,phone:O({phone:i?`${e.dialCode}${s}`:s,prefix:r}),cursorPosition:A-(D?.length??0),country:e};if(c&&!I.startsWith(`${r}${e.dialCode}`)&&!p){let b=I?s:`${r}${e.dialCode}${n}`;return {inputValue:b,phone:O({phone:b,prefix:r}),cursorPosition:r.length+e.dialCode.length+n.length,country:e}}let{phone:N,inputValue:u,country:h}=W({value:I,country:e,trimNonDigitsEnd:S==="backward",insertDialCodeOnEmpty:a,countryGuessingEnabled:o,countries:m,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,disableFormatting:d,defaultMask:l}),y=me({cursorPositionAfterInput:A,phoneBeforeInput:s,phoneAfterInput:I,phoneAfterFormatted:u,leftOffset:c?r.length+e.dialCode.length+n.length:0,deletion:S});return {phone:N,inputValue:u,cursorPosition:y,country:h}};var Ce=(t,e)=>{let a=Object.keys(t),s=Object.keys(e);if(a.length!==s.length)return  false;for(let r of a)if(t[r]!==e[r])return  false;return  true};var ye=()=>{let t=useRef(),e=useRef(Date.now());return {check:()=>{let s=Date.now(),r=t.current?s-e.current:void 0;return t.current=e.current,e.current=s,r}}};var ke={size:20,overrideLastItemDebounceMS:-1};function ge(t,e){let{size:a,overrideLastItemDebounceMS:s,onChange:r}={...ke,...e},[n,c]=useState(t),[i,o]=useState([n]),[l,d]=useState(0),m=ye();return [n,(p,C)=>{if(typeof p=="object"&&typeof n=="object"&&Ce(p,n)||p===n)return;let k=s>0,D=m.check(),I=k&&D!==void 0?D>s:true;if(C?.overrideLastItem!==void 0?C.overrideLastItem:!I)o(N=>[...N.slice(0,l),p]);else {let N=i.length>=a;o(u=>[...u.slice(N?1:0,l+1),p]),N||d(u=>u+1);}c(p),r?.(p);},()=>{if(l<=0)return {success:false};let p=i[l-1];return c(p),d(C=>C-1),r?.(p),{success:true,value:p}},()=>{if(l+1>=i.length)return {success:false};let p=i[l+1];return c(p),d(C=>C+1),r?.(p),{success:true,value:p}}]}var J=".",E={defaultCountry:"us",value:"",prefix:"+",defaultMask:"............",charAfterDialCode:" ",historySaveDebounceMS:200,disableCountryGuess:false,disableDialCodePrefill:false,forceDialCode:false,disableDialCodeAndPrefix:false,disableFormatting:false,countries:_},ee=({defaultCountry:t=E.defaultCountry,value:e=E.value,countries:a=E.countries,prefix:s=E.prefix,defaultMask:r=E.defaultMask,charAfterDialCode:n=E.charAfterDialCode,historySaveDebounceMS:c=E.historySaveDebounceMS,disableCountryGuess:i=E.disableCountryGuess,disableDialCodePrefill:o=E.disableDialCodePrefill,forceDialCode:l=E.forceDialCode,disableDialCodeAndPrefix:d=E.disableDialCodeAndPrefix,disableFormatting:m=E.disableFormatting,onChange:f,inputRef:g})=>{let C={countries:a,prefix:s,charAfterDialCode:n,forceDialCode:d?false:l,disableDialCodeAndPrefix:d,defaultMask:r,countryGuessingEnabled:!i,disableFormatting:m},k=useRef(null),D=g||k,I=w=>{Promise.resolve().then(()=>{typeof window>"u"||D.current!==document?.activeElement||D.current?.setSelectionRange(w,w);});},[{phone:A,inputValue:N,country:u},h,y,b]=ge(()=>{let w=$$4({value:t,field:"iso2",countries:a});w||console.error(`[react-international-phone]: can not find a country with "${t}" iso2 code`);let T=w||$$4({value:"us",field:"iso2",countries:a}),{phone:x,inputValue:L,country:U}=W({value:e,country:T,insertDialCodeOnEmpty:!o,...C});return I(L.length),{phone:x,inputValue:L,country:U.iso2}},{overrideLastItemDebounceMS:c,onChange:({inputValue:w,phone:T,country:x})=>{if(!f)return;let L=v(x);f({phone:T,inputValue:w,country:L});}}),v=useCallback(w=>$$4({value:w,field:"iso2",countries:a}),[a]),R=useMemo(()=>v(u),[u,v]);useEffect(()=>{let w=D.current;if(!w)return;let T=x=>{if(!x.key)return;let L=x.ctrlKey,U=x.metaKey,ve=x.shiftKey;if(x.key.toLowerCase()==="z"){if(de()){if(!U)return}else if(!L)return;ve?b():y();}};return w.addEventListener("keydown",T),()=>{w.removeEventListener("keydown",T);}},[D,y,b]);let V=w=>{w.preventDefault();let{phone:T,inputValue:x,country:L,cursorPosition:U}=fe(w,{country:R,phoneBeforeInput:N,insertDialCodeOnEmpty:false,...C});return h({inputValue:x,phone:T,country:L.iso2}),I(U),e},K=(w,T={focusOnInput:false})=>{let x=$$4({value:w,field:"iso2",countries:a});if(!x){console.error(`[react-international-phone]: can not find a country with "${w}" iso2 code`);return}let L=d?"":`${s}${x.dialCode}${n}`;h({inputValue:L,phone:`${s}${x.dialCode}`,country:x.iso2}),T.focusOnInput&&Promise.resolve().then(()=>{D.current?.focus();});},[G,j]=useState(false);return useEffect(()=>{if(!G){j(true),e!==A&&f?.({inputValue:N,phone:A,country:R});return}if(e===A)return;let{phone:w,inputValue:T,country:x}=W({value:e,country:R,insertDialCodeOnEmpty:!o,...C});h({phone:w,inputValue:T,country:x.iso2});},[e]),{phone:A,inputValue:N,country:R,setCountry:K,handlePhoneValueChange:V,inputRef:D}};var Q=({phone:t,country:e,defaultMask:a="............",disableFormatting:s=false})=>{let r=e.format,n=i=>s?i.replace(new RegExp(`[^${J}]`,"g"),""):i;if(!r)return n(a);if(typeof r=="string")return n(r);if(!r.default)return console.error(`[react-international-phone]: default mask for ${e.iso2} is not provided`),n(a);let c=Object.keys(r).find(i=>{if(i==="default")return  false;if(!(i.charAt(0)==="/"&&i.charAt(i.length-1)==="/"))return console.error(`[react-international-phone]: format regex "${i}" for ${e.iso2} is not valid`),false;let l=new RegExp(i.substring(1,i.length-1)),d=t.replace(e.dialCode,"");return l.test(z(d))});return n(c?r[c]:r.default)};var M=t=>{let[e,a,s,r,n,c]=t;return {name:e,iso2:a,dialCode:s,format:r,priority:n,areaCodes:c}};var Ae=t=>`Field "${t}" is not supported`,$$4=({field:t,value:e,countries:a=_})=>{if(["priority"].includes(t))throw new Error(Ae(t));let s=a.find(r=>{let n=M(r);return e===n[t]});if(s)return M(s)};var X=({phone:t,countries:e=_,currentCountryIso2:a})=>{let s={country:void 0,fullDialCodeMatch:false};if(!t)return s;let r=z(t);if(!r)return s;let n=s,c=({country:i,fullDialCodeMatch:o})=>{let l=i.dialCode===n.country?.dialCode,d=(i.priority??0)<(n.country?.priority??0);(!l||d)&&(n={country:i,fullDialCodeMatch:o});};for(let i of e){let o=M(i),{dialCode:l,areaCodes:d}=o;if(r.startsWith(l)){let m=n.country?Number(l)>=Number(n.country.dialCode):true;if(d){let f=r.substring(l.length);for(let g of d)if(f.startsWith(g))return {country:o,fullDialCodeMatch:true}}(m||l===r||!n.fullDialCodeMatch)&&c({country:o,fullDialCodeMatch:true});}n.fullDialCodeMatch||r.length<l.length&&l.startsWith(r)&&(!n.country||Number(l)<=Number(n.country.dialCode))&&c({country:o,fullDialCodeMatch:false});}if(a){let i=$$4({value:a,field:"iso2",countries:e});if(!i)return n;let l=i?(m=>{if(!m?.areaCodes)return  false;let f=r.substring(m.dialCode.length);return m.areaCodes.some(g=>g.startsWith(f))})(i):false;!!n&&n.country?.dialCode===i.dialCode&&n.country!==i&&n.fullDialCodeMatch&&(!i.areaCodes||l)&&(n={country:i,fullDialCodeMatch:true});}return n};var Te=(t,e)=>{let a=parseInt(t,16);return Number(a+e).toString(16)},Ee="abcdefghijklmnopqrstuvwxyz",Le="1f1e6",Pe=Ee.split("").reduce((t,e,a)=>({...t,[e]:Te(Le,a)}),{}),$e=t=>[Pe[t[0]],Pe[t[1]]].join("-"),q=({iso2:t,size:e,src:a,protocol:s="https",disableLazyLoading:r,className:n,style:c,...i})=>{if(!t)return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),width:e,height:e,...i});let o=()=>{if(a)return a;let l=$e(t);return `${s}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${l}.svg`};return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),src:o(),width:e,height:e,draggable:false,"data-country":t,loading:r?void 0:"lazy",style:{width:e,height:e,...c},alt:"",...i})};var He=1e3,ne=({show:t,dialCodePrefix:e="+",selectedCountry:a,countries:s=_,preferredCountries:r=[],flags:n,onSelect:c,onClose:i,...o})=>{let l=useRef(null),d=useRef(),m=useMemo(()=>{if(!r||!r.length)return s;let u=[],h=[...s];for(let y of r){let b=h.findIndex(v=>M(v).iso2===y);if(b!==-1){let v=h.splice(b,1)[0];u.push(v);}}return u.concat(h)},[s,r]),f=useRef({updatedAt:void 0,value:""}),g=u=>{let h=f.current.updatedAt&&new Date().getTime()-f.current.updatedAt.getTime()>He;f.current={value:h?u:`${f.current.value}${u}`,updatedAt:new Date};let y=m.findIndex(b=>M(b).name.toLowerCase().startsWith(f.current.value));y!==-1&&C(y);},S=useCallback(u=>m.findIndex(h=>M(h).iso2===u),[m]),[p,C]=useState(S(a)),k=()=>{d.current!==a&&C(S(a));},D=useCallback(u=>{C(S(u.iso2)),c?.(u);},[c,S]),I=u=>{let h=m.length-1,y=b=>u==="prev"?b-1:u==="next"?b+1:u==="last"?h:0;C(b=>{let v=y(b);return v<0?0:v>h?h:v});},A=u=>{if(u.stopPropagation(),u.key==="Enter"){u.preventDefault();let h=M(m[p]);D(h);return}if(u.key==="Escape"){i?.();return}if(u.key==="ArrowUp"){u.preventDefault(),I("prev");return}if(u.key==="ArrowDown"){u.preventDefault(),I("next");return}if(u.key==="PageUp"){u.preventDefault(),I("first");return}if(u.key==="PageDown"){u.preventDefault(),I("last");return}u.key===" "&&u.preventDefault(),u.key.length===1&&!u.altKey&&!u.ctrlKey&&!u.metaKey&&g(u.key.toLocaleLowerCase());},N=useCallback(()=>{if(!l.current||p===void 0)return;let u=M(m[p]).iso2;if(u===d.current)return;let h=l.current.querySelector(`[data-country="${u}"]`);h&&(ue(l.current,h),d.current=u);},[p,m]);return useEffect(()=>{N();},[p,N]),useEffect(()=>{l.current&&(t?l.current.focus():k());},[t]),useEffect(()=>{k();},[a]),H.createElement("ul",{ref:l,role:"listbox",className:P({addPrefix:["country-selector-dropdown"],rawClassNames:[o.className]}),style:{display:t?"block":"none",...o.style},onKeyDown:A,onBlur:i,tabIndex:-1,"aria-activedescendant":`react-international-phone__${M(m[p]).iso2}-option`},m.map((u,h)=>{let y=M(u),b=y.iso2===a,v=h===p,R=r.includes(y.iso2),V=h===r.length-1,K=n?.find(G=>G.iso2===y.iso2);return H.createElement(H.Fragment,{key:y.iso2},H.createElement("li",{"data-country":y.iso2,role:"option","aria-selected":b,"aria-label":`${y.name} ${e}${y.dialCode}`,id:`react-international-phone__${y.iso2}-option`,className:P({addPrefix:["country-selector-dropdown__list-item",R&&"country-selector-dropdown__list-item--preferred",b&&"country-selector-dropdown__list-item--selected",v&&"country-selector-dropdown__list-item--focused"],rawClassNames:[o.listItemClassName,R&&o.listItemPreferredClassName,b&&o.listItemSelectedClassName,v&&o.listItemFocusedClassName]}),onClick:()=>D(y),style:o.listItemStyle,title:y.name},H.createElement(q,{iso2:y.iso2,src:K?.src,className:P({addPrefix:["country-selector-dropdown__list-item-flag-emoji"],rawClassNames:[o.listItemFlagClassName]}),style:o.listItemFlagStyle}),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-country-name"],rawClassNames:[o.listItemCountryNameClassName]}),style:o.listItemCountryNameStyle},y.name),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-dial-code"],rawClassNames:[o.listItemDialCodeClassName]}),style:o.listItemDialCodeStyle},e,y.dialCode)),V?H.createElement("hr",{className:P({addPrefix:["country-selector-dropdown__preferred-list-divider"],rawClassNames:[o.preferredListDividerClassName]}),style:o.preferredListDividerStyle}):null)}))};var ae=({selectedCountry:t,onSelect:e,disabled:a,hideDropdown:s,countries:r=_,preferredCountries:n=[],flags:c,renderButtonWrapper:i,...o})=>{let[l,d]=useState(false),m=useMemo(()=>{if(t)return $$4({value:t,field:"iso2",countries:r})},[r,t]),f=useRef(null),g=p=>{p.key&&["ArrowUp","ArrowDown"].includes(p.key)&&(p.preventDefault(),d(true));},S=()=>{let p={title:m?.name,onClick:()=>d(k=>!k),onMouseDown:k=>k.preventDefault(),onKeyDown:g,disabled:s||a,role:"combobox","aria-label":"Country selector","aria-haspopup":"listbox","aria-expanded":l},C=H.createElement("div",{className:P({addPrefix:["country-selector-button__button-content"],rawClassNames:[o.buttonContentWrapperClassName]}),style:o.buttonContentWrapperStyle},H.createElement(q,{iso2:t,src:c?.find(k=>k.iso2===t)?.src,className:P({addPrefix:["country-selector-button__flag-emoji",a&&"country-selector-button__flag-emoji--disabled"],rawClassNames:[o.flagClassName]}),style:{visibility:t?"visible":"hidden",...o.flagStyle}}),!s&&H.createElement("div",{className:P({addPrefix:["country-selector-button__dropdown-arrow",a&&"country-selector-button__dropdown-arrow--disabled",l&&"country-selector-button__dropdown-arrow--active"],rawClassNames:[o.dropdownArrowClassName]}),style:o.dropdownArrowStyle}));return i?i({children:C,rootProps:p}):H.createElement("button",{...p,type:"button",className:P({addPrefix:["country-selector-button",l&&"country-selector-button--active",a&&"country-selector-button--disabled",s&&"country-selector-button--hide-dropdown"],rawClassNames:[o.buttonClassName]}),"data-country":t,style:o.buttonStyle},C)};return H.createElement("div",{className:P({addPrefix:["country-selector"],rawClassNames:[o.className]}),style:o.style,ref:f},S(),H.createElement(ne,{show:l,countries:r,preferredCountries:n,flags:c,onSelect:p=>{d(false),e?.(p);},selectedCountry:t,onClose:()=>{d(false);},...o.dropdownStyleProps}))};var ie=({dialCode:t,prefix:e,disabled:a,style:s,className:r})=>H.createElement("div",{className:P({addPrefix:["dial-code-preview",a&&"dial-code-preview--disabled"],rawClassNames:[r]}),style:s},`${e}${t}`);var Ue=forwardRef(({value:t,onChange:e,countries:a=_,preferredCountries:s=[],hideDropdown:r,showDisabledDialCodeAndPrefix:n,disableFocusAfterCountrySelect:c,flags:i,style:o,className:l,inputStyle:d,inputClassName:m,countrySelectorStyleProps:f,dialCodePreviewStyleProps:g,inputProps:S,placeholder:p,disabled:C,name:k,onFocus:D,onBlur:I,required:A,autoFocus:N,...u},h)=>{let{phone:y,inputValue:b,inputRef:v,country:R,setCountry:V,handlePhoneValueChange:K}=ee({value:t,countries:a,...u,onChange:j=>{e?.(j.phone,{country:j.country,inputValue:j.inputValue});}}),G=u.disableDialCodeAndPrefix&&n&&R?.dialCode;return useImperativeHandle(h,()=>v.current?Object.assign(v.current,{setCountry:V,state:{phone:y,inputValue:b,country:R}}):null,[v,V,y,b,R]),H.createElement("div",{ref:h,className:P({addPrefix:["input-container"],rawClassNames:[l]}),style:o},H.createElement(ae,{onSelect:j=>V(j.iso2,{focusOnInput:!c}),flags:i,selectedCountry:R.iso2,countries:a,preferredCountries:s,disabled:C,hideDropdown:r,...f}),G&&H.createElement(ie,{dialCode:R.dialCode,prefix:u.prefix??"+",disabled:C,...g}),H.createElement("input",{onChange:K,value:b,type:"tel",ref:v,className:P({addPrefix:["input",C&&"input--disabled"],rawClassNames:[m]}),placeholder:p,disabled:C,style:d,name:k,onFocus:D,onBlur:I,autoFocus:N,required:A,...S}))});
 
 var {
-  Title: Title$2,
-  Text: Text$2
+  Title: Title$3,
+  Text: Text$3
 } = Typography;
-var BRAND_RED$1 = '#ff4d4f';
+var BRAND_RED$2 = '#ff4d4f';
+
+/** Dummy country options (extend as needed) */
+var COUNTRY_OPTIONS = [{
+  label: 'Uganda',
+  value: 'UG'
+}, {
+  label: 'Kenya',
+  value: 'KE'
+}, {
+  label: 'Tanzania',
+  value: 'TZ'
+}, {
+  label: 'Rwanda',
+  value: 'RW'
+}, {
+  label: 'Nigeria',
+  value: 'NG'
+}, {
+  label: 'Ghana',
+  value: 'GH'
+}, {
+  label: 'South Africa',
+  value: 'ZA'
+}];
+
+/** Demo provider catalog per country (extend as needed) */
+var PROVIDERS_BY_COUNTRY = {
+  UG: [{
+    label: 'MTN Uganda',
+    value: 'mtn_ug'
+  }, {
+    label: 'Airtel Uganda',
+    value: 'airtel_ug'
+  }],
+  KE: [{
+    label: 'M-Pesa (Safaricom)',
+    value: 'mpesa_ke'
+  }, {
+    label: 'Airtel Money Kenya',
+    value: 'airtel_ke'
+  }],
+  TZ: [{
+    label: 'M-Pesa Tanzania',
+    value: 'mpesa_tz'
+  }, {
+    label: 'Tigo Pesa',
+    value: 'tigo_tz'
+  }, {
+    label: 'Airtel Money Tanzania',
+    value: 'airtel_tz'
+  }],
+  RW: [{
+    label: 'MTN Rwanda',
+    value: 'mtn_rw'
+  }, {
+    label: 'Airtel Rwanda',
+    value: 'airtel_rw'
+  }],
+  NG: [{
+    label: 'MTN Nigeria MoMo',
+    value: 'mtn_ng'
+  }, {
+    label: 'Airtel SmartCash',
+    value: 'airtel_ng'
+  }, {
+    label: 'Opay',
+    value: 'opay_ng'
+  }, {
+    label: 'PalmPay',
+    value: 'palmpay_ng'
+  }],
+  GH: [{
+    label: 'MTN Mobile Money Ghana',
+    value: 'mtn_gh'
+  }, {
+    label: 'AirtelTigo Money',
+    value: 'airteltigo_gh'
+  }, {
+    label: 'Vodafone Cash',
+    value: 'vodafone_gh'
+  }],
+  ZA: [{
+    label: 'MTN SA MoMo',
+    value: 'mtn_za'
+  }, {
+    label: 'Vodacom M-Pesa (legacy/limited)',
+    value: 'mpesa_za'
+  }]
+};
 function MobileMoneyFallbackModal(_ref) {
   var {
     open = false,
     onCancel,
     onSubmit,
-    // (payload) => void ; payload = { msisdn, e164, country }
+    // (payload) => void ; payload = { msisdn, e164, country, provider }
     zIndex = 2100,
     width = 520,
-    defaultCountry = 'ug' // two-letter ISO for initial country (e.g., 'ug', 'ke', 'ng')
+    defaultCountry = 'ug' // two-letter ISO (lowercase) e.g. 'ug', 'ke', 'ng'
   } = _ref;
-  var [phone, setPhone] = useState(''); // E.164 string returned by PhoneInput (e.g., "+256700000000")
-  var [countryIso, setCountryIso] = useState(defaultCountry);
+  var [phone, setPhone] = useState(''); // E.164 string (e.g. "+256700000000")
+  var [countryIso, setCountryIso] = useState(String(defaultCountry || 'ug').toUpperCase()); // 'UG', 'KE', 'NG', ...
+  var [provider, setProvider] = useState(null);
+
+  // Limit countries to those we have providers for (optional)
+  var supportedSet = useMemo(() => new Set(Object.keys(PROVIDERS_BY_COUNTRY)), []);
+  var countrySelectOptions = useMemo(() => COUNTRY_OPTIONS.filter(c => supportedSet.has(c.value)), [supportedSet]);
+
+  // Providers for the selected country
+  var providerOptions = useMemo(() => PROVIDERS_BY_COUNTRY[countryIso] || [], [countryIso]);
 
   // very light validation: must start with '+' and have at least 8 digits total
   var isValidE164 = useMemo(() => {
     if (!phone || typeof phone !== 'string') return false;
     if (!phone.startsWith('+')) return false;
-    // count digits
     var digits = (phone.match(/\d/g) || []).length;
     return digits >= 8;
   }, [phone]);
+  var canSubmit = isValidE164 && !!provider;
+  var handleCountryChange = iso => {
+    setCountryIso(iso);
+    setProvider(null); // reset provider when country changes
+  };
   var handleSubmit = () => {
-    if (!isValidE164) return;
-    var payload = {
+    if (!canSubmit) return;
+    onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit({
       msisdn: phone,
-      // raw E.164 as typed/normalized by the component
       e164: phone,
-      // duplicate for clarity
-      country: (countryIso || '').toUpperCase() // e.g. 'UG', 'KE', 'NG'
-    };
-    onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(payload);
+      country: countryIso,
+      // 'UG', 'KE', 'NG'
+      provider // e.g. 'mtn_ug'
+    });
   };
   return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
     open: open,
@@ -5619,7 +5719,7 @@ function MobileMoneyFallbackModal(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED$1,
+        background: BRAND_RED$2,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -5640,43 +5740,75 @@ function MobileMoneyFallbackModal(_ref) {
       style: {
         width: '100%'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$3, {
         level: 4,
         style: {
           margin: 0
         },
         children: "Pay with Mobile Money"
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
         type: "secondary",
-        children: "Enter the mobile number to proceed with the payment."
+        children: "Choose country & provider, then enter the mobile number."
       }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
         style: {
           marginTop: 12
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+          children: "Country"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Select, {
+          style: {
+            width: '100%',
+            marginTop: 6
+          },
+          placeholder: "Select a country",
+          options: countrySelectOptions,
+          value: countryIso,
+          onChange: handleCountryChange,
+          showSearch: true,
+          optionFilterProp: "label"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
+          children: "Provider"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Select, {
+          style: {
+            width: '100%',
+            marginTop: 6
+          },
+          placeholder: providerOptions.length ? 'Select a provider' : 'No providers for this country',
+          options: providerOptions,
+          value: provider,
+          onChange: setProvider,
+          disabled: !providerOptions.length,
+          showSearch: true,
+          optionFilterProp: "label"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$3, {
           children: "Mobile Number"
         }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
           style: {
-            marginTop: 6,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
+            marginTop: 6
           },
-          children: /*#__PURE__*/jsxRuntimeExports.jsx("div", {
-            style: {
-              flex: 1
-            },
-            children: /*#__PURE__*/jsxRuntimeExports.jsx(Ue, {
-              defaultCountry: defaultCountry,
-              value: phone,
-              onChange: setPhone,
-              onCountryChange: iso => setCountryIso(iso),
-              forceDialCode: true,
-              hideDropdown: false,
-              inputStyle: {
-                width: '100%'
-              } // ensure it fills the modal width
-            })
+          children: /*#__PURE__*/jsxRuntimeExports.jsx(Ue
+          // Keep the dial code/country dropdown in sync:
+          , {
+            country: countryIso.toLowerCase(),
+            defaultCountry: countryIso.toLowerCase(),
+            value: phone,
+            onChange: setPhone,
+            onCountryChange: iso => setCountryIso(String(iso || '').toUpperCase()),
+            forceDialCode: true,
+            hideDropdown: false,
+            inputStyle: {
+              width: '100%'
+            }
           })
         })]
       }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
@@ -5694,7 +5826,7 @@ function MobileMoneyFallbackModal(_ref) {
           type: "primary",
           shape: "round",
           onClick: handleSubmit,
-          disabled: !isValidE164,
+          disabled: !canSubmit,
           children: "Continue"
         })]
       })]
@@ -5760,10 +5892,10 @@ $$3({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
 });
 
 var {
-  Title: Title$1,
-  Text: Text$1
+  Title: Title$2,
+  Text: Text$2
 } = Typography;
-var BRAND_RED = '#ff4d4f';
+var BRAND_RED$1 = '#ff4d4f';
 function CardPaymentModal(_ref) {
   var {
     open = false,
@@ -5820,7 +5952,7 @@ function CardPaymentModal(_ref) {
         width: 28,
         height: 28,
         borderRadius: '50%',
-        background: BRAND_RED,
+        background: BRAND_RED$1,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -5841,20 +5973,20 @@ function CardPaymentModal(_ref) {
       style: {
         width: '100%'
       },
-      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$2, {
         level: 4,
         style: {
           margin: 0
         },
         children: "Pay with Card"
-      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
         type: "secondary",
         children: "Enter your card details to continue."
       }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
         style: {
           marginTop: 12
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
           children: "Card Holder\u2019s Name"
         }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
           size: "large",
@@ -5866,7 +5998,7 @@ function CardPaymentModal(_ref) {
         style: {
           marginTop: 12
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
           children: "Card Number"
         }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
           size: "large",
@@ -5883,7 +6015,7 @@ function CardPaymentModal(_ref) {
           marginTop: 12
         },
         children: [/*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
             children: "Expiry"
           }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
             size: "large",
@@ -5893,7 +6025,7 @@ function CardPaymentModal(_ref) {
             inputMode: "numeric"
           })]
         }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
-          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
             children: "CVV"
           }), /*#__PURE__*/jsxRuntimeExports.jsx(Input.Password, {
             size: "large",
@@ -5907,7 +6039,7 @@ function CardPaymentModal(_ref) {
         style: {
           marginTop: 12
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
           children: "Address (optional)"
         }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
           size: "large",
@@ -5919,7 +6051,7 @@ function CardPaymentModal(_ref) {
         style: {
           marginTop: 12
         },
-        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
           children: "Phone number (optional)"
         }), /*#__PURE__*/jsxRuntimeExports.jsx(Ue, {
           defaultCountry: defaultCountry,
@@ -5967,6 +6099,285 @@ function guessBrand(num) {
   if (/^3[47]/.test(n)) return 'amex';
   if (/^6/.test(n)) return 'discover';
   return null;
+}
+
+var {
+  Title: Title$1,
+  Text: Text$1
+} = Typography;
+var BRAND_RED = '#ff4d4f';
+
+/**
+ * Dummy country → banks map (demo only).
+ * Replace/extend with your gateway’s list later.
+ */
+var COUNTRIES = [{
+  code: 'UG',
+  name: 'Uganda'
+}, {
+  code: 'KE',
+  name: 'Kenya'
+}, {
+  code: 'NG',
+  name: 'Nigeria'
+}, {
+  code: 'RW',
+  name: 'Rwanda'
+}];
+var BANKS_BY_COUNTRY = {
+  UG: [{
+    code: 'STANBIC_UG',
+    name: 'Stanbic Bank Uganda'
+  }, {
+    code: 'ABSA_UG',
+    name: 'Absa Bank Uganda'
+  }, {
+    code: 'CENTENARY_UG',
+    name: 'Centenary Bank'
+  }, {
+    code: 'DTB_UG',
+    name: 'Diamond Trust Bank Uganda'
+  }],
+  KE: [{
+    code: 'KCB_KE',
+    name: 'KCB Bank Kenya'
+  }, {
+    code: 'EQUITY_KE',
+    name: 'Equity Bank'
+  }, {
+    code: 'COOP_KE',
+    name: 'Co-operative Bank of Kenya'
+  }, {
+    code: 'ABSA_KE',
+    name: 'Absa Bank Kenya'
+  }],
+  NG: [{
+    code: 'GTB_NG',
+    name: 'Guaranty Trust Bank (GTB)'
+  }, {
+    code: 'ACCESS_NG',
+    name: 'Access Bank'
+  }, {
+    code: 'FBN_NG',
+    name: 'First Bank of Nigeria'
+  }, {
+    code: 'UBA_NG',
+    name: 'United Bank for Africa (UBA)'
+  }],
+  RW: [{
+    code: 'BK_RW',
+    name: 'Bank of Kigali'
+  }, {
+    code: 'IM_RW',
+    name: 'I&M Bank Rwanda'
+  }, {
+    code: 'EQUITY_RW',
+    name: 'Equity Bank Rwanda'
+  }, {
+    code: 'KCB_RW',
+    name: 'KCB Bank Rwanda'
+  }]
+};
+function BankPaymentModal(_ref) {
+  var {
+    open = false,
+    onCancel,
+    onSubmit,
+    // (payload) => void
+    zIndex = 2100,
+    width = 520,
+    defaultCountry = 'UG'
+  } = _ref;
+  var [country, setCountry] = useState(defaultCountry);
+  var [bank, setBank] = useState(null);
+  var [accountNumber, setAccountNumber] = useState('');
+  var [accountName, setAccountName] = useState('');
+  var [branch, setBranch] = useState('');
+  var [reference, setReference] = useState('');
+  var banks = useMemo(() => BANKS_BY_COUNTRY[country] || [], [country]);
+
+  // very light client-side checks
+  var canSubmit = useMemo(() => {
+    var hasCountry = !!country;
+    var hasBank = !!bank;
+    var num = accountNumber.replace(/\s+/g, '');
+    var hasAcctNum = num.length >= 6; // relax as needed
+    var hasName = accountName.trim().length >= 2;
+    return hasCountry && hasBank && hasAcctNum && hasName;
+  }, [country, bank, accountNumber, accountName]);
+  var handleSubmit = () => {
+    if (!canSubmit) return;
+    var payload = {
+      country,
+      bank,
+      accountNumber: accountNumber.replace(/\s+/g, ''),
+      accountName: accountName.trim(),
+      branch: branch.trim() || null,
+      reference: reference.trim() || null
+    };
+    onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(payload);
+  };
+  return /*#__PURE__*/jsxRuntimeExports.jsxs(Modal, {
+    open: open,
+    centered: true,
+    width: width,
+    footer: null,
+    onCancel: onCancel,
+    zIndex: zIndex,
+    maskClosable: false,
+    title: null,
+    bodyStyle: {
+      padding: 20
+    },
+    closeIcon: /*#__PURE__*/jsxRuntimeExports.jsx("span", {
+      style: {
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        background: BRAND_RED,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+      },
+      children: /*#__PURE__*/jsxRuntimeExports.jsx(CloseOutlined, {})
+    }),
+    children: [/*#__PURE__*/jsxRuntimeExports.jsx(BrandHeader, {
+      size: "sm"
+    }), /*#__PURE__*/jsxRuntimeExports.jsx("div", {
+      style: {
+        borderTop: '1px dashed #e5e7eb',
+        margin: '12px -20px 16px'
+      }
+    }), /*#__PURE__*/jsxRuntimeExports.jsxs(Space, {
+      direction: "vertical",
+      style: {
+        width: '100%'
+      },
+      children: [/*#__PURE__*/jsxRuntimeExports.jsx(Title$1, {
+        level: 4,
+        style: {
+          margin: 0
+        },
+        children: "Pay via Bank"
+      }), /*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+        type: "secondary",
+        children: "Select your country and bank, then enter your account details."
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Country"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Select, {
+          style: {
+            width: '100%',
+            marginTop: 6
+          },
+          value: country,
+          onChange: val => {
+            setCountry(val);
+            setBank(null); // reset bank when country changes
+          },
+          options: COUNTRIES.map(c => ({
+            label: c.name,
+            value: c.code
+          })),
+          showSearch: true,
+          optionFilterProp: "label"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Bank"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Select, {
+          style: {
+            width: '100%',
+            marginTop: 6
+          },
+          placeholder: "Select a bank",
+          value: bank,
+          onChange: setBank,
+          options: banks.map(b => ({
+            label: b.name,
+            value: b.code
+          })),
+          showSearch: true,
+          optionFilterProp: "label"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Account Number"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
+          size: "large",
+          placeholder: "Enter account number",
+          value: accountNumber,
+          onChange: e => setAccountNumber(e.target.value.replace(/[^\d\s]/g, '').slice(0, 24)),
+          inputMode: "numeric"
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Account Name"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
+          size: "large",
+          placeholder: "e.g. Jane A. Doe",
+          value: accountName,
+          onChange: e => setAccountName(e.target.value)
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Branch (optional)"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
+          size: "large",
+          placeholder: "Enter branch",
+          value: branch,
+          onChange: e => setBranch(e.target.value)
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$1, {
+          children: "Payment Reference (optional)"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Input, {
+          size: "large",
+          placeholder: "e.g. Order #12345",
+          value: reference,
+          onChange: e => setReference(e.target.value)
+        })]
+      }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
+        style: {
+          display: 'flex',
+          gap: 12,
+          justifyContent: 'flex-end',
+          marginTop: 16
+        },
+        children: [/*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          onClick: onCancel,
+          shape: "round",
+          children: "Cancel"
+        }), /*#__PURE__*/jsxRuntimeExports.jsx(Button, {
+          type: "primary",
+          shape: "round",
+          onClick: handleSubmit,
+          disabled: !canSubmit,
+          children: "Continue"
+        })]
+      })]
+    })]
+  });
 }
 
 var tryToString = tryToString$5;
@@ -7297,7 +7708,7 @@ function WalletPaymentForm(props) {
     supportEmail,
     supportPhone,
     onSuccess,
-    minProcessingMs = 1500
+    minProcessingMs = 1500 // used for alternate-method transition overlay
   } = props;
   var {
     view,
@@ -7305,6 +7716,7 @@ function WalletPaymentForm(props) {
     quote,
     submitting,
     processing,
+    // processing from the hook (quote/charge)
     details,
     accounts,
     selectAccount,
@@ -7318,6 +7730,7 @@ function WalletPaymentForm(props) {
   // Alternate-payment modals (independent of wallet flow)
   var [showMM, setShowMM] = useState(false);
   var [showCard, setShowCard] = useState(false);
+  var [showBank, setShowBank] = useState(false); // ← NEW
   var [altProcessing, setAltProcessing] = useState(false);
   var renderLoading = () => /*#__PURE__*/jsxRuntimeExports.jsx(LoadingOverlay, {
     open: true,
@@ -7402,6 +7815,7 @@ function WalletPaymentForm(props) {
       setAltProcessing(false);
       setShowMM(true);
       setShowCard(false);
+      setShowBank(false);
     }, delay);
   };
   var startCardFlow = () => {
@@ -7410,14 +7824,16 @@ function WalletPaymentForm(props) {
       setAltProcessing(false);
       setShowCard(true);
       setShowMM(false);
+      setShowBank(false);
     }, delay);
   };
   var startBankFlow = () => {
-    // stub so the tile shows; replace with your bank modal/redirect when ready
     setAltProcessing(true);
     setTimeout(() => {
       setAltProcessing(false);
-      console.log('[EVZ SDK] Bank transfer flow not implemented yet.');
+      setShowBank(true);
+      setShowMM(false);
+      setShowCard(false);
     }, delay);
   };
 
@@ -7484,6 +7900,26 @@ function WalletPaymentForm(props) {
     setShowCard(false);
     closeAndReset();
   };
+  var handleBankSubmit = bankPayload => {
+    var _quote$total3;
+    try {
+      console.log('[EVZ SDK] bank payload:', bankPayload);
+    } catch (_unused3) {}
+    onSuccess === null || onSuccess === void 0 ? void 0 : onSuccess({
+      transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: null,
+      user: null,
+      amount: (_quote$total3 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total3 !== void 0 ? _quote$total3 : details.billedAmount,
+      currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
+      type: details.type,
+      particulars: details.particulars,
+      paymentMethod: 'BANK',
+      paymentMeta: bankPayload // { country, bank, accountNumber, accountName, branch?, reference? }
+    });
+    setShowBank(false);
+    closeAndReset();
+  };
 
   // ---------- Single active modal ----------
   var content = null;
@@ -7499,6 +7935,13 @@ function WalletPaymentForm(props) {
       open: true,
       onCancel: () => setShowCard(false),
       onSubmit: handleCardSubmit,
+      zIndex: zIndex
+    });
+  } else if (showBank) {
+    content = /*#__PURE__*/jsxRuntimeExports.jsx(BankPaymentModal, {
+      open: true,
+      onCancel: () => setShowBank(false),
+      onSubmit: handleBankSubmit,
       zIndex: zIndex
     });
   } else if (view === 'accountPicker') {
@@ -7529,10 +7972,10 @@ function WalletPaymentForm(props) {
   } else if (view === 'passcode') {
     content = renderPasscode();
   } else if (view === 'success') {
-    var _quote$total3;
+    var _quote$total4;
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
       open: true,
-      amount: (_quote$total3 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total3 !== void 0 ? _quote$total3 : details.billedAmount,
+      amount: (_quote$total4 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total4 !== void 0 ? _quote$total4 : details.billedAmount,
       currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
       zIndex: zIndex,
       onClose: closeAndReset
@@ -7549,11 +7992,11 @@ function WalletPaymentForm(props) {
       open: true,
       zIndex: zIndex,
       onClose: closeAndReset,
-      onOpenAltMobile: startMobileMoneyFlow // shows MM
+      onOpenAltMobile: startMobileMoneyFlow // Mobile Money
       ,
-      onOpenCard: startCardFlow // ← wire Card tile
+      onOpenCard: startCardFlow // Card
       ,
-      onOpenBank: startBankFlow // ← optional stub so Bank tile appears
+      onOpenBank: startBankFlow // Bank
     });
   }
   return content;
