@@ -73,24 +73,6 @@ function _toPropertyKey(t) {
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-var check = function (it) {
-  return it && it.Math === Math && it;
-};
-
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var globalThis_1 =
-  // eslint-disable-next-line es/no-global-this -- safe
-  check(typeof globalThis == 'object' && globalThis) ||
-  check(typeof window == 'object' && window) ||
-  // eslint-disable-next-line no-restricted-globals -- safe
-  check(typeof self == 'object' && self) ||
-  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
-  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
-  // eslint-disable-next-line no-new-func -- fallback
-  (function () { return this; })() || Function('return this')();
-
-var objectGetOwnPropertyDescriptor = {};
-
 var fails$p = function (exec) {
   try {
     return !!exec();
@@ -101,15 +83,7 @@ var fails$p = function (exec) {
 
 var fails$o = fails$p;
 
-// Detect IE8's incomplete defineProperty implementation
-var descriptors = !fails$o(function () {
-  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] !== 7;
-});
-
-var fails$n = fails$p;
-
-var functionBindNative = !fails$n(function () {
+var functionBindNative = !fails$o(function () {
   // eslint-disable-next-line es/no-function-prototype-bind -- safe
   var test = (function () { /* empty */ }).bind();
   // eslint-disable-next-line no-prototype-builtins -- safe
@@ -118,68 +92,35 @@ var functionBindNative = !fails$n(function () {
 
 var NATIVE_BIND$3 = functionBindNative;
 
-var call$j = Function.prototype.call;
-// eslint-disable-next-line es/no-function-prototype-bind -- safe
-var functionCall = NATIVE_BIND$3 ? call$j.bind(call$j) : function () {
-  return call$j.apply(call$j, arguments);
-};
-
-var objectPropertyIsEnumerable = {};
-
-var $propertyIsEnumerable = {}.propertyIsEnumerable;
-// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var getOwnPropertyDescriptor$3 = Object.getOwnPropertyDescriptor;
-
-// Nashorn ~ JDK8 bug
-var NASHORN_BUG = getOwnPropertyDescriptor$3 && !$propertyIsEnumerable.call({ 1: 2 }, 1);
-
-// `Object.prototype.propertyIsEnumerable` method implementation
-// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
-objectPropertyIsEnumerable.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
-  var descriptor = getOwnPropertyDescriptor$3(this, V);
-  return !!descriptor && descriptor.enumerable;
-} : $propertyIsEnumerable;
-
-var createPropertyDescriptor$3 = function (bitmap, value) {
-  return {
-    enumerable: !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable: !(bitmap & 4),
-    value: value
-  };
-};
-
-var NATIVE_BIND$2 = functionBindNative;
-
 var FunctionPrototype$2 = Function.prototype;
-var call$i = FunctionPrototype$2.call;
+var call$j = FunctionPrototype$2.call;
 // eslint-disable-next-line es/no-function-prototype-bind -- safe
-var uncurryThisWithBind = NATIVE_BIND$2 && FunctionPrototype$2.bind.bind(call$i, call$i);
+var uncurryThisWithBind = NATIVE_BIND$3 && FunctionPrototype$2.bind.bind(call$j, call$j);
 
-var functionUncurryThis = NATIVE_BIND$2 ? uncurryThisWithBind : function (fn) {
+var functionUncurryThis = NATIVE_BIND$3 ? uncurryThisWithBind : function (fn) {
   return function () {
-    return call$i.apply(fn, arguments);
+    return call$j.apply(fn, arguments);
   };
+};
+
+var uncurryThis$q = functionUncurryThis;
+
+var toString$d = uncurryThis$q({}.toString);
+var stringSlice$9 = uncurryThis$q(''.slice);
+
+var classofRaw$2 = function (it) {
+  return stringSlice$9(toString$d(it), 8, -1);
 };
 
 var uncurryThis$p = functionUncurryThis;
-
-var toString$c = uncurryThis$p({}.toString);
-var stringSlice$8 = uncurryThis$p(''.slice);
-
-var classofRaw$2 = function (it) {
-  return stringSlice$8(toString$c(it), 8, -1);
-};
-
-var uncurryThis$o = functionUncurryThis;
-var fails$m = fails$p;
+var fails$n = fails$p;
 var classof$7 = classofRaw$2;
 
 var $Object$4 = Object;
-var split = uncurryThis$o(''.split);
+var split = uncurryThis$p(''.split);
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var indexedObject = fails$m(function () {
+var indexedObject = fails$n(function () {
   // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
   // eslint-disable-next-line no-prototype-builtins -- safe
   return !$Object$4('z').propertyIsEnumerable(0);
@@ -199,17 +140,182 @@ var $TypeError$f = TypeError;
 
 // `RequireObjectCoercible` abstract operation
 // https://tc39.es/ecma262/#sec-requireobjectcoercible
-var requireObjectCoercible$a = function (it) {
+var requireObjectCoercible$b = function (it) {
   if (isNullOrUndefined$5(it)) throw new $TypeError$f("Can't call method on " + it);
   return it;
 };
 
 // toObject with fallback for non-array-like ES3 strings
 var IndexedObject$1 = indexedObject;
-var requireObjectCoercible$9 = requireObjectCoercible$a;
+var requireObjectCoercible$a = requireObjectCoercible$b;
 
 var toIndexedObject$5 = function (it) {
-  return IndexedObject$1(requireObjectCoercible$9(it));
+  return IndexedObject$1(requireObjectCoercible$a(it));
+};
+
+var check = function (it) {
+  return it && it.Math === Math && it;
+};
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var globalThis_1 =
+  // eslint-disable-next-line es/no-global-this -- safe
+  check(typeof globalThis == 'object' && globalThis) ||
+  check(typeof window == 'object' && window) ||
+  // eslint-disable-next-line no-restricted-globals -- safe
+  check(typeof self == 'object' && self) ||
+  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
+  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
+  // eslint-disable-next-line no-new-func -- fallback
+  (function () { return this; })() || Function('return this')();
+
+var sharedStore = {exports: {}};
+
+var globalThis$n = globalThis_1;
+
+// eslint-disable-next-line es/no-object-defineproperty -- safe
+var defineProperty$7 = Object.defineProperty;
+
+var defineGlobalProperty$3 = function (key, value) {
+  try {
+    defineProperty$7(globalThis$n, key, { value: value, configurable: true, writable: true });
+  } catch (error) {
+    globalThis$n[key] = value;
+  } return value;
+};
+
+var globalThis$m = globalThis_1;
+var defineGlobalProperty$2 = defineGlobalProperty$3;
+
+var SHARED = '__core-js_shared__';
+var store$3 = sharedStore.exports = globalThis$m[SHARED] || defineGlobalProperty$2(SHARED, {});
+
+(store$3.versions || (store$3.versions = [])).push({
+  version: '3.41.0',
+  mode: 'global',
+  copyright: '© 2014-2025 Denis Pushkarev (zloirock.ru)',
+  license: 'https://github.com/zloirock/core-js/blob/v3.41.0/LICENSE',
+  source: 'https://github.com/zloirock/core-js'
+});
+
+var sharedStoreExports = sharedStore.exports;
+
+var store$2 = sharedStoreExports;
+
+var shared$4 = function (key, value) {
+  return store$2[key] || (store$2[key] = value || {});
+};
+
+var requireObjectCoercible$9 = requireObjectCoercible$b;
+
+var $Object$3 = Object;
+
+// `ToObject` abstract operation
+// https://tc39.es/ecma262/#sec-toobject
+var toObject$5 = function (argument) {
+  return $Object$3(requireObjectCoercible$9(argument));
+};
+
+var uncurryThis$o = functionUncurryThis;
+var toObject$4 = toObject$5;
+
+var hasOwnProperty = uncurryThis$o({}.hasOwnProperty);
+
+// `HasOwnProperty` abstract operation
+// https://tc39.es/ecma262/#sec-hasownproperty
+// eslint-disable-next-line es/no-object-hasown -- safe
+var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
+  return hasOwnProperty(toObject$4(it), key);
+};
+
+var uncurryThis$n = functionUncurryThis;
+
+var id = 0;
+var postfix = Math.random();
+var toString$c = uncurryThis$n(1.0.toString);
+
+var uid$2 = function (key) {
+  return 'Symbol(' + (key === undefined ? '' : key) + ')_' + toString$c(++id + postfix, 36);
+};
+
+var globalThis$l = globalThis_1;
+
+var navigator = globalThis$l.navigator;
+var userAgent$8 = navigator && navigator.userAgent;
+
+var environmentUserAgent = userAgent$8 ? String(userAgent$8) : '';
+
+var globalThis$k = globalThis_1;
+var userAgent$7 = environmentUserAgent;
+
+var process$4 = globalThis$k.process;
+var Deno$1 = globalThis$k.Deno;
+var versions = process$4 && process$4.versions || Deno$1 && Deno$1.version;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  // in old Chrome, versions of V8 isn't V8 = Chrome / 10
+  // but their correct versions are not interesting for us
+  version = match[0] > 0 && match[0] < 4 ? 1 : +(match[0] + match[1]);
+}
+
+// BrowserFS NodeJS `process` polyfill incorrectly set `.v8` to `0.0`
+// so check `userAgent` even if `.v8` exists, but 0
+if (!version && userAgent$7) {
+  match = userAgent$7.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent$7.match(/Chrome\/(\d+)/);
+    if (match) version = +match[1];
+  }
+}
+
+var environmentV8Version = version;
+
+/* eslint-disable es/no-symbol -- required for testing */
+var V8_VERSION$1 = environmentV8Version;
+var fails$m = fails$p;
+var globalThis$j = globalThis_1;
+
+var $String$6 = globalThis$j.String;
+
+// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails$m(function () {
+  var symbol = Symbol('symbol detection');
+  // Chrome 38 Symbol has incorrect toString conversion
+  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
+  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
+  // of course, fail.
+  return !$String$6(symbol) || !(Object(symbol) instanceof Symbol) ||
+    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
+    !Symbol.sham && V8_VERSION$1 && V8_VERSION$1 < 41;
+});
+
+/* eslint-disable es/no-symbol -- required for testing */
+var NATIVE_SYMBOL$1 = symbolConstructorDetection;
+
+var useSymbolAsUid = NATIVE_SYMBOL$1 &&
+  !Symbol.sham &&
+  typeof Symbol.iterator == 'symbol';
+
+var globalThis$i = globalThis_1;
+var shared$3 = shared$4;
+var hasOwn$b = hasOwnProperty_1;
+var uid$1 = uid$2;
+var NATIVE_SYMBOL = symbolConstructorDetection;
+var USE_SYMBOL_AS_UID$1 = useSymbolAsUid;
+
+var Symbol$1 = globalThis$i.Symbol;
+var WellKnownSymbolsStore = shared$3('wks');
+var createWellKnownSymbol = USE_SYMBOL_AS_UID$1 ? Symbol$1['for'] || Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid$1;
+
+var wellKnownSymbol$j = function (name) {
+  if (!hasOwn$b(WellKnownSymbolsStore, name)) {
+    WellKnownSymbolsStore[name] = NATIVE_SYMBOL && hasOwn$b(Symbol$1, name)
+      ? Symbol$1[name]
+      : createWellKnownSymbol('Symbol.' + name);
+  } return WellKnownSymbolsStore[name];
 };
 
 // https://tc39.es/ecma262/#sec-IsHTMLDDA-internal-slot
@@ -230,7 +336,74 @@ var isObject$c = function (it) {
   return typeof it == 'object' ? it !== null : isCallable$l(it);
 };
 
-var globalThis$n = globalThis_1;
+var isObject$b = isObject$c;
+
+var $String$5 = String;
+var $TypeError$e = TypeError;
+
+// `Assert: Type(argument) is Object`
+var anObject$e = function (argument) {
+  if (isObject$b(argument)) return argument;
+  throw new $TypeError$e($String$5(argument) + ' is not an object');
+};
+
+var objectDefineProperties = {};
+
+var fails$l = fails$p;
+
+// Detect IE8's incomplete defineProperty implementation
+var descriptors = !fails$l(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] !== 7;
+});
+
+var DESCRIPTORS$c = descriptors;
+var fails$k = fails$p;
+
+// V8 ~ Chrome 36-
+// https://bugs.chromium.org/p/v8/issues/detail?id=3334
+var v8PrototypeDefineBug = DESCRIPTORS$c && fails$k(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  return Object.defineProperty(function () { /* empty */ }, 'prototype', {
+    value: 42,
+    writable: false
+  }).prototype !== 42;
+});
+
+var objectDefineProperty = {};
+
+var globalThis$h = globalThis_1;
+var isObject$a = isObject$c;
+
+var document$3 = globalThis$h.document;
+// typeof document.createElement is 'object' in old IE
+var EXISTS$1 = isObject$a(document$3) && isObject$a(document$3.createElement);
+
+var documentCreateElement$2 = function (it) {
+  return EXISTS$1 ? document$3.createElement(it) : {};
+};
+
+var DESCRIPTORS$b = descriptors;
+var fails$j = fails$p;
+var createElement$1 = documentCreateElement$2;
+
+// Thanks to IE8 for its funny defineProperty
+var ie8DomDefine = !DESCRIPTORS$b && !fails$j(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  return Object.defineProperty(createElement$1('div'), 'a', {
+    get: function () { return 7; }
+  }).a !== 7;
+});
+
+var NATIVE_BIND$2 = functionBindNative;
+
+var call$i = Function.prototype.call;
+// eslint-disable-next-line es/no-function-prototype-bind -- safe
+var functionCall = NATIVE_BIND$2 ? call$i.bind(call$i) : function () {
+  return call$i.apply(call$i, arguments);
+};
+
+var globalThis$g = globalThis_1;
 var isCallable$k = isCallable$m;
 
 var aFunction = function (argument) {
@@ -238,93 +411,32 @@ var aFunction = function (argument) {
 };
 
 var getBuiltIn$7 = function (namespace, method) {
-  return arguments.length < 2 ? aFunction(globalThis$n[namespace]) : globalThis$n[namespace] && globalThis$n[namespace][method];
+  return arguments.length < 2 ? aFunction(globalThis$g[namespace]) : globalThis$g[namespace] && globalThis$g[namespace][method];
 };
 
-var uncurryThis$n = functionUncurryThis;
+var uncurryThis$m = functionUncurryThis;
 
-var objectIsPrototypeOf = uncurryThis$n({}.isPrototypeOf);
-
-var globalThis$m = globalThis_1;
-
-var navigator = globalThis$m.navigator;
-var userAgent$7 = navigator && navigator.userAgent;
-
-var environmentUserAgent = userAgent$7 ? String(userAgent$7) : '';
-
-var globalThis$l = globalThis_1;
-var userAgent$6 = environmentUserAgent;
-
-var process$4 = globalThis$l.process;
-var Deno$1 = globalThis$l.Deno;
-var versions = process$4 && process$4.versions || Deno$1 && Deno$1.version;
-var v8 = versions && versions.v8;
-var match, version;
-
-if (v8) {
-  match = v8.split('.');
-  // in old Chrome, versions of V8 isn't V8 = Chrome / 10
-  // but their correct versions are not interesting for us
-  version = match[0] > 0 && match[0] < 4 ? 1 : +(match[0] + match[1]);
-}
-
-// BrowserFS NodeJS `process` polyfill incorrectly set `.v8` to `0.0`
-// so check `userAgent` even if `.v8` exists, but 0
-if (!version && userAgent$6) {
-  match = userAgent$6.match(/Edge\/(\d+)/);
-  if (!match || match[1] >= 74) {
-    match = userAgent$6.match(/Chrome\/(\d+)/);
-    if (match) version = +match[1];
-  }
-}
-
-var environmentV8Version = version;
-
-/* eslint-disable es/no-symbol -- required for testing */
-var V8_VERSION$1 = environmentV8Version;
-var fails$l = fails$p;
-var globalThis$k = globalThis_1;
-
-var $String$6 = globalThis$k.String;
-
-// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
-var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails$l(function () {
-  var symbol = Symbol('symbol detection');
-  // Chrome 38 Symbol has incorrect toString conversion
-  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
-  // of course, fail.
-  return !$String$6(symbol) || !(Object(symbol) instanceof Symbol) ||
-    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
-    !Symbol.sham && V8_VERSION$1 && V8_VERSION$1 < 41;
-});
-
-/* eslint-disable es/no-symbol -- required for testing */
-var NATIVE_SYMBOL$1 = symbolConstructorDetection;
-
-var useSymbolAsUid = NATIVE_SYMBOL$1 &&
-  !Symbol.sham &&
-  typeof Symbol.iterator == 'symbol';
+var objectIsPrototypeOf = uncurryThis$m({}.isPrototypeOf);
 
 var getBuiltIn$6 = getBuiltIn$7;
 var isCallable$j = isCallable$m;
 var isPrototypeOf$4 = objectIsPrototypeOf;
-var USE_SYMBOL_AS_UID$1 = useSymbolAsUid;
+var USE_SYMBOL_AS_UID = useSymbolAsUid;
 
-var $Object$3 = Object;
+var $Object$2 = Object;
 
-var isSymbol$2 = USE_SYMBOL_AS_UID$1 ? function (it) {
+var isSymbol$2 = USE_SYMBOL_AS_UID ? function (it) {
   return typeof it == 'symbol';
 } : function (it) {
   var $Symbol = getBuiltIn$6('Symbol');
-  return isCallable$j($Symbol) && isPrototypeOf$4($Symbol.prototype, $Object$3(it));
+  return isCallable$j($Symbol) && isPrototypeOf$4($Symbol.prototype, $Object$2(it));
 };
 
-var $String$5 = String;
+var $String$4 = String;
 
 var tryToString$5 = function (argument) {
   try {
-    return $String$5(argument);
+    return $String$4(argument);
   } catch (error) {
     return 'Object';
   }
@@ -333,12 +445,12 @@ var tryToString$5 = function (argument) {
 var isCallable$i = isCallable$m;
 var tryToString$4 = tryToString$5;
 
-var $TypeError$e = TypeError;
+var $TypeError$d = TypeError;
 
 // `Assert: IsCallable(argument) is true`
 var aCallable$9 = function (argument) {
   if (isCallable$i(argument)) return argument;
-  throw new $TypeError$e(tryToString$4(argument) + ' is not a function');
+  throw new $TypeError$d(tryToString$4(argument) + ' is not a function');
 };
 
 var aCallable$8 = aCallable$9;
@@ -353,129 +465,41 @@ var getMethod$5 = function (V, P) {
 
 var call$h = functionCall;
 var isCallable$h = isCallable$m;
-var isObject$b = isObject$c;
+var isObject$9 = isObject$c;
 
-var $TypeError$d = TypeError;
+var $TypeError$c = TypeError;
 
 // `OrdinaryToPrimitive` abstract operation
 // https://tc39.es/ecma262/#sec-ordinarytoprimitive
 var ordinaryToPrimitive$1 = function (input, pref) {
   var fn, val;
-  if (pref === 'string' && isCallable$h(fn = input.toString) && !isObject$b(val = call$h(fn, input))) return val;
-  if (isCallable$h(fn = input.valueOf) && !isObject$b(val = call$h(fn, input))) return val;
-  if (pref !== 'string' && isCallable$h(fn = input.toString) && !isObject$b(val = call$h(fn, input))) return val;
-  throw new $TypeError$d("Can't convert object to primitive value");
-};
-
-var sharedStore = {exports: {}};
-
-var globalThis$j = globalThis_1;
-
-// eslint-disable-next-line es/no-object-defineproperty -- safe
-var defineProperty$7 = Object.defineProperty;
-
-var defineGlobalProperty$3 = function (key, value) {
-  try {
-    defineProperty$7(globalThis$j, key, { value: value, configurable: true, writable: true });
-  } catch (error) {
-    globalThis$j[key] = value;
-  } return value;
-};
-
-var globalThis$i = globalThis_1;
-var defineGlobalProperty$2 = defineGlobalProperty$3;
-
-var SHARED = '__core-js_shared__';
-var store$3 = sharedStore.exports = globalThis$i[SHARED] || defineGlobalProperty$2(SHARED, {});
-
-(store$3.versions || (store$3.versions = [])).push({
-  version: '3.41.0',
-  mode: 'global',
-  copyright: '© 2014-2025 Denis Pushkarev (zloirock.ru)',
-  license: 'https://github.com/zloirock/core-js/blob/v3.41.0/LICENSE',
-  source: 'https://github.com/zloirock/core-js'
-});
-
-var sharedStoreExports = sharedStore.exports;
-
-var store$2 = sharedStoreExports;
-
-var shared$4 = function (key, value) {
-  return store$2[key] || (store$2[key] = value || {});
-};
-
-var requireObjectCoercible$8 = requireObjectCoercible$a;
-
-var $Object$2 = Object;
-
-// `ToObject` abstract operation
-// https://tc39.es/ecma262/#sec-toobject
-var toObject$5 = function (argument) {
-  return $Object$2(requireObjectCoercible$8(argument));
-};
-
-var uncurryThis$m = functionUncurryThis;
-var toObject$4 = toObject$5;
-
-var hasOwnProperty = uncurryThis$m({}.hasOwnProperty);
-
-// `HasOwnProperty` abstract operation
-// https://tc39.es/ecma262/#sec-hasownproperty
-// eslint-disable-next-line es/no-object-hasown -- safe
-var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
-  return hasOwnProperty(toObject$4(it), key);
-};
-
-var uncurryThis$l = functionUncurryThis;
-
-var id = 0;
-var postfix = Math.random();
-var toString$b = uncurryThis$l(1.0.toString);
-
-var uid$2 = function (key) {
-  return 'Symbol(' + (key === undefined ? '' : key) + ')_' + toString$b(++id + postfix, 36);
-};
-
-var globalThis$h = globalThis_1;
-var shared$3 = shared$4;
-var hasOwn$b = hasOwnProperty_1;
-var uid$1 = uid$2;
-var NATIVE_SYMBOL = symbolConstructorDetection;
-var USE_SYMBOL_AS_UID = useSymbolAsUid;
-
-var Symbol$1 = globalThis$h.Symbol;
-var WellKnownSymbolsStore = shared$3('wks');
-var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol$1['for'] || Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid$1;
-
-var wellKnownSymbol$j = function (name) {
-  if (!hasOwn$b(WellKnownSymbolsStore, name)) {
-    WellKnownSymbolsStore[name] = NATIVE_SYMBOL && hasOwn$b(Symbol$1, name)
-      ? Symbol$1[name]
-      : createWellKnownSymbol('Symbol.' + name);
-  } return WellKnownSymbolsStore[name];
+  if (pref === 'string' && isCallable$h(fn = input.toString) && !isObject$9(val = call$h(fn, input))) return val;
+  if (isCallable$h(fn = input.valueOf) && !isObject$9(val = call$h(fn, input))) return val;
+  if (pref !== 'string' && isCallable$h(fn = input.toString) && !isObject$9(val = call$h(fn, input))) return val;
+  throw new $TypeError$c("Can't convert object to primitive value");
 };
 
 var call$g = functionCall;
-var isObject$a = isObject$c;
+var isObject$8 = isObject$c;
 var isSymbol$1 = isSymbol$2;
 var getMethod$4 = getMethod$5;
 var ordinaryToPrimitive = ordinaryToPrimitive$1;
 var wellKnownSymbol$i = wellKnownSymbol$j;
 
-var $TypeError$c = TypeError;
+var $TypeError$b = TypeError;
 var TO_PRIMITIVE = wellKnownSymbol$i('toPrimitive');
 
 // `ToPrimitive` abstract operation
 // https://tc39.es/ecma262/#sec-toprimitive
 var toPrimitive$1 = function (input, pref) {
-  if (!isObject$a(input) || isSymbol$1(input)) return input;
+  if (!isObject$8(input) || isSymbol$1(input)) return input;
   var exoticToPrim = getMethod$4(input, TO_PRIMITIVE);
   var result;
   if (exoticToPrim) {
     if (pref === undefined) pref = 'default';
     result = call$g(exoticToPrim, input, pref);
-    if (!isObject$a(result) || isSymbol$1(result)) return result;
-    throw new $TypeError$c("Can't convert object to primitive value");
+    if (!isObject$8(result) || isSymbol$1(result)) return result;
+    throw new $TypeError$b("Can't convert object to primitive value");
   }
   if (pref === undefined) pref = 'number';
   return ordinaryToPrimitive(input, pref);
@@ -491,101 +515,29 @@ var toPropertyKey$2 = function (argument) {
   return isSymbol(key) ? key : key + '';
 };
 
-var globalThis$g = globalThis_1;
-var isObject$9 = isObject$c;
-
-var document$3 = globalThis$g.document;
-// typeof document.createElement is 'object' in old IE
-var EXISTS$1 = isObject$9(document$3) && isObject$9(document$3.createElement);
-
-var documentCreateElement$2 = function (it) {
-  return EXISTS$1 ? document$3.createElement(it) : {};
-};
-
-var DESCRIPTORS$c = descriptors;
-var fails$k = fails$p;
-var createElement$1 = documentCreateElement$2;
-
-// Thanks to IE8 for its funny defineProperty
-var ie8DomDefine = !DESCRIPTORS$c && !fails$k(function () {
-  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-  return Object.defineProperty(createElement$1('div'), 'a', {
-    get: function () { return 7; }
-  }).a !== 7;
-});
-
-var DESCRIPTORS$b = descriptors;
-var call$f = functionCall;
-var propertyIsEnumerableModule$1 = objectPropertyIsEnumerable;
-var createPropertyDescriptor$2 = createPropertyDescriptor$3;
-var toIndexedObject$4 = toIndexedObject$5;
-var toPropertyKey$1 = toPropertyKey$2;
-var hasOwn$a = hasOwnProperty_1;
-var IE8_DOM_DEFINE$1 = ie8DomDefine;
-
-// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
-
-// `Object.getOwnPropertyDescriptor` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-objectGetOwnPropertyDescriptor.f = DESCRIPTORS$b ? $getOwnPropertyDescriptor$1 : function getOwnPropertyDescriptor(O, P) {
-  O = toIndexedObject$4(O);
-  P = toPropertyKey$1(P);
-  if (IE8_DOM_DEFINE$1) try {
-    return $getOwnPropertyDescriptor$1(O, P);
-  } catch (error) { /* empty */ }
-  if (hasOwn$a(O, P)) return createPropertyDescriptor$2(!call$f(propertyIsEnumerableModule$1.f, O, P), O[P]);
-};
-
-var objectDefineProperty = {};
-
 var DESCRIPTORS$a = descriptors;
-var fails$j = fails$p;
-
-// V8 ~ Chrome 36-
-// https://bugs.chromium.org/p/v8/issues/detail?id=3334
-var v8PrototypeDefineBug = DESCRIPTORS$a && fails$j(function () {
-  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-  return Object.defineProperty(function () { /* empty */ }, 'prototype', {
-    value: 42,
-    writable: false
-  }).prototype !== 42;
-});
-
-var isObject$8 = isObject$c;
-
-var $String$4 = String;
-var $TypeError$b = TypeError;
-
-// `Assert: Type(argument) is Object`
-var anObject$e = function (argument) {
-  if (isObject$8(argument)) return argument;
-  throw new $TypeError$b($String$4(argument) + ' is not an object');
-};
-
-var DESCRIPTORS$9 = descriptors;
-var IE8_DOM_DEFINE = ie8DomDefine;
+var IE8_DOM_DEFINE$1 = ie8DomDefine;
 var V8_PROTOTYPE_DEFINE_BUG$1 = v8PrototypeDefineBug;
 var anObject$d = anObject$e;
-var toPropertyKey = toPropertyKey$2;
+var toPropertyKey$1 = toPropertyKey$2;
 
 var $TypeError$a = TypeError;
 // eslint-disable-next-line es/no-object-defineproperty -- safe
 var $defineProperty = Object.defineProperty;
 // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 var ENUMERABLE = 'enumerable';
 var CONFIGURABLE$1 = 'configurable';
 var WRITABLE = 'writable';
 
 // `Object.defineProperty` method
 // https://tc39.es/ecma262/#sec-object.defineproperty
-objectDefineProperty.f = DESCRIPTORS$9 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
+objectDefineProperty.f = DESCRIPTORS$a ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
   anObject$d(O);
-  P = toPropertyKey(P);
+  P = toPropertyKey$1(P);
   anObject$d(Attributes);
   if (typeof O === 'function' && P === 'prototype' && 'value' in Attributes && WRITABLE in Attributes && !Attributes[WRITABLE]) {
-    var current = $getOwnPropertyDescriptor(O, P);
+    var current = $getOwnPropertyDescriptor$1(O, P);
     if (current && current[WRITABLE]) {
       O[P] = Attributes.value;
       Attributes = {
@@ -597,9 +549,9 @@ objectDefineProperty.f = DESCRIPTORS$9 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function de
   } return $defineProperty(O, P, Attributes);
 } : $defineProperty : function defineProperty(O, P, Attributes) {
   anObject$d(O);
-  P = toPropertyKey(P);
+  P = toPropertyKey$1(P);
   anObject$d(Attributes);
-  if (IE8_DOM_DEFINE) try {
+  if (IE8_DOM_DEFINE$1) try {
     return $defineProperty(O, P, Attributes);
   } catch (error) { /* empty */ }
   if ('get' in Attributes || 'set' in Attributes) throw new $TypeError$a('Accessors not supported');
@@ -607,228 +559,7 @@ objectDefineProperty.f = DESCRIPTORS$9 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function de
   return O;
 };
 
-var DESCRIPTORS$8 = descriptors;
-var definePropertyModule$3 = objectDefineProperty;
-var createPropertyDescriptor$1 = createPropertyDescriptor$3;
-
-var createNonEnumerableProperty$6 = DESCRIPTORS$8 ? function (object, key, value) {
-  return definePropertyModule$3.f(object, key, createPropertyDescriptor$1(1, value));
-} : function (object, key, value) {
-  object[key] = value;
-  return object;
-};
-
-var makeBuiltIn$3 = {exports: {}};
-
-var DESCRIPTORS$7 = descriptors;
-var hasOwn$9 = hasOwnProperty_1;
-
-var FunctionPrototype$1 = Function.prototype;
-// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var getDescriptor = DESCRIPTORS$7 && Object.getOwnPropertyDescriptor;
-
-var EXISTS = hasOwn$9(FunctionPrototype$1, 'name');
-// additional protection from minified / mangled / dropped function names
-var PROPER = EXISTS && (function something() { /* empty */ }).name === 'something';
-var CONFIGURABLE = EXISTS && (!DESCRIPTORS$7 || (DESCRIPTORS$7 && getDescriptor(FunctionPrototype$1, 'name').configurable));
-
-var functionName = {
-  PROPER: PROPER,
-  CONFIGURABLE: CONFIGURABLE
-};
-
-var uncurryThis$k = functionUncurryThis;
-var isCallable$g = isCallable$m;
-var store$1 = sharedStoreExports;
-
-var functionToString = uncurryThis$k(Function.toString);
-
-// this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
-if (!isCallable$g(store$1.inspectSource)) {
-  store$1.inspectSource = function (it) {
-    return functionToString(it);
-  };
-}
-
-var inspectSource$3 = store$1.inspectSource;
-
-var globalThis$f = globalThis_1;
-var isCallable$f = isCallable$m;
-
-var WeakMap$1 = globalThis$f.WeakMap;
-
-var weakMapBasicDetection = isCallable$f(WeakMap$1) && /native code/.test(String(WeakMap$1));
-
-var shared$2 = shared$4;
-var uid = uid$2;
-
-var keys$1 = shared$2('keys');
-
-var sharedKey$3 = function (key) {
-  return keys$1[key] || (keys$1[key] = uid(key));
-};
-
-var hiddenKeys$4 = {};
-
-var NATIVE_WEAK_MAP = weakMapBasicDetection;
-var globalThis$e = globalThis_1;
-var isObject$7 = isObject$c;
-var createNonEnumerableProperty$5 = createNonEnumerableProperty$6;
-var hasOwn$8 = hasOwnProperty_1;
-var shared$1 = sharedStoreExports;
-var sharedKey$2 = sharedKey$3;
-var hiddenKeys$3 = hiddenKeys$4;
-
-var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
-var TypeError$2 = globalThis$e.TypeError;
-var WeakMap = globalThis$e.WeakMap;
-var set$1, get, has;
-
-var enforce = function (it) {
-  return has(it) ? get(it) : set$1(it, {});
-};
-
-var getterFor = function (TYPE) {
-  return function (it) {
-    var state;
-    if (!isObject$7(it) || (state = get(it)).type !== TYPE) {
-      throw new TypeError$2('Incompatible receiver, ' + TYPE + ' required');
-    } return state;
-  };
-};
-
-if (NATIVE_WEAK_MAP || shared$1.state) {
-  var store = shared$1.state || (shared$1.state = new WeakMap());
-  /* eslint-disable no-self-assign -- prototype methods protection */
-  store.get = store.get;
-  store.has = store.has;
-  store.set = store.set;
-  /* eslint-enable no-self-assign -- prototype methods protection */
-  set$1 = function (it, metadata) {
-    if (store.has(it)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
-    metadata.facade = it;
-    store.set(it, metadata);
-    return metadata;
-  };
-  get = function (it) {
-    return store.get(it) || {};
-  };
-  has = function (it) {
-    return store.has(it);
-  };
-} else {
-  var STATE = sharedKey$2('state');
-  hiddenKeys$3[STATE] = true;
-  set$1 = function (it, metadata) {
-    if (hasOwn$8(it, STATE)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
-    metadata.facade = it;
-    createNonEnumerableProperty$5(it, STATE, metadata);
-    return metadata;
-  };
-  get = function (it) {
-    return hasOwn$8(it, STATE) ? it[STATE] : {};
-  };
-  has = function (it) {
-    return hasOwn$8(it, STATE);
-  };
-}
-
-var internalState = {
-  set: set$1,
-  get: get,
-  has: has,
-  enforce: enforce,
-  getterFor: getterFor
-};
-
-var uncurryThis$j = functionUncurryThis;
-var fails$i = fails$p;
-var isCallable$e = isCallable$m;
-var hasOwn$7 = hasOwnProperty_1;
-var DESCRIPTORS$6 = descriptors;
-var CONFIGURABLE_FUNCTION_NAME$1 = functionName.CONFIGURABLE;
-var inspectSource$2 = inspectSource$3;
-var InternalStateModule$2 = internalState;
-
-var enforceInternalState$1 = InternalStateModule$2.enforce;
-var getInternalState$2 = InternalStateModule$2.get;
-var $String$3 = String;
-// eslint-disable-next-line es/no-object-defineproperty -- safe
-var defineProperty$6 = Object.defineProperty;
-var stringSlice$7 = uncurryThis$j(''.slice);
-var replace$4 = uncurryThis$j(''.replace);
-var join = uncurryThis$j([].join);
-
-var CONFIGURABLE_LENGTH = DESCRIPTORS$6 && !fails$i(function () {
-  return defineProperty$6(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
-});
-
-var TEMPLATE = String(String).split('String');
-
-var makeBuiltIn$2 = makeBuiltIn$3.exports = function (value, name, options) {
-  if (stringSlice$7($String$3(name), 0, 7) === 'Symbol(') {
-    name = '[' + replace$4($String$3(name), /^Symbol\(([^)]*)\).*$/, '$1') + ']';
-  }
-  if (options && options.getter) name = 'get ' + name;
-  if (options && options.setter) name = 'set ' + name;
-  if (!hasOwn$7(value, 'name') || (CONFIGURABLE_FUNCTION_NAME$1 && value.name !== name)) {
-    if (DESCRIPTORS$6) defineProperty$6(value, 'name', { value: name, configurable: true });
-    else value.name = name;
-  }
-  if (CONFIGURABLE_LENGTH && options && hasOwn$7(options, 'arity') && value.length !== options.arity) {
-    defineProperty$6(value, 'length', { value: options.arity });
-  }
-  try {
-    if (options && hasOwn$7(options, 'constructor') && options.constructor) {
-      if (DESCRIPTORS$6) defineProperty$6(value, 'prototype', { writable: false });
-    // in V8 ~ Chrome 53, prototypes of some methods, like `Array.prototype.values`, are non-writable
-    } else if (value.prototype) value.prototype = undefined;
-  } catch (error) { /* empty */ }
-  var state = enforceInternalState$1(value);
-  if (!hasOwn$7(state, 'source')) {
-    state.source = join(TEMPLATE, typeof name == 'string' ? name : '');
-  } return value;
-};
-
-// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
-// eslint-disable-next-line no-extend-native -- required
-Function.prototype.toString = makeBuiltIn$2(function toString() {
-  return isCallable$e(this) && getInternalState$2(this).source || inspectSource$2(this);
-}, 'toString');
-
-var makeBuiltInExports = makeBuiltIn$3.exports;
-
-var isCallable$d = isCallable$m;
-var definePropertyModule$2 = objectDefineProperty;
-var makeBuiltIn$1 = makeBuiltInExports;
-var defineGlobalProperty$1 = defineGlobalProperty$3;
-
-var defineBuiltIn$8 = function (O, key, value, options) {
-  if (!options) options = {};
-  var simple = options.enumerable;
-  var name = options.name !== undefined ? options.name : key;
-  if (isCallable$d(value)) makeBuiltIn$1(value, name, options);
-  if (options.global) {
-    if (simple) O[key] = value;
-    else defineGlobalProperty$1(key, value);
-  } else {
-    try {
-      if (!options.unsafe) delete O[key];
-      else if (O[key]) simple = true;
-    } catch (error) { /* empty */ }
-    if (simple) O[key] = value;
-    else definePropertyModule$2.f(O, key, {
-      value: value,
-      enumerable: false,
-      configurable: !options.nonConfigurable,
-      writable: !options.nonWritable
-    });
-  } return O;
-};
-
-var objectGetOwnPropertyNames = {};
-
-var ceil = Math.ceil;
+var ceil$1 = Math.ceil;
 var floor$3 = Math.floor;
 
 // `Math.trunc` method
@@ -836,7 +567,7 @@ var floor$3 = Math.floor;
 // eslint-disable-next-line es/no-math-trunc -- safe
 var mathTrunc = Math.trunc || function trunc(x) {
   var n = +x;
-  return (n > 0 ? floor$3 : ceil)(n);
+  return (n > 0 ? floor$3 : ceil$1)(n);
 };
 
 var trunc = mathTrunc;
@@ -868,27 +599,27 @@ var min$2 = Math.min;
 
 // `ToLength` abstract operation
 // https://tc39.es/ecma262/#sec-tolength
-var toLength$4 = function (argument) {
+var toLength$5 = function (argument) {
   var len = toIntegerOrInfinity$4(argument);
   return len > 0 ? min$2(len, 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
 };
 
-var toLength$3 = toLength$4;
+var toLength$4 = toLength$5;
 
 // `LengthOfArrayLike` abstract operation
 // https://tc39.es/ecma262/#sec-lengthofarraylike
 var lengthOfArrayLike$3 = function (obj) {
-  return toLength$3(obj.length);
+  return toLength$4(obj.length);
 };
 
-var toIndexedObject$3 = toIndexedObject$5;
+var toIndexedObject$4 = toIndexedObject$5;
 var toAbsoluteIndex = toAbsoluteIndex$1;
 var lengthOfArrayLike$2 = lengthOfArrayLike$3;
 
 // `Array.prototype.{ indexOf, includes }` methods implementation
-var createMethod$2 = function (IS_INCLUDES) {
+var createMethod$3 = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
-    var O = toIndexedObject$3($this);
+    var O = toIndexedObject$4($this);
     var length = lengthOfArrayLike$2(O);
     if (length === 0) return !IS_INCLUDES && -1;
     var index = toAbsoluteIndex(fromIndex, length);
@@ -909,28 +640,30 @@ var createMethod$2 = function (IS_INCLUDES) {
 var arrayIncludes = {
   // `Array.prototype.includes` method
   // https://tc39.es/ecma262/#sec-array.prototype.includes
-  includes: createMethod$2(true),
+  includes: createMethod$3(true),
   // `Array.prototype.indexOf` method
   // https://tc39.es/ecma262/#sec-array.prototype.indexof
-  indexOf: createMethod$2(false)
+  indexOf: createMethod$3(false)
 };
 
-var uncurryThis$i = functionUncurryThis;
-var hasOwn$6 = hasOwnProperty_1;
-var toIndexedObject$2 = toIndexedObject$5;
-var indexOf$1 = arrayIncludes.indexOf;
-var hiddenKeys$2 = hiddenKeys$4;
+var hiddenKeys$4 = {};
 
-var push$2 = uncurryThis$i([].push);
+var uncurryThis$l = functionUncurryThis;
+var hasOwn$a = hasOwnProperty_1;
+var toIndexedObject$3 = toIndexedObject$5;
+var indexOf$1 = arrayIncludes.indexOf;
+var hiddenKeys$3 = hiddenKeys$4;
+
+var push$2 = uncurryThis$l([].push);
 
 var objectKeysInternal = function (object, names) {
-  var O = toIndexedObject$2(object);
+  var O = toIndexedObject$3(object);
   var i = 0;
   var result = [];
   var key;
-  for (key in O) !hasOwn$6(hiddenKeys$2, key) && hasOwn$6(O, key) && push$2(result, key);
+  for (key in O) !hasOwn$a(hiddenKeys$3, key) && hasOwn$a(O, key) && push$2(result, key);
   // Don't enum bug & hidden keys
-  while (names.length > i) if (hasOwn$6(O, key = names[i++])) {
+  while (names.length > i) if (hasOwn$a(O, key = names[i++])) {
     ~indexOf$1(result, key) || push$2(result, key);
   }
   return result;
@@ -950,13 +683,425 @@ var enumBugKeys$3 = [
 var internalObjectKeys$1 = objectKeysInternal;
 var enumBugKeys$2 = enumBugKeys$3;
 
-var hiddenKeys$1 = enumBugKeys$2.concat('length', 'prototype');
+// `Object.keys` method
+// https://tc39.es/ecma262/#sec-object.keys
+// eslint-disable-next-line es/no-object-keys -- safe
+var objectKeys$2 = Object.keys || function keys(O) {
+  return internalObjectKeys$1(O, enumBugKeys$2);
+};
+
+var DESCRIPTORS$9 = descriptors;
+var V8_PROTOTYPE_DEFINE_BUG = v8PrototypeDefineBug;
+var definePropertyModule$3 = objectDefineProperty;
+var anObject$c = anObject$e;
+var toIndexedObject$2 = toIndexedObject$5;
+var objectKeys$1 = objectKeys$2;
+
+// `Object.defineProperties` method
+// https://tc39.es/ecma262/#sec-object.defineproperties
+// eslint-disable-next-line es/no-object-defineproperties -- safe
+objectDefineProperties.f = DESCRIPTORS$9 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject$c(O);
+  var props = toIndexedObject$2(Properties);
+  var keys = objectKeys$1(Properties);
+  var length = keys.length;
+  var index = 0;
+  var key;
+  while (length > index) definePropertyModule$3.f(O, key = keys[index++], props[key]);
+  return O;
+};
+
+var getBuiltIn$5 = getBuiltIn$7;
+
+var html$2 = getBuiltIn$5('document', 'documentElement');
+
+var shared$2 = shared$4;
+var uid = uid$2;
+
+var keys$1 = shared$2('keys');
+
+var sharedKey$3 = function (key) {
+  return keys$1[key] || (keys$1[key] = uid(key));
+};
+
+/* global ActiveXObject -- old IE, WSH */
+var anObject$b = anObject$e;
+var definePropertiesModule = objectDefineProperties;
+var enumBugKeys$1 = enumBugKeys$3;
+var hiddenKeys$2 = hiddenKeys$4;
+var html$1 = html$2;
+var documentCreateElement$1 = documentCreateElement$2;
+var sharedKey$2 = sharedKey$3;
+
+var GT = '>';
+var LT = '<';
+var PROTOTYPE = 'prototype';
+var SCRIPT = 'script';
+var IE_PROTO$1 = sharedKey$2('IE_PROTO');
+
+var EmptyConstructor = function () { /* empty */ };
+
+var scriptTag = function (content) {
+  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
+};
+
+// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
+var NullProtoObjectViaActiveX = function (activeXDocument) {
+  activeXDocument.write(scriptTag(''));
+  activeXDocument.close();
+  var temp = activeXDocument.parentWindow.Object;
+  // eslint-disable-next-line no-useless-assignment -- avoid memory leak
+  activeXDocument = null;
+  return temp;
+};
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var NullProtoObjectViaIFrame = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = documentCreateElement$1('iframe');
+  var JS = 'java' + SCRIPT + ':';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  html$1.appendChild(iframe);
+  // https://github.com/zloirock/core-js/issues/475
+  iframe.src = String(JS);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(scriptTag('document.F=Object'));
+  iframeDocument.close();
+  return iframeDocument.F;
+};
+
+// Check for document.domain and active x support
+// No need to use active x approach when document.domain is not set
+// see https://github.com/es-shims/es5-shim/issues/150
+// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
+// avoid IE GC bug
+var activeXDocument;
+var NullProtoObject = function () {
+  try {
+    activeXDocument = new ActiveXObject('htmlfile');
+  } catch (error) { /* ignore */ }
+  NullProtoObject = typeof document != 'undefined'
+    ? document.domain && activeXDocument
+      ? NullProtoObjectViaActiveX(activeXDocument) // old IE
+      : NullProtoObjectViaIFrame()
+    : NullProtoObjectViaActiveX(activeXDocument); // WSH
+  var length = enumBugKeys$1.length;
+  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys$1[length]];
+  return NullProtoObject();
+};
+
+hiddenKeys$2[IE_PROTO$1] = true;
+
+// `Object.create` method
+// https://tc39.es/ecma262/#sec-object.create
+// eslint-disable-next-line es/no-object-create -- safe
+var objectCreate = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    EmptyConstructor[PROTOTYPE] = anObject$b(O);
+    result = new EmptyConstructor();
+    EmptyConstructor[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO$1] = O;
+  } else result = NullProtoObject();
+  return Properties === undefined ? result : definePropertiesModule.f(result, Properties);
+};
+
+var wellKnownSymbol$h = wellKnownSymbol$j;
+var create$3 = objectCreate;
+var defineProperty$6 = objectDefineProperty.f;
+
+var UNSCOPABLES = wellKnownSymbol$h('unscopables');
+var ArrayPrototype$1 = Array.prototype;
+
+// Array.prototype[@@unscopables]
+// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+if (ArrayPrototype$1[UNSCOPABLES] === undefined) {
+  defineProperty$6(ArrayPrototype$1, UNSCOPABLES, {
+    configurable: true,
+    value: create$3(null)
+  });
+}
+
+// add a key to Array.prototype[@@unscopables]
+var addToUnscopables$2 = function (key) {
+  ArrayPrototype$1[UNSCOPABLES][key] = true;
+};
+
+var iterators = {};
+
+var globalThis$f = globalThis_1;
+var isCallable$g = isCallable$m;
+
+var WeakMap$1 = globalThis$f.WeakMap;
+
+var weakMapBasicDetection = isCallable$g(WeakMap$1) && /native code/.test(String(WeakMap$1));
+
+var createPropertyDescriptor$3 = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+var DESCRIPTORS$8 = descriptors;
+var definePropertyModule$2 = objectDefineProperty;
+var createPropertyDescriptor$2 = createPropertyDescriptor$3;
+
+var createNonEnumerableProperty$6 = DESCRIPTORS$8 ? function (object, key, value) {
+  return definePropertyModule$2.f(object, key, createPropertyDescriptor$2(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+var NATIVE_WEAK_MAP = weakMapBasicDetection;
+var globalThis$e = globalThis_1;
+var isObject$7 = isObject$c;
+var createNonEnumerableProperty$5 = createNonEnumerableProperty$6;
+var hasOwn$9 = hasOwnProperty_1;
+var shared$1 = sharedStoreExports;
+var sharedKey$1 = sharedKey$3;
+var hiddenKeys$1 = hiddenKeys$4;
+
+var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
+var TypeError$2 = globalThis$e.TypeError;
+var WeakMap = globalThis$e.WeakMap;
+var set$1, get, has;
+
+var enforce = function (it) {
+  return has(it) ? get(it) : set$1(it, {});
+};
+
+var getterFor = function (TYPE) {
+  return function (it) {
+    var state;
+    if (!isObject$7(it) || (state = get(it)).type !== TYPE) {
+      throw new TypeError$2('Incompatible receiver, ' + TYPE + ' required');
+    } return state;
+  };
+};
+
+if (NATIVE_WEAK_MAP || shared$1.state) {
+  var store$1 = shared$1.state || (shared$1.state = new WeakMap());
+  /* eslint-disable no-self-assign -- prototype methods protection */
+  store$1.get = store$1.get;
+  store$1.has = store$1.has;
+  store$1.set = store$1.set;
+  /* eslint-enable no-self-assign -- prototype methods protection */
+  set$1 = function (it, metadata) {
+    if (store$1.has(it)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
+    metadata.facade = it;
+    store$1.set(it, metadata);
+    return metadata;
+  };
+  get = function (it) {
+    return store$1.get(it) || {};
+  };
+  has = function (it) {
+    return store$1.has(it);
+  };
+} else {
+  var STATE = sharedKey$1('state');
+  hiddenKeys$1[STATE] = true;
+  set$1 = function (it, metadata) {
+    if (hasOwn$9(it, STATE)) throw new TypeError$2(OBJECT_ALREADY_INITIALIZED);
+    metadata.facade = it;
+    createNonEnumerableProperty$5(it, STATE, metadata);
+    return metadata;
+  };
+  get = function (it) {
+    return hasOwn$9(it, STATE) ? it[STATE] : {};
+  };
+  has = function (it) {
+    return hasOwn$9(it, STATE);
+  };
+}
+
+var internalState = {
+  set: set$1,
+  get: get,
+  has: has,
+  enforce: enforce,
+  getterFor: getterFor
+};
+
+var objectGetOwnPropertyDescriptor = {};
+
+var objectPropertyIsEnumerable = {};
+
+var $propertyIsEnumerable = {}.propertyIsEnumerable;
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var getOwnPropertyDescriptor$3 = Object.getOwnPropertyDescriptor;
+
+// Nashorn ~ JDK8 bug
+var NASHORN_BUG = getOwnPropertyDescriptor$3 && !$propertyIsEnumerable.call({ 1: 2 }, 1);
+
+// `Object.prototype.propertyIsEnumerable` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
+objectPropertyIsEnumerable.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
+  var descriptor = getOwnPropertyDescriptor$3(this, V);
+  return !!descriptor && descriptor.enumerable;
+} : $propertyIsEnumerable;
+
+var DESCRIPTORS$7 = descriptors;
+var call$f = functionCall;
+var propertyIsEnumerableModule$1 = objectPropertyIsEnumerable;
+var createPropertyDescriptor$1 = createPropertyDescriptor$3;
+var toIndexedObject$1 = toIndexedObject$5;
+var toPropertyKey = toPropertyKey$2;
+var hasOwn$8 = hasOwnProperty_1;
+var IE8_DOM_DEFINE = ie8DomDefine;
+
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+// `Object.getOwnPropertyDescriptor` method
+// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
+objectGetOwnPropertyDescriptor.f = DESCRIPTORS$7 ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
+  O = toIndexedObject$1(O);
+  P = toPropertyKey(P);
+  if (IE8_DOM_DEFINE) try {
+    return $getOwnPropertyDescriptor(O, P);
+  } catch (error) { /* empty */ }
+  if (hasOwn$8(O, P)) return createPropertyDescriptor$1(!call$f(propertyIsEnumerableModule$1.f, O, P), O[P]);
+};
+
+var makeBuiltIn$3 = {exports: {}};
+
+var DESCRIPTORS$6 = descriptors;
+var hasOwn$7 = hasOwnProperty_1;
+
+var FunctionPrototype$1 = Function.prototype;
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var getDescriptor = DESCRIPTORS$6 && Object.getOwnPropertyDescriptor;
+
+var EXISTS = hasOwn$7(FunctionPrototype$1, 'name');
+// additional protection from minified / mangled / dropped function names
+var PROPER = EXISTS && (function something() { /* empty */ }).name === 'something';
+var CONFIGURABLE = EXISTS && (!DESCRIPTORS$6 || (DESCRIPTORS$6 && getDescriptor(FunctionPrototype$1, 'name').configurable));
+
+var functionName = {
+  PROPER: PROPER,
+  CONFIGURABLE: CONFIGURABLE
+};
+
+var uncurryThis$k = functionUncurryThis;
+var isCallable$f = isCallable$m;
+var store = sharedStoreExports;
+
+var functionToString = uncurryThis$k(Function.toString);
+
+// this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
+if (!isCallable$f(store.inspectSource)) {
+  store.inspectSource = function (it) {
+    return functionToString(it);
+  };
+}
+
+var inspectSource$3 = store.inspectSource;
+
+var uncurryThis$j = functionUncurryThis;
+var fails$i = fails$p;
+var isCallable$e = isCallable$m;
+var hasOwn$6 = hasOwnProperty_1;
+var DESCRIPTORS$5 = descriptors;
+var CONFIGURABLE_FUNCTION_NAME$1 = functionName.CONFIGURABLE;
+var inspectSource$2 = inspectSource$3;
+var InternalStateModule$2 = internalState;
+
+var enforceInternalState$1 = InternalStateModule$2.enforce;
+var getInternalState$2 = InternalStateModule$2.get;
+var $String$3 = String;
+// eslint-disable-next-line es/no-object-defineproperty -- safe
+var defineProperty$5 = Object.defineProperty;
+var stringSlice$8 = uncurryThis$j(''.slice);
+var replace$4 = uncurryThis$j(''.replace);
+var join = uncurryThis$j([].join);
+
+var CONFIGURABLE_LENGTH = DESCRIPTORS$5 && !fails$i(function () {
+  return defineProperty$5(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
+});
+
+var TEMPLATE = String(String).split('String');
+
+var makeBuiltIn$2 = makeBuiltIn$3.exports = function (value, name, options) {
+  if (stringSlice$8($String$3(name), 0, 7) === 'Symbol(') {
+    name = '[' + replace$4($String$3(name), /^Symbol\(([^)]*)\).*$/, '$1') + ']';
+  }
+  if (options && options.getter) name = 'get ' + name;
+  if (options && options.setter) name = 'set ' + name;
+  if (!hasOwn$6(value, 'name') || (CONFIGURABLE_FUNCTION_NAME$1 && value.name !== name)) {
+    if (DESCRIPTORS$5) defineProperty$5(value, 'name', { value: name, configurable: true });
+    else value.name = name;
+  }
+  if (CONFIGURABLE_LENGTH && options && hasOwn$6(options, 'arity') && value.length !== options.arity) {
+    defineProperty$5(value, 'length', { value: options.arity });
+  }
+  try {
+    if (options && hasOwn$6(options, 'constructor') && options.constructor) {
+      if (DESCRIPTORS$5) defineProperty$5(value, 'prototype', { writable: false });
+    // in V8 ~ Chrome 53, prototypes of some methods, like `Array.prototype.values`, are non-writable
+    } else if (value.prototype) value.prototype = undefined;
+  } catch (error) { /* empty */ }
+  var state = enforceInternalState$1(value);
+  if (!hasOwn$6(state, 'source')) {
+    state.source = join(TEMPLATE, typeof name == 'string' ? name : '');
+  } return value;
+};
+
+// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+// eslint-disable-next-line no-extend-native -- required
+Function.prototype.toString = makeBuiltIn$2(function toString() {
+  return isCallable$e(this) && getInternalState$2(this).source || inspectSource$2(this);
+}, 'toString');
+
+var makeBuiltInExports = makeBuiltIn$3.exports;
+
+var isCallable$d = isCallable$m;
+var definePropertyModule$1 = objectDefineProperty;
+var makeBuiltIn$1 = makeBuiltInExports;
+var defineGlobalProperty$1 = defineGlobalProperty$3;
+
+var defineBuiltIn$8 = function (O, key, value, options) {
+  if (!options) options = {};
+  var simple = options.enumerable;
+  var name = options.name !== undefined ? options.name : key;
+  if (isCallable$d(value)) makeBuiltIn$1(value, name, options);
+  if (options.global) {
+    if (simple) O[key] = value;
+    else defineGlobalProperty$1(key, value);
+  } else {
+    try {
+      if (!options.unsafe) delete O[key];
+      else if (O[key]) simple = true;
+    } catch (error) { /* empty */ }
+    if (simple) O[key] = value;
+    else definePropertyModule$1.f(O, key, {
+      value: value,
+      enumerable: false,
+      configurable: !options.nonConfigurable,
+      writable: !options.nonWritable
+    });
+  } return O;
+};
+
+var objectGetOwnPropertyNames = {};
+
+var internalObjectKeys = objectKeysInternal;
+var enumBugKeys = enumBugKeys$3;
+
+var hiddenKeys = enumBugKeys.concat('length', 'prototype');
 
 // `Object.getOwnPropertyNames` method
 // https://tc39.es/ecma262/#sec-object.getownpropertynames
 // eslint-disable-next-line es/no-object-getownpropertynames -- safe
 objectGetOwnPropertyNames.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-  return internalObjectKeys$1(O, hiddenKeys$1);
+  return internalObjectKeys(O, hiddenKeys);
 };
 
 var objectGetOwnPropertySymbols = {};
@@ -964,17 +1109,17 @@ var objectGetOwnPropertySymbols = {};
 // eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
 objectGetOwnPropertySymbols.f = Object.getOwnPropertySymbols;
 
-var getBuiltIn$5 = getBuiltIn$7;
-var uncurryThis$h = functionUncurryThis;
+var getBuiltIn$4 = getBuiltIn$7;
+var uncurryThis$i = functionUncurryThis;
 var getOwnPropertyNamesModule = objectGetOwnPropertyNames;
 var getOwnPropertySymbolsModule$1 = objectGetOwnPropertySymbols;
-var anObject$c = anObject$e;
+var anObject$a = anObject$e;
 
-var concat$2 = uncurryThis$h([].concat);
+var concat$2 = uncurryThis$i([].concat);
 
 // all object keys, includes non-enumerable and symbols
-var ownKeys$1 = getBuiltIn$5('Reflect', 'ownKeys') || function ownKeys(it) {
-  var keys = getOwnPropertyNamesModule.f(anObject$c(it));
+var ownKeys$1 = getBuiltIn$4('Reflect', 'ownKeys') || function ownKeys(it) {
+  var keys = getOwnPropertyNamesModule.f(anObject$a(it));
   var getOwnPropertySymbols = getOwnPropertySymbolsModule$1.f;
   return getOwnPropertySymbols ? concat$2(keys, getOwnPropertySymbols(it)) : keys;
 };
@@ -982,11 +1127,11 @@ var ownKeys$1 = getBuiltIn$5('Reflect', 'ownKeys') || function ownKeys(it) {
 var hasOwn$5 = hasOwnProperty_1;
 var ownKeys = ownKeys$1;
 var getOwnPropertyDescriptorModule = objectGetOwnPropertyDescriptor;
-var definePropertyModule$1 = objectDefineProperty;
+var definePropertyModule = objectDefineProperty;
 
 var copyConstructorProperties$1 = function (target, source, exceptions) {
   var keys = ownKeys(source);
-  var defineProperty = definePropertyModule$1.f;
+  var defineProperty = definePropertyModule.f;
   var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
@@ -1074,176 +1219,9 @@ var _export = function (options, source) {
   }
 };
 
-var objectDefineProperties = {};
-
-var internalObjectKeys = objectKeysInternal;
-var enumBugKeys$1 = enumBugKeys$3;
-
-// `Object.keys` method
-// https://tc39.es/ecma262/#sec-object.keys
-// eslint-disable-next-line es/no-object-keys -- safe
-var objectKeys$2 = Object.keys || function keys(O) {
-  return internalObjectKeys(O, enumBugKeys$1);
-};
-
-var DESCRIPTORS$5 = descriptors;
-var V8_PROTOTYPE_DEFINE_BUG = v8PrototypeDefineBug;
-var definePropertyModule = objectDefineProperty;
-var anObject$b = anObject$e;
-var toIndexedObject$1 = toIndexedObject$5;
-var objectKeys$1 = objectKeys$2;
-
-// `Object.defineProperties` method
-// https://tc39.es/ecma262/#sec-object.defineproperties
-// eslint-disable-next-line es/no-object-defineproperties -- safe
-objectDefineProperties.f = DESCRIPTORS$5 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
-  anObject$b(O);
-  var props = toIndexedObject$1(Properties);
-  var keys = objectKeys$1(Properties);
-  var length = keys.length;
-  var index = 0;
-  var key;
-  while (length > index) definePropertyModule.f(O, key = keys[index++], props[key]);
-  return O;
-};
-
-var getBuiltIn$4 = getBuiltIn$7;
-
-var html$2 = getBuiltIn$4('document', 'documentElement');
-
-/* global ActiveXObject -- old IE, WSH */
-var anObject$a = anObject$e;
-var definePropertiesModule = objectDefineProperties;
-var enumBugKeys = enumBugKeys$3;
-var hiddenKeys = hiddenKeys$4;
-var html$1 = html$2;
-var documentCreateElement$1 = documentCreateElement$2;
-var sharedKey$1 = sharedKey$3;
-
-var GT = '>';
-var LT = '<';
-var PROTOTYPE = 'prototype';
-var SCRIPT = 'script';
-var IE_PROTO$1 = sharedKey$1('IE_PROTO');
-
-var EmptyConstructor = function () { /* empty */ };
-
-var scriptTag = function (content) {
-  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
-};
-
-// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
-var NullProtoObjectViaActiveX = function (activeXDocument) {
-  activeXDocument.write(scriptTag(''));
-  activeXDocument.close();
-  var temp = activeXDocument.parentWindow.Object;
-  // eslint-disable-next-line no-useless-assignment -- avoid memory leak
-  activeXDocument = null;
-  return temp;
-};
-
-// Create object with fake `null` prototype: use iframe Object with cleared prototype
-var NullProtoObjectViaIFrame = function () {
-  // Thrash, waste and sodomy: IE GC bug
-  var iframe = documentCreateElement$1('iframe');
-  var JS = 'java' + SCRIPT + ':';
-  var iframeDocument;
-  iframe.style.display = 'none';
-  html$1.appendChild(iframe);
-  // https://github.com/zloirock/core-js/issues/475
-  iframe.src = String(JS);
-  iframeDocument = iframe.contentWindow.document;
-  iframeDocument.open();
-  iframeDocument.write(scriptTag('document.F=Object'));
-  iframeDocument.close();
-  return iframeDocument.F;
-};
-
-// Check for document.domain and active x support
-// No need to use active x approach when document.domain is not set
-// see https://github.com/es-shims/es5-shim/issues/150
-// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
-// avoid IE GC bug
-var activeXDocument;
-var NullProtoObject = function () {
-  try {
-    activeXDocument = new ActiveXObject('htmlfile');
-  } catch (error) { /* ignore */ }
-  NullProtoObject = typeof document != 'undefined'
-    ? document.domain && activeXDocument
-      ? NullProtoObjectViaActiveX(activeXDocument) // old IE
-      : NullProtoObjectViaIFrame()
-    : NullProtoObjectViaActiveX(activeXDocument); // WSH
-  var length = enumBugKeys.length;
-  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
-  return NullProtoObject();
-};
-
-hiddenKeys[IE_PROTO$1] = true;
-
-// `Object.create` method
-// https://tc39.es/ecma262/#sec-object.create
-// eslint-disable-next-line es/no-object-create -- safe
-var objectCreate = Object.create || function create(O, Properties) {
-  var result;
-  if (O !== null) {
-    EmptyConstructor[PROTOTYPE] = anObject$a(O);
-    result = new EmptyConstructor();
-    EmptyConstructor[PROTOTYPE] = null;
-    // add "__proto__" for Object.getPrototypeOf polyfill
-    result[IE_PROTO$1] = O;
-  } else result = NullProtoObject();
-  return Properties === undefined ? result : definePropertiesModule.f(result, Properties);
-};
-
-var wellKnownSymbol$h = wellKnownSymbol$j;
-var create$3 = objectCreate;
-var defineProperty$5 = objectDefineProperty.f;
-
-var UNSCOPABLES = wellKnownSymbol$h('unscopables');
-var ArrayPrototype$1 = Array.prototype;
-
-// Array.prototype[@@unscopables]
-// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-if (ArrayPrototype$1[UNSCOPABLES] === undefined) {
-  defineProperty$5(ArrayPrototype$1, UNSCOPABLES, {
-    configurable: true,
-    value: create$3(null)
-  });
-}
-
-// add a key to Array.prototype[@@unscopables]
-var addToUnscopables$2 = function (key) {
-  ArrayPrototype$1[UNSCOPABLES][key] = true;
-};
-
-var $$f = _export;
-var $includes = arrayIncludes.includes;
 var fails$g = fails$p;
-var addToUnscopables$1 = addToUnscopables$2;
 
-// FF99+ bug
-var BROKEN_ON_SPARSE = fails$g(function () {
-  // eslint-disable-next-line es/no-array-prototype-includes -- detection
-  return !Array(1).includes();
-});
-
-// `Array.prototype.includes` method
-// https://tc39.es/ecma262/#sec-array.prototype.includes
-$$f({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables$1('includes');
-
-var iterators = {};
-
-var fails$f = fails$p;
-
-var correctPrototypeGetter = !fails$f(function () {
+var correctPrototypeGetter = !fails$g(function () {
   function F() { /* empty */ }
   F.prototype.constructor = null;
   // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
@@ -1272,7 +1250,7 @@ var objectGetPrototypeOf = CORRECT_PROTOTYPE_GETTER ? $Object$1.getPrototypeOf :
   } return object instanceof $Object$1 ? ObjectPrototype : null;
 };
 
-var fails$e = fails$p;
+var fails$f = fails$p;
 var isCallable$a = isCallable$m;
 var isObject$6 = isObject$c;
 var getPrototypeOf$1 = objectGetPrototypeOf;
@@ -1297,7 +1275,7 @@ if ([].keys) {
   }
 }
 
-var NEW_ITERATOR_PROTOTYPE = !isObject$6(IteratorPrototype$2) || fails$e(function () {
+var NEW_ITERATOR_PROTOTYPE = !isObject$6(IteratorPrototype$2) || fails$f(function () {
   var test = {};
   // FF44- legacy iterators case
   return IteratorPrototype$2[ITERATOR$5].call(test) !== test;
@@ -1347,13 +1325,13 @@ var iteratorCreateConstructor = function (IteratorConstructor, NAME, next, ENUME
   return IteratorConstructor;
 };
 
-var uncurryThis$g = functionUncurryThis;
+var uncurryThis$h = functionUncurryThis;
 var aCallable$7 = aCallable$9;
 
 var functionUncurryThisAccessor = function (object, key, method) {
   try {
     // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-    return uncurryThis$g(aCallable$7(Object.getOwnPropertyDescriptor(object, key)[method]));
+    return uncurryThis$h(aCallable$7(Object.getOwnPropertyDescriptor(object, key)[method]));
   } catch (error) { /* empty */ }
 };
 
@@ -1376,7 +1354,7 @@ var aPossiblePrototype$1 = function (argument) {
 /* eslint-disable no-proto -- safe */
 var uncurryThisAccessor = functionUncurryThisAccessor;
 var isObject$4 = isObject$c;
-var requireObjectCoercible$7 = requireObjectCoercible$a;
+var requireObjectCoercible$8 = requireObjectCoercible$b;
 var aPossiblePrototype = aPossiblePrototype$1;
 
 // `Object.setPrototypeOf` method
@@ -1393,7 +1371,7 @@ var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? functio
     CORRECT_SETTER = test instanceof Array;
   } catch (error) { /* empty */ }
   return function setPrototypeOf(O, proto) {
-    requireObjectCoercible$7(O);
+    requireObjectCoercible$8(O);
     aPossiblePrototype(proto);
     if (!isObject$4(O)) return O;
     if (CORRECT_SETTER) setter(O, proto);
@@ -1402,7 +1380,7 @@ var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? functio
   };
 }() : undefined);
 
-var $$e = _export;
+var $$g = _export;
 var call$e = functionCall;
 var FunctionName = functionName;
 var isCallable$9 = isCallable$m;
@@ -1490,7 +1468,7 @@ var iteratorDefine = function (Iterable, NAME, IteratorConstructor, next, DEFAUL
       if (BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME || !(KEY in IterablePrototype)) {
         defineBuiltIn$5(IterablePrototype, KEY, methods[KEY]);
       }
-    } else $$e({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
+    } else $$g({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
   }
 
   // define iterator
@@ -1509,7 +1487,7 @@ var createIterResultObject$1 = function (value, done) {
 };
 
 var toIndexedObject = toIndexedObject$5;
-var addToUnscopables = addToUnscopables$2;
+var addToUnscopables$1 = addToUnscopables$2;
 var Iterators$2 = iterators;
 var InternalStateModule$1 = internalState;
 var defineProperty$3 = objectDefineProperty.f;
@@ -1560,14 +1538,128 @@ var es_array_iterator = defineIterator(Array, 'Array', function (iterated, kind)
 var values = Iterators$2.Arguments = Iterators$2.Array;
 
 // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables('keys');
-addToUnscopables('values');
-addToUnscopables('entries');
+addToUnscopables$1('keys');
+addToUnscopables$1('values');
+addToUnscopables$1('entries');
 
 // V8 ~ Chrome 45- bug
 if (DESCRIPTORS$4 && values.name !== 'values') try {
   defineProperty$3(values, 'name', { value: 'values' });
 } catch (error) { /* empty */ }
+
+var wellKnownSymbol$d = wellKnownSymbol$j;
+
+var TO_STRING_TAG$1 = wellKnownSymbol$d('toStringTag');
+var test$1 = {};
+
+test$1[TO_STRING_TAG$1] = 'z';
+
+var toStringTagSupport = String(test$1) === '[object z]';
+
+var TO_STRING_TAG_SUPPORT = toStringTagSupport;
+var isCallable$8 = isCallable$m;
+var classofRaw$1 = classofRaw$2;
+var wellKnownSymbol$c = wellKnownSymbol$j;
+
+var TO_STRING_TAG = wellKnownSymbol$c('toStringTag');
+var $Object = Object;
+
+// ES3 wrong here
+var CORRECT_ARGUMENTS = classofRaw$1(function () { return arguments; }()) === 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (error) { /* empty */ }
+};
+
+// getting tag from ES6+ `Object.prototype.toString`
+var classof$6 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
+  var O, tag, result;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == 'string' ? tag
+    // builtinTag case
+    : CORRECT_ARGUMENTS ? classofRaw$1(O)
+    // ES3 arguments fallback
+    : (result = classofRaw$1(O)) === 'Object' && isCallable$8(O.callee) ? 'Arguments' : result;
+};
+
+var classof$5 = classof$6;
+
+var $String$1 = String;
+
+var toString$b = function (argument) {
+  if (classof$5(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
+  return $String$1(argument);
+};
+
+var toIntegerOrInfinity$3 = toIntegerOrInfinity$6;
+var toString$a = toString$b;
+var requireObjectCoercible$7 = requireObjectCoercible$b;
+
+var $RangeError$1 = RangeError;
+
+// `String.prototype.repeat` method implementation
+// https://tc39.es/ecma262/#sec-string.prototype.repeat
+var stringRepeat = function repeat(count) {
+  var str = toString$a(requireObjectCoercible$7(this));
+  var result = '';
+  var n = toIntegerOrInfinity$3(count);
+  if (n < 0 || n === Infinity) throw new $RangeError$1('Wrong number of repetitions');
+  for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) result += str;
+  return result;
+};
+
+// https://github.com/tc39/proposal-string-pad-start-end
+var uncurryThis$g = functionUncurryThis;
+var toLength$3 = toLength$5;
+var toString$9 = toString$b;
+var $repeat$1 = stringRepeat;
+var requireObjectCoercible$6 = requireObjectCoercible$b;
+
+var repeat$1 = uncurryThis$g($repeat$1);
+var stringSlice$7 = uncurryThis$g(''.slice);
+var ceil = Math.ceil;
+
+// `String.prototype.{ padStart, padEnd }` methods implementation
+var createMethod$2 = function (IS_END) {
+  return function ($this, maxLength, fillString) {
+    var S = toString$9(requireObjectCoercible$6($this));
+    var intMaxLength = toLength$3(maxLength);
+    var stringLength = S.length;
+    var fillStr = fillString === undefined ? ' ' : toString$9(fillString);
+    var fillLen, stringFiller;
+    if (intMaxLength <= stringLength || fillStr === '') return S;
+    fillLen = intMaxLength - stringLength;
+    stringFiller = repeat$1(fillStr, ceil(fillLen / fillStr.length));
+    if (stringFiller.length > fillLen) stringFiller = stringSlice$7(stringFiller, 0, fillLen);
+    return IS_END ? S + stringFiller : stringFiller + S;
+  };
+};
+
+var stringPad = {
+  // `String.prototype.padStart` method
+  // https://tc39.es/ecma262/#sec-string.prototype.padstart
+  start: createMethod$2(false)};
+
+// https://github.com/zloirock/core-js/issues/280
+var userAgent$6 = environmentUserAgent;
+
+var stringPadWebkitBug = /Version\/10(?:\.\d+){1,2}(?: [\w./]+)?(?: Mobile\/\w+)? Safari\//.test(userAgent$6);
+
+var $$f = _export;
+var $padStart = stringPad.start;
+var WEBKIT_BUG = stringPadWebkitBug;
+
+// `String.prototype.padStart` method
+// https://tc39.es/ecma262/#sec-string.prototype.padstart
+$$f({ target: 'String', proto: true, forced: WEBKIT_BUG }, {
+  padStart: function padStart(maxLength /* , fillString = ' ' */) {
+    return $padStart(this, maxLength, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
 
 // iterable DOM collections
 // flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
@@ -1619,9 +1711,9 @@ var DOMTokenListPrototype = domTokenListPrototype;
 var ArrayIteratorMethods = es_array_iterator;
 var createNonEnumerableProperty$2 = createNonEnumerableProperty$6;
 var setToStringTag$1 = setToStringTag$4;
-var wellKnownSymbol$d = wellKnownSymbol$j;
+var wellKnownSymbol$b = wellKnownSymbol$j;
 
-var ITERATOR$3 = wellKnownSymbol$d('iterator');
+var ITERATOR$3 = wellKnownSymbol$b('iterator');
 var ArrayValues = ArrayIteratorMethods.values;
 
 var handlePrototype = function (CollectionPrototype, COLLECTION_NAME) {
@@ -2336,77 +2428,12 @@ var uncurryThis$f = functionUncurryThis;
 // https://tc39.es/ecma262/#sec-thisnumbervalue
 var thisNumberValue$1 = uncurryThis$f(1.0.valueOf);
 
-var wellKnownSymbol$c = wellKnownSymbol$j;
-
-var TO_STRING_TAG$1 = wellKnownSymbol$c('toStringTag');
-var test$1 = {};
-
-test$1[TO_STRING_TAG$1] = 'z';
-
-var toStringTagSupport = String(test$1) === '[object z]';
-
-var TO_STRING_TAG_SUPPORT = toStringTagSupport;
-var isCallable$8 = isCallable$m;
-var classofRaw$1 = classofRaw$2;
-var wellKnownSymbol$b = wellKnownSymbol$j;
-
-var TO_STRING_TAG = wellKnownSymbol$b('toStringTag');
-var $Object = Object;
-
-// ES3 wrong here
-var CORRECT_ARGUMENTS = classofRaw$1(function () { return arguments; }()) === 'Arguments';
-
-// fallback for IE11 Script Access Denied error
-var tryGet = function (it, key) {
-  try {
-    return it[key];
-  } catch (error) { /* empty */ }
-};
-
-// getting tag from ES6+ `Object.prototype.toString`
-var classof$6 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
-  var O, tag, result;
-  return it === undefined ? 'Undefined' : it === null ? 'Null'
-    // @@toStringTag case
-    : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == 'string' ? tag
-    // builtinTag case
-    : CORRECT_ARGUMENTS ? classofRaw$1(O)
-    // ES3 arguments fallback
-    : (result = classofRaw$1(O)) === 'Object' && isCallable$8(O.callee) ? 'Arguments' : result;
-};
-
-var classof$5 = classof$6;
-
-var $String$1 = String;
-
-var toString$a = function (argument) {
-  if (classof$5(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
-  return $String$1(argument);
-};
-
-var toIntegerOrInfinity$3 = toIntegerOrInfinity$6;
-var toString$9 = toString$a;
-var requireObjectCoercible$6 = requireObjectCoercible$a;
-
-var $RangeError$1 = RangeError;
-
-// `String.prototype.repeat` method implementation
-// https://tc39.es/ecma262/#sec-string.prototype.repeat
-var stringRepeat = function repeat(count) {
-  var str = toString$9(requireObjectCoercible$6(this));
-  var result = '';
-  var n = toIntegerOrInfinity$3(count);
-  if (n < 0 || n === Infinity) throw new $RangeError$1('Wrong number of repetitions');
-  for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) result += str;
-  return result;
-};
-
-var $$d = _export;
+var $$e = _export;
 var uncurryThis$e = functionUncurryThis;
 var toIntegerOrInfinity$2 = toIntegerOrInfinity$6;
 var thisNumberValue = thisNumberValue$1;
 var $repeat = stringRepeat;
-var fails$d = fails$p;
+var fails$e = fails$p;
 
 var $RangeError = RangeError;
 var $String = String;
@@ -2463,19 +2490,19 @@ var dataToString = function (data) {
   } return s;
 };
 
-var FORCED$1 = fails$d(function () {
+var FORCED$1 = fails$e(function () {
   return nativeToFixed(0.00008, 3) !== '0.000' ||
     nativeToFixed(0.9, 0) !== '1' ||
     nativeToFixed(1.255, 2) !== '1.25' ||
     nativeToFixed(1000000000000000128.0, 0) !== '1000000000000000128';
-}) || !fails$d(function () {
+}) || !fails$e(function () {
   // V8 ~ Android 4.3-
   nativeToFixed({});
 });
 
 // `Number.prototype.toFixed` method
 // https://tc39.es/ecma262/#sec-number.prototype.tofixed
-$$d({ target: 'Number', proto: true, forced: FORCED$1 }, {
+$$e({ target: 'Number', proto: true, forced: FORCED$1 }, {
   toFixed: function toFixed(fractionDigits) {
     var number = thisNumberValue(this);
     var fractDigits = toIntegerOrInfinity$2(fractionDigits);
@@ -2550,13 +2577,13 @@ var regexpFlags$1 = function () {
   return result;
 };
 
-var fails$c = fails$p;
+var fails$d = fails$p;
 var globalThis$b = globalThis_1;
 
 // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
 var $RegExp$2 = globalThis$b.RegExp;
 
-var UNSUPPORTED_Y$2 = fails$c(function () {
+var UNSUPPORTED_Y$2 = fails$d(function () {
   var re = $RegExp$2('a', 'y');
   re.lastIndex = 2;
   return re.exec('abcd') !== null;
@@ -2564,11 +2591,11 @@ var UNSUPPORTED_Y$2 = fails$c(function () {
 
 // UC Browser bug
 // https://github.com/zloirock/core-js/issues/1008
-var MISSED_STICKY$1 = UNSUPPORTED_Y$2 || fails$c(function () {
+var MISSED_STICKY$1 = UNSUPPORTED_Y$2 || fails$d(function () {
   return !$RegExp$2('a', 'y').sticky;
 });
 
-var BROKEN_CARET = UNSUPPORTED_Y$2 || fails$c(function () {
+var BROKEN_CARET = UNSUPPORTED_Y$2 || fails$d(function () {
   // https://bugzilla.mozilla.org/show_bug.cgi?id=773687
   var re = $RegExp$2('^r', 'gy');
   re.lastIndex = 2;
@@ -2581,24 +2608,24 @@ var regexpStickyHelpers = {
   UNSUPPORTED_Y: UNSUPPORTED_Y$2
 };
 
-var fails$b = fails$p;
+var fails$c = fails$p;
 var globalThis$a = globalThis_1;
 
 // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
 var $RegExp$1 = globalThis$a.RegExp;
 
-var regexpUnsupportedDotAll = fails$b(function () {
+var regexpUnsupportedDotAll = fails$c(function () {
   var re = $RegExp$1('.', 's');
   return !(re.dotAll && re.test('\n') && re.flags === 's');
 });
 
-var fails$a = fails$p;
+var fails$b = fails$p;
 var globalThis$9 = globalThis_1;
 
 // babel-minify and Closure Compiler transpiles RegExp('(?<a>b)', 'g') -> /(?<a>b)/g and it causes SyntaxError
 var $RegExp = globalThis$9.RegExp;
 
-var regexpUnsupportedNcg = fails$a(function () {
+var regexpUnsupportedNcg = fails$b(function () {
   var re = $RegExp('(?<a>b)', 'g');
   return re.exec('b').groups.a !== 'b' ||
     'b'.replace(re, '$<a>c') !== 'bc';
@@ -2608,7 +2635,7 @@ var regexpUnsupportedNcg = fails$a(function () {
 /* eslint-disable regexp/no-useless-quantifier -- testing */
 var call$d = functionCall;
 var uncurryThis$d = functionUncurryThis;
-var toString$8 = toString$a;
+var toString$8 = toString$b;
 var regexpFlags = regexpFlags$1;
 var stickyHelpers$1 = regexpStickyHelpers;
 var shared = shared$4;
@@ -2721,12 +2748,12 @@ if (PATCH) {
 
 var regexpExec$2 = patchedExec;
 
-var $$c = _export;
+var $$d = _export;
 var exec$2 = regexpExec$2;
 
 // `RegExp.prototype.exec` method
 // https://tc39.es/ecma262/#sec-regexp.prototype.exec
-$$c({ target: 'RegExp', proto: true, forced: /./.exec !== exec$2 }, {
+$$d({ target: 'RegExp', proto: true, forced: /./.exec !== exec$2 }, {
   exec: exec$2
 });
 
@@ -2746,7 +2773,7 @@ var functionApply = typeof Reflect == 'object' && Reflect.apply || (NATIVE_BIND$
 var call$b = functionCall;
 var defineBuiltIn$4 = defineBuiltIn$8;
 var regexpExec$1 = regexpExec$2;
-var fails$9 = fails$p;
+var fails$a = fails$p;
 var wellKnownSymbol$a = wellKnownSymbol$j;
 var createNonEnumerableProperty$1 = createNonEnumerableProperty$6;
 
@@ -2756,14 +2783,14 @@ var RegExpPrototype$3 = RegExp.prototype;
 var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
   var SYMBOL = wellKnownSymbol$a(KEY);
 
-  var DELEGATES_TO_SYMBOL = !fails$9(function () {
+  var DELEGATES_TO_SYMBOL = !fails$a(function () {
     // String methods call symbol-named RegExp methods
     var O = {};
     O[SYMBOL] = function () { return 7; };
     return ''[KEY](O) !== 7;
   });
 
-  var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL && !fails$9(function () {
+  var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL && !fails$a(function () {
     // Symbol-named RegExp methods call .exec
     var execCalled = false;
     var re = /a/;
@@ -2819,8 +2846,8 @@ var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
 
 var uncurryThis$c = functionUncurryThis;
 var toIntegerOrInfinity$1 = toIntegerOrInfinity$6;
-var toString$7 = toString$a;
-var requireObjectCoercible$5 = requireObjectCoercible$a;
+var toString$7 = toString$b;
+var requireObjectCoercible$5 = requireObjectCoercible$b;
 
 var charAt$3 = uncurryThis$c(''.charAt);
 var charCodeAt = uncurryThis$c(''.charCodeAt);
@@ -2930,14 +2957,14 @@ var apply$1 = functionApply;
 var call$9 = functionCall;
 var uncurryThis$a = functionUncurryThis;
 var fixRegExpWellKnownSymbolLogic$1 = fixRegexpWellKnownSymbolLogic;
-var fails$8 = fails$p;
+var fails$9 = fails$p;
 var anObject$7 = anObject$e;
 var isCallable$6 = isCallable$m;
 var isNullOrUndefined$3 = isNullOrUndefined$6;
 var toIntegerOrInfinity = toIntegerOrInfinity$6;
-var toLength$2 = toLength$4;
-var toString$6 = toString$a;
-var requireObjectCoercible$4 = requireObjectCoercible$a;
+var toLength$2 = toLength$5;
+var toString$6 = toString$b;
+var requireObjectCoercible$4 = requireObjectCoercible$b;
 var advanceStringIndex$1 = advanceStringIndex$2;
 var getMethod$3 = getMethod$5;
 var getSubstitution = getSubstitution$1;
@@ -2971,7 +2998,7 @@ var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = (function () {
   return false;
 })();
 
-var REPLACE_SUPPORTS_NAMED_GROUPS = !fails$8(function () {
+var REPLACE_SUPPORTS_NAMED_GROUPS = !fails$9(function () {
   var re = /./;
   re.exec = function () {
     var result = [];
@@ -4153,7 +4180,7 @@ var anInstance$1 = function (it, Prototype) {
 };
 
 var uncurryThis$9 = functionUncurryThis;
-var fails$7 = fails$p;
+var fails$8 = fails$p;
 var isCallable$5 = isCallable$m;
 var classof$2 = classof$6;
 var getBuiltIn$2 = getBuiltIn$7;
@@ -4196,7 +4223,7 @@ isConstructorLegacy.sham = true;
 
 // `IsConstructor` abstract operation
 // https://tc39.es/ecma262/#sec-isconstructor
-var isConstructor$1 = !construct || fails$7(function () {
+var isConstructor$1 = !construct || fails$8(function () {
   var called;
   return isConstructorModern(isConstructorModern.call)
     || !isConstructorModern(Object)
@@ -4275,7 +4302,7 @@ var apply = functionApply;
 var bind$3 = functionBindContext;
 var isCallable$4 = isCallable$m;
 var hasOwn$2 = hasOwnProperty_1;
-var fails$6 = fails$p;
+var fails$7 = fails$p;
 var html = html$2;
 var arraySlice$1 = arraySlice$2;
 var createElement = documentCreateElement$2;
@@ -4295,7 +4322,7 @@ var queue$2 = {};
 var ONREADYSTATECHANGE = 'onreadystatechange';
 var $location, defer, channel, port;
 
-fails$6(function () {
+fails$7(function () {
   // Deno throws a ReferenceError on `location` access without `--location` flag
   $location = globalThis$7.location;
 });
@@ -4362,7 +4389,7 @@ if (!set || !clear) {
     isCallable$4(globalThis$7.postMessage) &&
     !globalThis$7.importScripts &&
     $location && $location.protocol !== 'file:' &&
-    !fails$6(globalPostMessageDefer)
+    !fails$7(globalPostMessageDefer)
   ) {
     defer = globalPostMessageDefer;
     globalThis$7.addEventListener('message', eventListener, false);
@@ -4596,7 +4623,7 @@ newPromiseCapability$2.f = function (C) {
   return new PromiseCapability(C);
 };
 
-var $$b = _export;
+var $$c = _export;
 var IS_NODE = environmentIsNode;
 var globalThis$2 = globalThis_1;
 var call$8 = functionCall;
@@ -4878,7 +4905,7 @@ if (FORCED_PROMISE_CONSTRUCTOR$4) {
 
 // `Promise` constructor
 // https://tc39.es/ecma262/#sec-promise-executor
-$$b({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
+$$c({ global: true, constructor: true, wrap: true, forced: FORCED_PROMISE_CONSTRUCTOR$4 }, {
   Promise: PromiseConstructor
 });
 
@@ -5066,7 +5093,7 @@ var promiseStaticsIncorrectIteration = FORCED_PROMISE_CONSTRUCTOR$3 || !checkCor
   NativePromiseConstructor$1.all(iterable).then(undefined, function () { /* empty */ });
 });
 
-var $$a = _export;
+var $$b = _export;
 var call$4 = functionCall;
 var aCallable$2 = aCallable$9;
 var newPromiseCapabilityModule$2 = newPromiseCapability$2;
@@ -5076,7 +5103,7 @@ var PROMISE_STATICS_INCORRECT_ITERATION$1 = promiseStaticsIncorrectIteration;
 
 // `Promise.all` method
 // https://tc39.es/ecma262/#sec-promise.all
-$$a({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
+$$b({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION$1 }, {
   all: function all(iterable) {
     var C = this;
     var capability = newPromiseCapabilityModule$2.f(C);
@@ -5105,7 +5132,7 @@ $$a({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION
   }
 });
 
-var $$9 = _export;
+var $$a = _export;
 var FORCED_PROMISE_CONSTRUCTOR$2 = promiseConstructorDetection.CONSTRUCTOR;
 var NativePromiseConstructor = promiseNativeConstructor;
 var getBuiltIn$1 = getBuiltIn$7;
@@ -5116,7 +5143,7 @@ var NativePromisePrototype = NativePromiseConstructor && NativePromiseConstructo
 
 // `Promise.prototype.catch` method
 // https://tc39.es/ecma262/#sec-promise.prototype.catch
-$$9({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
+$$a({ target: 'Promise', proto: true, forced: FORCED_PROMISE_CONSTRUCTOR$2, real: true }, {
   'catch': function (onRejected) {
     return this.then(undefined, onRejected);
   }
@@ -5130,7 +5157,7 @@ if (isCallable$1(NativePromiseConstructor)) {
   }
 }
 
-var $$8 = _export;
+var $$9 = _export;
 var call$3 = functionCall;
 var aCallable$1 = aCallable$9;
 var newPromiseCapabilityModule$1 = newPromiseCapability$2;
@@ -5140,7 +5167,7 @@ var PROMISE_STATICS_INCORRECT_ITERATION = promiseStaticsIncorrectIteration;
 
 // `Promise.race` method
 // https://tc39.es/ecma262/#sec-promise.race
-$$8({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
+$$9({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION }, {
   race: function race(iterable) {
     var C = this;
     var capability = newPromiseCapabilityModule$1.f(C);
@@ -5156,13 +5183,13 @@ $$8({ target: 'Promise', stat: true, forced: PROMISE_STATICS_INCORRECT_ITERATION
   }
 });
 
-var $$7 = _export;
+var $$8 = _export;
 var newPromiseCapabilityModule = newPromiseCapability$2;
 var FORCED_PROMISE_CONSTRUCTOR$1 = promiseConstructorDetection.CONSTRUCTOR;
 
 // `Promise.reject` method
 // https://tc39.es/ecma262/#sec-promise.reject
-$$7({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
+$$8({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR$1 }, {
   reject: function reject(r) {
     var capability = newPromiseCapabilityModule.f(this);
     var capabilityReject = capability.reject;
@@ -5184,7 +5211,7 @@ var promiseResolve$1 = function (C, x) {
   return promiseCapability.promise;
 };
 
-var $$6 = _export;
+var $$7 = _export;
 var getBuiltIn = getBuiltIn$7;
 var FORCED_PROMISE_CONSTRUCTOR = promiseConstructorDetection.CONSTRUCTOR;
 var promiseResolve = promiseResolve$1;
@@ -5193,7 +5220,7 @@ getBuiltIn('Promise');
 
 // `Promise.resolve` method
 // https://tc39.es/ecma262/#sec-promise.resolve
-$$6({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
+$$7({ target: 'Promise', stat: true, forced: FORCED_PROMISE_CONSTRUCTOR }, {
   resolve: function resolve(x) {
     return promiseResolve(this, x);
   }
@@ -5215,15 +5242,15 @@ var regexpGetFlags = function (R) {
 var PROPER_FUNCTION_NAME$1 = functionName.PROPER;
 var defineBuiltIn$1 = defineBuiltIn$8;
 var anObject$1 = anObject$e;
-var $toString = toString$a;
-var fails$5 = fails$p;
+var $toString = toString$b;
+var fails$6 = fails$p;
 var getRegExpFlags$1 = regexpGetFlags;
 
 var TO_STRING = 'toString';
 var RegExpPrototype$1 = RegExp.prototype;
 var nativeToString = RegExpPrototype$1[TO_STRING];
 
-var NOT_GENERIC = fails$5(function () { return nativeToString.call({ source: 'a', flags: 'b' }) !== '/a/b'; });
+var NOT_GENERIC = fails$6(function () { return nativeToString.call({ source: 'a', flags: 'b' }) !== '/a/b'; });
 // FF44- RegExp#toString has a wrong name
 var INCORRECT_NAME = PROPER_FUNCTION_NAME$1 && nativeToString.name !== TO_STRING;
 
@@ -5422,9 +5449,9 @@ var call$1 = functionCall;
 var fixRegExpWellKnownSymbolLogic = fixRegexpWellKnownSymbolLogic;
 var anObject = anObject$e;
 var isNullOrUndefined = isNullOrUndefined$6;
-var toLength$1 = toLength$4;
-var toString$5 = toString$a;
-var requireObjectCoercible$3 = requireObjectCoercible$a;
+var toLength$1 = toLength$5;
+var toString$5 = toString$b;
+var requireObjectCoercible$3 = requireObjectCoercible$b;
 var getMethod = getMethod$5;
 var advanceStringIndex = advanceStringIndex$2;
 var regExpExec = regexpExecAbstract;
@@ -5505,13 +5532,13 @@ var correctIsRegexpLogic = function (METHOD_NAME) {
   } return false;
 };
 
-var $$5 = _export;
+var $$6 = _export;
 var uncurryThis$5 = functionUncurryThisClause;
 var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
-var toLength = toLength$4;
-var toString$4 = toString$a;
+var toLength = toLength$5;
+var toString$4 = toString$b;
 var notARegExp$1 = notARegexp;
-var requireObjectCoercible$2 = requireObjectCoercible$a;
+var requireObjectCoercible$2 = requireObjectCoercible$b;
 var correctIsRegExpLogic$1 = correctIsRegexpLogic;
 
 var stringSlice$1 = uncurryThis$5(''.slice);
@@ -5526,7 +5553,7 @@ var MDN_POLYFILL_BUG = !CORRECT_IS_REGEXP_LOGIC && !!function () {
 
 // `String.prototype.startsWith` method
 // https://tc39.es/ecma262/#sec-string.prototype.startswith
-$$5({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_REGEXP_LOGIC }, {
+$$6({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_REGEXP_LOGIC }, {
   startsWith: function startsWith(searchString /* , position = 0 */) {
     var that = toString$4(requireObjectCoercible$2(this));
     notARegExp$1(searchString);
@@ -5536,7 +5563,7 @@ $$5({ target: 'String', proto: true, forced: !MDN_POLYFILL_BUG && !CORRECT_IS_RE
   }
 });
 
-var _=[["Afghanistan","af","93"],["Albania","al","355"],["Algeria","dz","213"],["Andorra","ad","376"],["Angola","ao","244"],["Antigua and Barbuda","ag","1268"],["Argentina","ar","54","(..) ........",0],["Armenia","am","374",".. ......"],["Aruba","aw","297"],["Australia","au","61",{default:". .... ....","/^4/":"... ... ...","/^5(?!50)/":"... ... ...","/^1(3|8)00/":".... ... ...","/^13/":".. .. ..","/^180/":"... ...."},0,[]],["Austria","at","43"],["Azerbaijan","az","994","(..) ... .. .."],["Bahamas","bs","1242"],["Bahrain","bh","973"],["Bangladesh","bd","880"],["Barbados","bb","1246"],["Belarus","by","375","(..) ... .. .."],["Belgium","be","32","... .. .. .."],["Belize","bz","501"],["Benin","bj","229"],["Bhutan","bt","975"],["Bolivia","bo","591"],["Bosnia and Herzegovina","ba","387"],["Botswana","bw","267"],["Brazil","br","55","(..) .....-...."],["British Indian Ocean Territory","io","246"],["Brunei","bn","673"],["Bulgaria","bg","359"],["Burkina Faso","bf","226"],["Burundi","bi","257"],["Cambodia","kh","855"],["Cameroon","cm","237"],["Canada","ca","1","(...) ...-....",1,["204","226","236","249","250","289","306","343","365","387","403","416","418","431","437","438","450","506","514","519","548","579","581","587","604","613","639","647","672","705","709","742","778","780","782","807","819","825","867","873","902","905"]],["Cape Verde","cv","238"],["Caribbean Netherlands","bq","599","",1],["Cayman Islands","ky","1","... ... ....",4,["345"]],["Central African Republic","cf","236"],["Chad","td","235"],["Chile","cl","56"],["China","cn","86","... .... ...."],["Colombia","co","57","... ... ...."],["Comoros","km","269"],["Congo","cd","243"],["Congo","cg","242"],["Costa Rica","cr","506","....-...."],["C\xF4te d'Ivoire","ci","225",".. .. .. .. .."],["Croatia","hr","385"],["Cuba","cu","53"],["Cura\xE7ao","cw","599","",0],["Cyprus","cy","357",".. ......"],["Czech Republic","cz","420","... ... ..."],["Denmark","dk","45",".. .. .. .."],["Djibouti","dj","253",".. .. ...."],["Dominica","dm","1767"],["Dominican Republic","do","1","(...) ...-....",2,["809","829","849"]],["Ecuador","ec","593"],["Egypt","eg","20"],["El Salvador","sv","503","....-...."],["Equatorial Guinea","gq","240"],["Eritrea","er","291"],["Estonia","ee","372",".... ......"],["Ethiopia","et","251",".. ... ...."],["Faroe Islands","fo","298",".. .. .."],["Fiji","fj","679"],["Finland","fi","358",".. ... .. .."],["France","fr","33",". .. .. .. .."],["French Guiana","gf","594","... .. .. .."],["French Polynesia","pf","689",{"/^44/":".. .. ..","/^80[0-5]/":"... .. .. ..",default:".. .. .. .."}],["Gabon","ga","241"],["Gambia","gm","220"],["Georgia","ge","995"],["Germany","de","49","... ........."],["Ghana","gh","233"],["Greece","gr","30"],["Greenland","gl","299",".. .. .."],["Grenada","gd","1473"],["Guadeloupe","gp","590","... .. .. ..",0],["Guam","gu","1671"],["Guatemala","gt","502","....-...."],["Guinea","gn","224"],["Guinea-Bissau","gw","245"],["Guyana","gy","592"],["Haiti","ht","509","....-...."],["Honduras","hn","504"],["Hong Kong","hk","852",".... ...."],["Hungary","hu","36"],["Iceland","is","354","... ...."],["India","in","91",".....-....."],["Indonesia","id","62"],["Iran","ir","98","... ... ...."],["Iraq","iq","964"],["Ireland","ie","353",".. ......."],["Israel","il","972","... ... ...."],["Italy","it","39","... .......",0],["Jamaica","jm","1876"],["Japan","jp","81",".. .... ...."],["Jordan","jo","962"],["Kazakhstan","kz","7","... ...-..-..",0],["Kenya","ke","254"],["Kiribati","ki","686"],["Kosovo","xk","383"],["Kuwait","kw","965"],["Kyrgyzstan","kg","996","... ... ..."],["Laos","la","856"],["Latvia","lv","371",".. ... ..."],["Lebanon","lb","961"],["Lesotho","ls","266"],["Liberia","lr","231"],["Libya","ly","218"],["Liechtenstein","li","423"],["Lithuania","lt","370"],["Luxembourg","lu","352"],["Macau","mo","853"],["Macedonia","mk","389"],["Madagascar","mg","261"],["Malawi","mw","265"],["Malaysia","my","60","..-....-...."],["Maldives","mv","960"],["Mali","ml","223"],["Malta","mt","356"],["Marshall Islands","mh","692"],["Martinique","mq","596","... .. .. .."],["Mauritania","mr","222"],["Mauritius","mu","230"],["Mayotte","yt","262","... .. .. ..",1,["269","639"]],["Mexico","mx","52","... ... ....",0],["Micronesia","fm","691"],["Moldova","md","373","(..) ..-..-.."],["Monaco","mc","377"],["Mongolia","mn","976"],["Montenegro","me","382"],["Morocco","ma","212"],["Mozambique","mz","258"],["Myanmar","mm","95"],["Namibia","na","264"],["Nauru","nr","674"],["Nepal","np","977"],["Netherlands","nl","31",{"/^06/":"(.). .........","/^6/":". .........","/^0(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":"(.).. ........","/^(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":".. ........","/^0/":"(.)... .......",default:"... ......."}],["New Caledonia","nc","687"],["New Zealand","nz","64","...-...-...."],["Nicaragua","ni","505"],["Niger","ne","227"],["Nigeria","ng","234"],["North Korea","kp","850"],["Norway","no","47","... .. ..."],["Oman","om","968"],["Pakistan","pk","92","...-......."],["Palau","pw","680"],["Palestine","ps","970"],["Panama","pa","507"],["Papua New Guinea","pg","675"],["Paraguay","py","595"],["Peru","pe","51"],["Philippines","ph","63","... ... ...."],["Poland","pl","48","...-...-..."],["Portugal","pt","351"],["Puerto Rico","pr","1","(...) ...-....",3,["787","939"]],["Qatar","qa","974"],["R\xE9union","re","262","... .. .. ..",0],["Romania","ro","40"],["Russia","ru","7","(...) ...-..-..",1],["Rwanda","rw","250"],["Saint Kitts and Nevis","kn","1869"],["Saint Lucia","lc","1758"],["Saint Pierre & Miquelon","pm","508",{"/^708/":"... ... ...","/^8/":"... .. .. ..",default:".. .. .."}],["Saint Vincent and the Grenadines","vc","1784"],["Samoa","ws","685"],["San Marino","sm","378"],["S\xE3o Tom\xE9 and Pr\xEDncipe","st","239"],["Saudi Arabia","sa","966"],["Senegal","sn","221"],["Serbia","rs","381"],["Seychelles","sc","248"],["Sierra Leone","sl","232"],["Singapore","sg","65","....-...."],["Slovakia","sk","421"],["Slovenia","si","386"],["Solomon Islands","sb","677"],["Somalia","so","252"],["South Africa","za","27"],["South Korea","kr","82","... .... ...."],["South Sudan","ss","211"],["Spain","es","34","... ... ..."],["Sri Lanka","lk","94"],["Sudan","sd","249"],["Suriname","sr","597"],["Swaziland","sz","268"],["Sweden","se","46","... ... ..."],["Switzerland","ch","41",".. ... .. .."],["Syria","sy","963"],["Taiwan","tw","886"],["Tajikistan","tj","992"],["Tanzania","tz","255"],["Thailand","th","66"],["Timor-Leste","tl","670"],["Togo","tg","228"],["Tonga","to","676"],["Trinidad and Tobago","tt","1868"],["Tunisia","tn","216"],["Turkey","tr","90","... ... .. .."],["Turkmenistan","tm","993"],["Tuvalu","tv","688"],["Uganda","ug","256"],["Ukraine","ua","380","(..) ... .. .."],["United Arab Emirates","ae","971"],["United Kingdom","gb","44",".... ......"],["United States","us","1","(...) ...-....",0],["Uruguay","uy","598"],["Uzbekistan","uz","998",".. ... .. .."],["Vanuatu","vu","678"],["Vatican City","va","39",".. .... ....",1],["Venezuela","ve","58"],["Vietnam","vn","84"],["Wallis & Futuna","wf","681",".. .. .."],["Yemen","ye","967"],["Zambia","zm","260"],["Zimbabwe","zw","263"]];var xe="react-international-phone-",se=(...t)=>t.filter(e=>!!e).join(" ").trim(),Se=(...t)=>se(...t).split(" ").map(e=>`${xe}${e}`).join(" "),P=({addPrefix:t,rawClassNames:e})=>se(Se(...t),...e);var le=({value:t,mask:e,maskSymbol:a,offset:s=0,trimNonMaskCharsLeftover:r=false})=>{if(t.length<s)return t;let n=t.slice(0,s),c=t.slice(s),i=n,o=0;for(let l of e.split("")){if(o>=c.length){if(!r&&l!==a){i+=l;continue}break}l===a?(i+=c[o],o+=1):i+=l;}return i};var F=t=>t?/^\d+$/.test(t):false;var z=t=>t.replace(/\D/g,"");var ue=(t,e)=>{let a=t.style.display;a!=="block"&&(t.style.display="block");let s=t.getBoundingClientRect(),r=e.getBoundingClientRect(),n=r.top-s.top,c=s.bottom-r.bottom;n>=0&&c>=0||(Math.abs(n)<Math.abs(c)?t.scrollTop+=n:t.scrollTop-=c),t.style.display=a;};var de=()=>typeof window>"u"?false:window.navigator.userAgent.toLowerCase().includes("macintosh");var pe=(t,e)=>{let a=e.disableDialCodeAndPrefix?false:e.forceDialCode,s=e.disableDialCodeAndPrefix?false:e.insertDialCodeOnEmpty,r=t,n=l=>e.trimNonDigitsEnd?l.trim():l;if(!r)return s&&!r.length||a?n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`):n(r);if(r=z(r),r===e.dialCode&&!e.disableDialCodeAndPrefix)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(e.dialCode.startsWith(r)&&!e.disableDialCodeAndPrefix)return n(a?`${e.prefix}${e.dialCode}${e.charAfterDialCode}`:`${e.prefix}${r}`);if(!r.startsWith(e.dialCode)&&!e.disableDialCodeAndPrefix){if(a)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(r.length<e.dialCode.length)return n(`${e.prefix}${r}`)}let c=()=>{let l=e.dialCode.length,d=r.slice(0,l),m=r.slice(l);return {phoneLeftSide:d,phoneRightSide:m}},{phoneLeftSide:i,phoneRightSide:o}=c();return i=`${e.prefix}${i}${e.charAfterDialCode}`,o=le({value:o,mask:e.mask,maskSymbol:e.maskChar,trimNonMaskCharsLeftover:e.trimNonDigitsEnd||e.disableDialCodeAndPrefix&&o.length===0}),e.disableDialCodeAndPrefix&&(i=""),n(`${i}${o}`)};var me=({phoneBeforeInput:t,phoneAfterInput:e,phoneAfterFormatted:a,cursorPositionAfterInput:s,leftOffset:r=0,deletion:n})=>{if(s<r)return r;if(!t)return a.length;let c=null;for(let d=s-1;d>=0;d-=1)if(F(e[d])){c=d;break}if(c===null){for(let d=0;d<e.length;d+=1)if(F(a[d]))return d;return e.length}let i=0;for(let d=0;d<c;d+=1)F(e[d])&&(i+=1);let o=0,l=0;for(let d=0;d<a.length&&(o+=1,F(a[d])&&(l+=1),!(l>=i+1));d+=1);if(n!=="backward")for(;!F(a[o])&&o<a.length;)o+=1;return o};var O=({phone:t,prefix:e})=>t?`${e}${z(t)}`:"";function W({value:t,country:e,insertDialCodeOnEmpty:a,trimNonDigitsEnd:s,countries:r,prefix:n,charAfterDialCode:c,forceDialCode:i,disableDialCodeAndPrefix:o,defaultMask:l,countryGuessingEnabled:d,disableFormatting:m}){let f=t;o&&(f=f.startsWith(`${n}`)?f:`${n}${e.dialCode}${f}`);let g=d?X({phone:f,countries:r,currentCountryIso2:e?.iso2}):void 0,S=g?.country??e,p=pe(f,{prefix:n,mask:Q({phone:f,country:S,defaultMask:l,disableFormatting:m}),maskChar:J,dialCode:S.dialCode,trimNonDigitsEnd:s,charAfterDialCode:c,forceDialCode:i,insertDialCodeOnEmpty:a,disableDialCodeAndPrefix:o}),C=d&&!g?.fullDialCodeMatch?e:S;return {phone:O({phone:o?`${C.dialCode}${p}`:p,prefix:n}),inputValue:p,country:C}}var Ie=t=>{if(t?.toLocaleLowerCase().includes("delete")??false)return t?.toLocaleLowerCase().includes("forward")?"forward":"backward"},fe=(t,{country:e,insertDialCodeOnEmpty:a,phoneBeforeInput:s,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,countryGuessingEnabled:o,defaultMask:l,disableFormatting:d,countries:m})=>{let f=t.nativeEvent,g=f.inputType,S=Ie(g),p=!!g?.startsWith("insertFrom"),C=g==="insertText",D=f?.data||void 0,I=t.target.value,A=t.target.selectionStart??0;if(g?.includes("history"))return {inputValue:s,phone:O({phone:s,prefix:r}),cursorPosition:s.length,country:e};if(C&&!F(D)&&I!==r)return {inputValue:s,phone:O({phone:i?`${e.dialCode}${s}`:s,prefix:r}),cursorPosition:A-(D?.length??0),country:e};if(c&&!I.startsWith(`${r}${e.dialCode}`)&&!p){let b=I?s:`${r}${e.dialCode}${n}`;return {inputValue:b,phone:O({phone:b,prefix:r}),cursorPosition:r.length+e.dialCode.length+n.length,country:e}}let{phone:N,inputValue:u,country:h}=W({value:I,country:e,trimNonDigitsEnd:S==="backward",insertDialCodeOnEmpty:a,countryGuessingEnabled:o,countries:m,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,disableFormatting:d,defaultMask:l}),y=me({cursorPositionAfterInput:A,phoneBeforeInput:s,phoneAfterInput:I,phoneAfterFormatted:u,leftOffset:c?r.length+e.dialCode.length+n.length:0,deletion:S});return {phone:N,inputValue:u,cursorPosition:y,country:h}};var Ce=(t,e)=>{let a=Object.keys(t),s=Object.keys(e);if(a.length!==s.length)return  false;for(let r of a)if(t[r]!==e[r])return  false;return  true};var ye=()=>{let t=useRef(),e=useRef(Date.now());return {check:()=>{let s=Date.now(),r=t.current?s-e.current:void 0;return t.current=e.current,e.current=s,r}}};var ke={size:20,overrideLastItemDebounceMS:-1};function ge(t,e){let{size:a,overrideLastItemDebounceMS:s,onChange:r}={...ke,...e},[n,c]=useState(t),[i,o]=useState([n]),[l,d]=useState(0),m=ye();return [n,(p,C)=>{if(typeof p=="object"&&typeof n=="object"&&Ce(p,n)||p===n)return;let k=s>0,D=m.check(),I=k&&D!==void 0?D>s:true;if(C?.overrideLastItem!==void 0?C.overrideLastItem:!I)o(N=>[...N.slice(0,l),p]);else {let N=i.length>=a;o(u=>[...u.slice(N?1:0,l+1),p]),N||d(u=>u+1);}c(p),r?.(p);},()=>{if(l<=0)return {success:false};let p=i[l-1];return c(p),d(C=>C-1),r?.(p),{success:true,value:p}},()=>{if(l+1>=i.length)return {success:false};let p=i[l+1];return c(p),d(C=>C+1),r?.(p),{success:true,value:p}}]}var J=".",E={defaultCountry:"us",value:"",prefix:"+",defaultMask:"............",charAfterDialCode:" ",historySaveDebounceMS:200,disableCountryGuess:false,disableDialCodePrefill:false,forceDialCode:false,disableDialCodeAndPrefix:false,disableFormatting:false,countries:_},ee=({defaultCountry:t=E.defaultCountry,value:e=E.value,countries:a=E.countries,prefix:s=E.prefix,defaultMask:r=E.defaultMask,charAfterDialCode:n=E.charAfterDialCode,historySaveDebounceMS:c=E.historySaveDebounceMS,disableCountryGuess:i=E.disableCountryGuess,disableDialCodePrefill:o=E.disableDialCodePrefill,forceDialCode:l=E.forceDialCode,disableDialCodeAndPrefix:d=E.disableDialCodeAndPrefix,disableFormatting:m=E.disableFormatting,onChange:f,inputRef:g})=>{let C={countries:a,prefix:s,charAfterDialCode:n,forceDialCode:d?false:l,disableDialCodeAndPrefix:d,defaultMask:r,countryGuessingEnabled:!i,disableFormatting:m},k=useRef(null),D=g||k,I=w=>{Promise.resolve().then(()=>{typeof window>"u"||D.current!==document?.activeElement||D.current?.setSelectionRange(w,w);});},[{phone:A,inputValue:N,country:u},h,y,b]=ge(()=>{let w=$$4({value:t,field:"iso2",countries:a});w||console.error(`[react-international-phone]: can not find a country with "${t}" iso2 code`);let T=w||$$4({value:"us",field:"iso2",countries:a}),{phone:x,inputValue:L,country:U}=W({value:e,country:T,insertDialCodeOnEmpty:!o,...C});return I(L.length),{phone:x,inputValue:L,country:U.iso2}},{overrideLastItemDebounceMS:c,onChange:({inputValue:w,phone:T,country:x})=>{if(!f)return;let L=v(x);f({phone:T,inputValue:w,country:L});}}),v=useCallback(w=>$$4({value:w,field:"iso2",countries:a}),[a]),R=useMemo(()=>v(u),[u,v]);useEffect(()=>{let w=D.current;if(!w)return;let T=x=>{if(!x.key)return;let L=x.ctrlKey,U=x.metaKey,ve=x.shiftKey;if(x.key.toLowerCase()==="z"){if(de()){if(!U)return}else if(!L)return;ve?b():y();}};return w.addEventListener("keydown",T),()=>{w.removeEventListener("keydown",T);}},[D,y,b]);let V=w=>{w.preventDefault();let{phone:T,inputValue:x,country:L,cursorPosition:U}=fe(w,{country:R,phoneBeforeInput:N,insertDialCodeOnEmpty:false,...C});return h({inputValue:x,phone:T,country:L.iso2}),I(U),e},K=(w,T={focusOnInput:false})=>{let x=$$4({value:w,field:"iso2",countries:a});if(!x){console.error(`[react-international-phone]: can not find a country with "${w}" iso2 code`);return}let L=d?"":`${s}${x.dialCode}${n}`;h({inputValue:L,phone:`${s}${x.dialCode}`,country:x.iso2}),T.focusOnInput&&Promise.resolve().then(()=>{D.current?.focus();});},[G,j]=useState(false);return useEffect(()=>{if(!G){j(true),e!==A&&f?.({inputValue:N,phone:A,country:R});return}if(e===A)return;let{phone:w,inputValue:T,country:x}=W({value:e,country:R,insertDialCodeOnEmpty:!o,...C});h({phone:w,inputValue:T,country:x.iso2});},[e]),{phone:A,inputValue:N,country:R,setCountry:K,handlePhoneValueChange:V,inputRef:D}};var Q=({phone:t,country:e,defaultMask:a="............",disableFormatting:s=false})=>{let r=e.format,n=i=>s?i.replace(new RegExp(`[^${J}]`,"g"),""):i;if(!r)return n(a);if(typeof r=="string")return n(r);if(!r.default)return console.error(`[react-international-phone]: default mask for ${e.iso2} is not provided`),n(a);let c=Object.keys(r).find(i=>{if(i==="default")return  false;if(!(i.charAt(0)==="/"&&i.charAt(i.length-1)==="/"))return console.error(`[react-international-phone]: format regex "${i}" for ${e.iso2} is not valid`),false;let l=new RegExp(i.substring(1,i.length-1)),d=t.replace(e.dialCode,"");return l.test(z(d))});return n(c?r[c]:r.default)};var M=t=>{let[e,a,s,r,n,c]=t;return {name:e,iso2:a,dialCode:s,format:r,priority:n,areaCodes:c}};var Ae=t=>`Field "${t}" is not supported`,$$4=({field:t,value:e,countries:a=_})=>{if(["priority"].includes(t))throw new Error(Ae(t));let s=a.find(r=>{let n=M(r);return e===n[t]});if(s)return M(s)};var X=({phone:t,countries:e=_,currentCountryIso2:a})=>{let s={country:void 0,fullDialCodeMatch:false};if(!t)return s;let r=z(t);if(!r)return s;let n=s,c=({country:i,fullDialCodeMatch:o})=>{let l=i.dialCode===n.country?.dialCode,d=(i.priority??0)<(n.country?.priority??0);(!l||d)&&(n={country:i,fullDialCodeMatch:o});};for(let i of e){let o=M(i),{dialCode:l,areaCodes:d}=o;if(r.startsWith(l)){let m=n.country?Number(l)>=Number(n.country.dialCode):true;if(d){let f=r.substring(l.length);for(let g of d)if(f.startsWith(g))return {country:o,fullDialCodeMatch:true}}(m||l===r||!n.fullDialCodeMatch)&&c({country:o,fullDialCodeMatch:true});}n.fullDialCodeMatch||r.length<l.length&&l.startsWith(r)&&(!n.country||Number(l)<=Number(n.country.dialCode))&&c({country:o,fullDialCodeMatch:false});}if(a){let i=$$4({value:a,field:"iso2",countries:e});if(!i)return n;let l=i?(m=>{if(!m?.areaCodes)return  false;let f=r.substring(m.dialCode.length);return m.areaCodes.some(g=>g.startsWith(f))})(i):false;!!n&&n.country?.dialCode===i.dialCode&&n.country!==i&&n.fullDialCodeMatch&&(!i.areaCodes||l)&&(n={country:i,fullDialCodeMatch:true});}return n};var Te=(t,e)=>{let a=parseInt(t,16);return Number(a+e).toString(16)},Ee="abcdefghijklmnopqrstuvwxyz",Le="1f1e6",Pe=Ee.split("").reduce((t,e,a)=>({...t,[e]:Te(Le,a)}),{}),$e=t=>[Pe[t[0]],Pe[t[1]]].join("-"),q=({iso2:t,size:e,src:a,protocol:s="https",disableLazyLoading:r,className:n,style:c,...i})=>{if(!t)return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),width:e,height:e,...i});let o=()=>{if(a)return a;let l=$e(t);return `${s}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${l}.svg`};return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),src:o(),width:e,height:e,draggable:false,"data-country":t,loading:r?void 0:"lazy",style:{width:e,height:e,...c},alt:"",...i})};var He=1e3,ne=({show:t,dialCodePrefix:e="+",selectedCountry:a,countries:s=_,preferredCountries:r=[],flags:n,onSelect:c,onClose:i,...o})=>{let l=useRef(null),d=useRef(),m=useMemo(()=>{if(!r||!r.length)return s;let u=[],h=[...s];for(let y of r){let b=h.findIndex(v=>M(v).iso2===y);if(b!==-1){let v=h.splice(b,1)[0];u.push(v);}}return u.concat(h)},[s,r]),f=useRef({updatedAt:void 0,value:""}),g=u=>{let h=f.current.updatedAt&&new Date().getTime()-f.current.updatedAt.getTime()>He;f.current={value:h?u:`${f.current.value}${u}`,updatedAt:new Date};let y=m.findIndex(b=>M(b).name.toLowerCase().startsWith(f.current.value));y!==-1&&C(y);},S=useCallback(u=>m.findIndex(h=>M(h).iso2===u),[m]),[p,C]=useState(S(a)),k=()=>{d.current!==a&&C(S(a));},D=useCallback(u=>{C(S(u.iso2)),c?.(u);},[c,S]),I=u=>{let h=m.length-1,y=b=>u==="prev"?b-1:u==="next"?b+1:u==="last"?h:0;C(b=>{let v=y(b);return v<0?0:v>h?h:v});},A=u=>{if(u.stopPropagation(),u.key==="Enter"){u.preventDefault();let h=M(m[p]);D(h);return}if(u.key==="Escape"){i?.();return}if(u.key==="ArrowUp"){u.preventDefault(),I("prev");return}if(u.key==="ArrowDown"){u.preventDefault(),I("next");return}if(u.key==="PageUp"){u.preventDefault(),I("first");return}if(u.key==="PageDown"){u.preventDefault(),I("last");return}u.key===" "&&u.preventDefault(),u.key.length===1&&!u.altKey&&!u.ctrlKey&&!u.metaKey&&g(u.key.toLocaleLowerCase());},N=useCallback(()=>{if(!l.current||p===void 0)return;let u=M(m[p]).iso2;if(u===d.current)return;let h=l.current.querySelector(`[data-country="${u}"]`);h&&(ue(l.current,h),d.current=u);},[p,m]);return useEffect(()=>{N();},[p,N]),useEffect(()=>{l.current&&(t?l.current.focus():k());},[t]),useEffect(()=>{k();},[a]),H.createElement("ul",{ref:l,role:"listbox",className:P({addPrefix:["country-selector-dropdown"],rawClassNames:[o.className]}),style:{display:t?"block":"none",...o.style},onKeyDown:A,onBlur:i,tabIndex:-1,"aria-activedescendant":`react-international-phone__${M(m[p]).iso2}-option`},m.map((u,h)=>{let y=M(u),b=y.iso2===a,v=h===p,R=r.includes(y.iso2),V=h===r.length-1,K=n?.find(G=>G.iso2===y.iso2);return H.createElement(H.Fragment,{key:y.iso2},H.createElement("li",{"data-country":y.iso2,role:"option","aria-selected":b,"aria-label":`${y.name} ${e}${y.dialCode}`,id:`react-international-phone__${y.iso2}-option`,className:P({addPrefix:["country-selector-dropdown__list-item",R&&"country-selector-dropdown__list-item--preferred",b&&"country-selector-dropdown__list-item--selected",v&&"country-selector-dropdown__list-item--focused"],rawClassNames:[o.listItemClassName,R&&o.listItemPreferredClassName,b&&o.listItemSelectedClassName,v&&o.listItemFocusedClassName]}),onClick:()=>D(y),style:o.listItemStyle,title:y.name},H.createElement(q,{iso2:y.iso2,src:K?.src,className:P({addPrefix:["country-selector-dropdown__list-item-flag-emoji"],rawClassNames:[o.listItemFlagClassName]}),style:o.listItemFlagStyle}),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-country-name"],rawClassNames:[o.listItemCountryNameClassName]}),style:o.listItemCountryNameStyle},y.name),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-dial-code"],rawClassNames:[o.listItemDialCodeClassName]}),style:o.listItemDialCodeStyle},e,y.dialCode)),V?H.createElement("hr",{className:P({addPrefix:["country-selector-dropdown__preferred-list-divider"],rawClassNames:[o.preferredListDividerClassName]}),style:o.preferredListDividerStyle}):null)}))};var ae=({selectedCountry:t,onSelect:e,disabled:a,hideDropdown:s,countries:r=_,preferredCountries:n=[],flags:c,renderButtonWrapper:i,...o})=>{let[l,d]=useState(false),m=useMemo(()=>{if(t)return $$4({value:t,field:"iso2",countries:r})},[r,t]),f=useRef(null),g=p=>{p.key&&["ArrowUp","ArrowDown"].includes(p.key)&&(p.preventDefault(),d(true));},S=()=>{let p={title:m?.name,onClick:()=>d(k=>!k),onMouseDown:k=>k.preventDefault(),onKeyDown:g,disabled:s||a,role:"combobox","aria-label":"Country selector","aria-haspopup":"listbox","aria-expanded":l},C=H.createElement("div",{className:P({addPrefix:["country-selector-button__button-content"],rawClassNames:[o.buttonContentWrapperClassName]}),style:o.buttonContentWrapperStyle},H.createElement(q,{iso2:t,src:c?.find(k=>k.iso2===t)?.src,className:P({addPrefix:["country-selector-button__flag-emoji",a&&"country-selector-button__flag-emoji--disabled"],rawClassNames:[o.flagClassName]}),style:{visibility:t?"visible":"hidden",...o.flagStyle}}),!s&&H.createElement("div",{className:P({addPrefix:["country-selector-button__dropdown-arrow",a&&"country-selector-button__dropdown-arrow--disabled",l&&"country-selector-button__dropdown-arrow--active"],rawClassNames:[o.dropdownArrowClassName]}),style:o.dropdownArrowStyle}));return i?i({children:C,rootProps:p}):H.createElement("button",{...p,type:"button",className:P({addPrefix:["country-selector-button",l&&"country-selector-button--active",a&&"country-selector-button--disabled",s&&"country-selector-button--hide-dropdown"],rawClassNames:[o.buttonClassName]}),"data-country":t,style:o.buttonStyle},C)};return H.createElement("div",{className:P({addPrefix:["country-selector"],rawClassNames:[o.className]}),style:o.style,ref:f},S(),H.createElement(ne,{show:l,countries:r,preferredCountries:n,flags:c,onSelect:p=>{d(false),e?.(p);},selectedCountry:t,onClose:()=>{d(false);},...o.dropdownStyleProps}))};var ie=({dialCode:t,prefix:e,disabled:a,style:s,className:r})=>H.createElement("div",{className:P({addPrefix:["dial-code-preview",a&&"dial-code-preview--disabled"],rawClassNames:[r]}),style:s},`${e}${t}`);var Ue=forwardRef(({value:t,onChange:e,countries:a=_,preferredCountries:s=[],hideDropdown:r,showDisabledDialCodeAndPrefix:n,disableFocusAfterCountrySelect:c,flags:i,style:o,className:l,inputStyle:d,inputClassName:m,countrySelectorStyleProps:f,dialCodePreviewStyleProps:g,inputProps:S,placeholder:p,disabled:C,name:k,onFocus:D,onBlur:I,required:A,autoFocus:N,...u},h)=>{let{phone:y,inputValue:b,inputRef:v,country:R,setCountry:V,handlePhoneValueChange:K}=ee({value:t,countries:a,...u,onChange:j=>{e?.(j.phone,{country:j.country,inputValue:j.inputValue});}}),G=u.disableDialCodeAndPrefix&&n&&R?.dialCode;return useImperativeHandle(h,()=>v.current?Object.assign(v.current,{setCountry:V,state:{phone:y,inputValue:b,country:R}}):null,[v,V,y,b,R]),H.createElement("div",{ref:h,className:P({addPrefix:["input-container"],rawClassNames:[l]}),style:o},H.createElement(ae,{onSelect:j=>V(j.iso2,{focusOnInput:!c}),flags:i,selectedCountry:R.iso2,countries:a,preferredCountries:s,disabled:C,hideDropdown:r,...f}),G&&H.createElement(ie,{dialCode:R.dialCode,prefix:u.prefix??"+",disabled:C,...g}),H.createElement("input",{onChange:K,value:b,type:"tel",ref:v,className:P({addPrefix:["input",C&&"input--disabled"],rawClassNames:[m]}),placeholder:p,disabled:C,style:d,name:k,onFocus:D,onBlur:I,autoFocus:N,required:A,...S}))});
+var _=[["Afghanistan","af","93"],["Albania","al","355"],["Algeria","dz","213"],["Andorra","ad","376"],["Angola","ao","244"],["Antigua and Barbuda","ag","1268"],["Argentina","ar","54","(..) ........",0],["Armenia","am","374",".. ......"],["Aruba","aw","297"],["Australia","au","61",{default:". .... ....","/^4/":"... ... ...","/^5(?!50)/":"... ... ...","/^1(3|8)00/":".... ... ...","/^13/":".. .. ..","/^180/":"... ...."},0,[]],["Austria","at","43"],["Azerbaijan","az","994","(..) ... .. .."],["Bahamas","bs","1242"],["Bahrain","bh","973"],["Bangladesh","bd","880"],["Barbados","bb","1246"],["Belarus","by","375","(..) ... .. .."],["Belgium","be","32","... .. .. .."],["Belize","bz","501"],["Benin","bj","229"],["Bhutan","bt","975"],["Bolivia","bo","591"],["Bosnia and Herzegovina","ba","387"],["Botswana","bw","267"],["Brazil","br","55","(..) .....-...."],["British Indian Ocean Territory","io","246"],["Brunei","bn","673"],["Bulgaria","bg","359"],["Burkina Faso","bf","226"],["Burundi","bi","257"],["Cambodia","kh","855"],["Cameroon","cm","237"],["Canada","ca","1","(...) ...-....",1,["204","226","236","249","250","289","306","343","365","387","403","416","418","431","437","438","450","506","514","519","548","579","581","587","604","613","639","647","672","705","709","742","778","780","782","807","819","825","867","873","902","905"]],["Cape Verde","cv","238"],["Caribbean Netherlands","bq","599","",1],["Cayman Islands","ky","1","... ... ....",4,["345"]],["Central African Republic","cf","236"],["Chad","td","235"],["Chile","cl","56"],["China","cn","86","... .... ...."],["Colombia","co","57","... ... ...."],["Comoros","km","269"],["Congo","cd","243"],["Congo","cg","242"],["Costa Rica","cr","506","....-...."],["C\xF4te d'Ivoire","ci","225",".. .. .. .. .."],["Croatia","hr","385"],["Cuba","cu","53"],["Cura\xE7ao","cw","599","",0],["Cyprus","cy","357",".. ......"],["Czech Republic","cz","420","... ... ..."],["Denmark","dk","45",".. .. .. .."],["Djibouti","dj","253",".. .. ...."],["Dominica","dm","1767"],["Dominican Republic","do","1","(...) ...-....",2,["809","829","849"]],["Ecuador","ec","593"],["Egypt","eg","20"],["El Salvador","sv","503","....-...."],["Equatorial Guinea","gq","240"],["Eritrea","er","291"],["Estonia","ee","372",".... ......"],["Ethiopia","et","251",".. ... ...."],["Faroe Islands","fo","298",".. .. .."],["Fiji","fj","679"],["Finland","fi","358",".. ... .. .."],["France","fr","33",". .. .. .. .."],["French Guiana","gf","594","... .. .. .."],["French Polynesia","pf","689",{"/^44/":".. .. ..","/^80[0-5]/":"... .. .. ..",default:".. .. .. .."}],["Gabon","ga","241"],["Gambia","gm","220"],["Georgia","ge","995"],["Germany","de","49","... ........."],["Ghana","gh","233"],["Greece","gr","30"],["Greenland","gl","299",".. .. .."],["Grenada","gd","1473"],["Guadeloupe","gp","590","... .. .. ..",0],["Guam","gu","1671"],["Guatemala","gt","502","....-...."],["Guinea","gn","224"],["Guinea-Bissau","gw","245"],["Guyana","gy","592"],["Haiti","ht","509","....-...."],["Honduras","hn","504"],["Hong Kong","hk","852",".... ...."],["Hungary","hu","36"],["Iceland","is","354","... ...."],["India","in","91",".....-....."],["Indonesia","id","62"],["Iran","ir","98","... ... ...."],["Iraq","iq","964"],["Ireland","ie","353",".. ......."],["Israel","il","972","... ... ...."],["Italy","it","39","... .......",0],["Jamaica","jm","1876"],["Japan","jp","81",".. .... ...."],["Jordan","jo","962"],["Kazakhstan","kz","7","... ...-..-..",0],["Kenya","ke","254"],["Kiribati","ki","686"],["Kosovo","xk","383"],["Kuwait","kw","965"],["Kyrgyzstan","kg","996","... ... ..."],["Laos","la","856"],["Latvia","lv","371",".. ... ..."],["Lebanon","lb","961"],["Lesotho","ls","266"],["Liberia","lr","231"],["Libya","ly","218"],["Liechtenstein","li","423"],["Lithuania","lt","370"],["Luxembourg","lu","352"],["Macau","mo","853"],["Macedonia","mk","389"],["Madagascar","mg","261"],["Malawi","mw","265"],["Malaysia","my","60","..-....-...."],["Maldives","mv","960"],["Mali","ml","223"],["Malta","mt","356"],["Marshall Islands","mh","692"],["Martinique","mq","596","... .. .. .."],["Mauritania","mr","222"],["Mauritius","mu","230"],["Mayotte","yt","262","... .. .. ..",1,["269","639"]],["Mexico","mx","52","... ... ....",0],["Micronesia","fm","691"],["Moldova","md","373","(..) ..-..-.."],["Monaco","mc","377"],["Mongolia","mn","976"],["Montenegro","me","382"],["Morocco","ma","212"],["Mozambique","mz","258"],["Myanmar","mm","95"],["Namibia","na","264"],["Nauru","nr","674"],["Nepal","np","977"],["Netherlands","nl","31",{"/^06/":"(.). .........","/^6/":". .........","/^0(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":"(.).. ........","/^(10|13|14|15|20|23|24|26|30|33|35|36|38|40|43|44|45|46|50|53|55|58|70|71|72|73|74|75|76|77|78|79|82|84|85|87|88|91)/":".. ........","/^0/":"(.)... .......",default:"... ......."}],["New Caledonia","nc","687"],["New Zealand","nz","64","...-...-...."],["Nicaragua","ni","505"],["Niger","ne","227"],["Nigeria","ng","234"],["North Korea","kp","850"],["Norway","no","47","... .. ..."],["Oman","om","968"],["Pakistan","pk","92","...-......."],["Palau","pw","680"],["Palestine","ps","970"],["Panama","pa","507"],["Papua New Guinea","pg","675"],["Paraguay","py","595"],["Peru","pe","51"],["Philippines","ph","63","... ... ...."],["Poland","pl","48","...-...-..."],["Portugal","pt","351"],["Puerto Rico","pr","1","(...) ...-....",3,["787","939"]],["Qatar","qa","974"],["R\xE9union","re","262","... .. .. ..",0],["Romania","ro","40"],["Russia","ru","7","(...) ...-..-..",1],["Rwanda","rw","250"],["Saint Kitts and Nevis","kn","1869"],["Saint Lucia","lc","1758"],["Saint Pierre & Miquelon","pm","508",{"/^708/":"... ... ...","/^8/":"... .. .. ..",default:".. .. .."}],["Saint Vincent and the Grenadines","vc","1784"],["Samoa","ws","685"],["San Marino","sm","378"],["S\xE3o Tom\xE9 and Pr\xEDncipe","st","239"],["Saudi Arabia","sa","966"],["Senegal","sn","221"],["Serbia","rs","381"],["Seychelles","sc","248"],["Sierra Leone","sl","232"],["Singapore","sg","65","....-...."],["Slovakia","sk","421"],["Slovenia","si","386"],["Solomon Islands","sb","677"],["Somalia","so","252"],["South Africa","za","27"],["South Korea","kr","82","... .... ...."],["South Sudan","ss","211"],["Spain","es","34","... ... ..."],["Sri Lanka","lk","94"],["Sudan","sd","249"],["Suriname","sr","597"],["Swaziland","sz","268"],["Sweden","se","46","... ... ..."],["Switzerland","ch","41",".. ... .. .."],["Syria","sy","963"],["Taiwan","tw","886"],["Tajikistan","tj","992"],["Tanzania","tz","255"],["Thailand","th","66"],["Timor-Leste","tl","670"],["Togo","tg","228"],["Tonga","to","676"],["Trinidad and Tobago","tt","1868"],["Tunisia","tn","216"],["Turkey","tr","90","... ... .. .."],["Turkmenistan","tm","993"],["Tuvalu","tv","688"],["Uganda","ug","256"],["Ukraine","ua","380","(..) ... .. .."],["United Arab Emirates","ae","971"],["United Kingdom","gb","44",".... ......"],["United States","us","1","(...) ...-....",0],["Uruguay","uy","598"],["Uzbekistan","uz","998",".. ... .. .."],["Vanuatu","vu","678"],["Vatican City","va","39",".. .... ....",1],["Venezuela","ve","58"],["Vietnam","vn","84"],["Wallis & Futuna","wf","681",".. .. .."],["Yemen","ye","967"],["Zambia","zm","260"],["Zimbabwe","zw","263"]];var xe="react-international-phone-",se=(...t)=>t.filter(e=>!!e).join(" ").trim(),Se=(...t)=>se(...t).split(" ").map(e=>`${xe}${e}`).join(" "),P=({addPrefix:t,rawClassNames:e})=>se(Se(...t),...e);var le=({value:t,mask:e,maskSymbol:a,offset:s=0,trimNonMaskCharsLeftover:r=false})=>{if(t.length<s)return t;let n=t.slice(0,s),c=t.slice(s),i=n,o=0;for(let l of e.split("")){if(o>=c.length){if(!r&&l!==a){i+=l;continue}break}l===a?(i+=c[o],o+=1):i+=l;}return i};var F=t=>t?/^\d+$/.test(t):false;var z=t=>t.replace(/\D/g,"");var ue=(t,e)=>{let a=t.style.display;a!=="block"&&(t.style.display="block");let s=t.getBoundingClientRect(),r=e.getBoundingClientRect(),n=r.top-s.top,c=s.bottom-r.bottom;n>=0&&c>=0||(Math.abs(n)<Math.abs(c)?t.scrollTop+=n:t.scrollTop-=c),t.style.display=a;};var de=()=>typeof window>"u"?false:window.navigator.userAgent.toLowerCase().includes("macintosh");var pe=(t,e)=>{let a=e.disableDialCodeAndPrefix?false:e.forceDialCode,s=e.disableDialCodeAndPrefix?false:e.insertDialCodeOnEmpty,r=t,n=l=>e.trimNonDigitsEnd?l.trim():l;if(!r)return s&&!r.length||a?n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`):n(r);if(r=z(r),r===e.dialCode&&!e.disableDialCodeAndPrefix)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(e.dialCode.startsWith(r)&&!e.disableDialCodeAndPrefix)return n(a?`${e.prefix}${e.dialCode}${e.charAfterDialCode}`:`${e.prefix}${r}`);if(!r.startsWith(e.dialCode)&&!e.disableDialCodeAndPrefix){if(a)return n(`${e.prefix}${e.dialCode}${e.charAfterDialCode}`);if(r.length<e.dialCode.length)return n(`${e.prefix}${r}`)}let c=()=>{let l=e.dialCode.length,d=r.slice(0,l),m=r.slice(l);return {phoneLeftSide:d,phoneRightSide:m}},{phoneLeftSide:i,phoneRightSide:o}=c();return i=`${e.prefix}${i}${e.charAfterDialCode}`,o=le({value:o,mask:e.mask,maskSymbol:e.maskChar,trimNonMaskCharsLeftover:e.trimNonDigitsEnd||e.disableDialCodeAndPrefix&&o.length===0}),e.disableDialCodeAndPrefix&&(i=""),n(`${i}${o}`)};var me=({phoneBeforeInput:t,phoneAfterInput:e,phoneAfterFormatted:a,cursorPositionAfterInput:s,leftOffset:r=0,deletion:n})=>{if(s<r)return r;if(!t)return a.length;let c=null;for(let d=s-1;d>=0;d-=1)if(F(e[d])){c=d;break}if(c===null){for(let d=0;d<e.length;d+=1)if(F(a[d]))return d;return e.length}let i=0;for(let d=0;d<c;d+=1)F(e[d])&&(i+=1);let o=0,l=0;for(let d=0;d<a.length&&(o+=1,F(a[d])&&(l+=1),!(l>=i+1));d+=1);if(n!=="backward")for(;!F(a[o])&&o<a.length;)o+=1;return o};var O=({phone:t,prefix:e})=>t?`${e}${z(t)}`:"";function W({value:t,country:e,insertDialCodeOnEmpty:a,trimNonDigitsEnd:s,countries:r,prefix:n,charAfterDialCode:c,forceDialCode:i,disableDialCodeAndPrefix:o,defaultMask:l,countryGuessingEnabled:d,disableFormatting:m}){let f=t;o&&(f=f.startsWith(`${n}`)?f:`${n}${e.dialCode}${f}`);let g=d?X({phone:f,countries:r,currentCountryIso2:e?.iso2}):void 0,S=g?.country??e,p=pe(f,{prefix:n,mask:Q({phone:f,country:S,defaultMask:l,disableFormatting:m}),maskChar:J,dialCode:S.dialCode,trimNonDigitsEnd:s,charAfterDialCode:c,forceDialCode:i,insertDialCodeOnEmpty:a,disableDialCodeAndPrefix:o}),C=d&&!g?.fullDialCodeMatch?e:S;return {phone:O({phone:o?`${C.dialCode}${p}`:p,prefix:n}),inputValue:p,country:C}}var Ie=t=>{if(t?.toLocaleLowerCase().includes("delete")??false)return t?.toLocaleLowerCase().includes("forward")?"forward":"backward"},fe=(t,{country:e,insertDialCodeOnEmpty:a,phoneBeforeInput:s,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,countryGuessingEnabled:o,defaultMask:l,disableFormatting:d,countries:m})=>{let f=t.nativeEvent,g=f.inputType,S=Ie(g),p=!!g?.startsWith("insertFrom"),C=g==="insertText",D=f?.data||void 0,I=t.target.value,A=t.target.selectionStart??0;if(g?.includes("history"))return {inputValue:s,phone:O({phone:s,prefix:r}),cursorPosition:s.length,country:e};if(C&&!F(D)&&I!==r)return {inputValue:s,phone:O({phone:i?`${e.dialCode}${s}`:s,prefix:r}),cursorPosition:A-(D?.length??0),country:e};if(c&&!I.startsWith(`${r}${e.dialCode}`)&&!p){let b=I?s:`${r}${e.dialCode}${n}`;return {inputValue:b,phone:O({phone:b,prefix:r}),cursorPosition:r.length+e.dialCode.length+n.length,country:e}}let{phone:N,inputValue:u,country:h}=W({value:I,country:e,trimNonDigitsEnd:S==="backward",insertDialCodeOnEmpty:a,countryGuessingEnabled:o,countries:m,prefix:r,charAfterDialCode:n,forceDialCode:c,disableDialCodeAndPrefix:i,disableFormatting:d,defaultMask:l}),y=me({cursorPositionAfterInput:A,phoneBeforeInput:s,phoneAfterInput:I,phoneAfterFormatted:u,leftOffset:c?r.length+e.dialCode.length+n.length:0,deletion:S});return {phone:N,inputValue:u,cursorPosition:y,country:h}};var Ce=(t,e)=>{let a=Object.keys(t),s=Object.keys(e);if(a.length!==s.length)return  false;for(let r of a)if(t[r]!==e[r])return  false;return  true};var ye=()=>{let t=useRef(),e=useRef(Date.now());return {check:()=>{let s=Date.now(),r=t.current?s-e.current:void 0;return t.current=e.current,e.current=s,r}}};var ke={size:20,overrideLastItemDebounceMS:-1};function ge(t,e){let{size:a,overrideLastItemDebounceMS:s,onChange:r}={...ke,...e},[n,c]=useState(t),[i,o]=useState([n]),[l,d]=useState(0),m=ye();return [n,(p,C)=>{if(typeof p=="object"&&typeof n=="object"&&Ce(p,n)||p===n)return;let k=s>0,D=m.check(),I=k&&D!==void 0?D>s:true;if(C?.overrideLastItem!==void 0?C.overrideLastItem:!I)o(N=>[...N.slice(0,l),p]);else {let N=i.length>=a;o(u=>[...u.slice(N?1:0,l+1),p]),N||d(u=>u+1);}c(p),r?.(p);},()=>{if(l<=0)return {success:false};let p=i[l-1];return c(p),d(C=>C-1),r?.(p),{success:true,value:p}},()=>{if(l+1>=i.length)return {success:false};let p=i[l+1];return c(p),d(C=>C+1),r?.(p),{success:true,value:p}}]}var J=".",E={defaultCountry:"us",value:"",prefix:"+",defaultMask:"............",charAfterDialCode:" ",historySaveDebounceMS:200,disableCountryGuess:false,disableDialCodePrefill:false,forceDialCode:false,disableDialCodeAndPrefix:false,disableFormatting:false,countries:_},ee=({defaultCountry:t=E.defaultCountry,value:e=E.value,countries:a=E.countries,prefix:s=E.prefix,defaultMask:r=E.defaultMask,charAfterDialCode:n=E.charAfterDialCode,historySaveDebounceMS:c=E.historySaveDebounceMS,disableCountryGuess:i=E.disableCountryGuess,disableDialCodePrefill:o=E.disableDialCodePrefill,forceDialCode:l=E.forceDialCode,disableDialCodeAndPrefix:d=E.disableDialCodeAndPrefix,disableFormatting:m=E.disableFormatting,onChange:f,inputRef:g})=>{let C={countries:a,prefix:s,charAfterDialCode:n,forceDialCode:d?false:l,disableDialCodeAndPrefix:d,defaultMask:r,countryGuessingEnabled:!i,disableFormatting:m},k=useRef(null),D=g||k,I=w=>{Promise.resolve().then(()=>{typeof window>"u"||D.current!==document?.activeElement||D.current?.setSelectionRange(w,w);});},[{phone:A,inputValue:N,country:u},h,y,b]=ge(()=>{let w=$$5({value:t,field:"iso2",countries:a});w||console.error(`[react-international-phone]: can not find a country with "${t}" iso2 code`);let T=w||$$5({value:"us",field:"iso2",countries:a}),{phone:x,inputValue:L,country:U}=W({value:e,country:T,insertDialCodeOnEmpty:!o,...C});return I(L.length),{phone:x,inputValue:L,country:U.iso2}},{overrideLastItemDebounceMS:c,onChange:({inputValue:w,phone:T,country:x})=>{if(!f)return;let L=v(x);f({phone:T,inputValue:w,country:L});}}),v=useCallback(w=>$$5({value:w,field:"iso2",countries:a}),[a]),R=useMemo(()=>v(u),[u,v]);useEffect(()=>{let w=D.current;if(!w)return;let T=x=>{if(!x.key)return;let L=x.ctrlKey,U=x.metaKey,ve=x.shiftKey;if(x.key.toLowerCase()==="z"){if(de()){if(!U)return}else if(!L)return;ve?b():y();}};return w.addEventListener("keydown",T),()=>{w.removeEventListener("keydown",T);}},[D,y,b]);let V=w=>{w.preventDefault();let{phone:T,inputValue:x,country:L,cursorPosition:U}=fe(w,{country:R,phoneBeforeInput:N,insertDialCodeOnEmpty:false,...C});return h({inputValue:x,phone:T,country:L.iso2}),I(U),e},K=(w,T={focusOnInput:false})=>{let x=$$5({value:w,field:"iso2",countries:a});if(!x){console.error(`[react-international-phone]: can not find a country with "${w}" iso2 code`);return}let L=d?"":`${s}${x.dialCode}${n}`;h({inputValue:L,phone:`${s}${x.dialCode}`,country:x.iso2}),T.focusOnInput&&Promise.resolve().then(()=>{D.current?.focus();});},[G,j]=useState(false);return useEffect(()=>{if(!G){j(true),e!==A&&f?.({inputValue:N,phone:A,country:R});return}if(e===A)return;let{phone:w,inputValue:T,country:x}=W({value:e,country:R,insertDialCodeOnEmpty:!o,...C});h({phone:w,inputValue:T,country:x.iso2});},[e]),{phone:A,inputValue:N,country:R,setCountry:K,handlePhoneValueChange:V,inputRef:D}};var Q=({phone:t,country:e,defaultMask:a="............",disableFormatting:s=false})=>{let r=e.format,n=i=>s?i.replace(new RegExp(`[^${J}]`,"g"),""):i;if(!r)return n(a);if(typeof r=="string")return n(r);if(!r.default)return console.error(`[react-international-phone]: default mask for ${e.iso2} is not provided`),n(a);let c=Object.keys(r).find(i=>{if(i==="default")return  false;if(!(i.charAt(0)==="/"&&i.charAt(i.length-1)==="/"))return console.error(`[react-international-phone]: format regex "${i}" for ${e.iso2} is not valid`),false;let l=new RegExp(i.substring(1,i.length-1)),d=t.replace(e.dialCode,"");return l.test(z(d))});return n(c?r[c]:r.default)};var M=t=>{let[e,a,s,r,n,c]=t;return {name:e,iso2:a,dialCode:s,format:r,priority:n,areaCodes:c}};var Ae=t=>`Field "${t}" is not supported`,$$5=({field:t,value:e,countries:a=_})=>{if(["priority"].includes(t))throw new Error(Ae(t));let s=a.find(r=>{let n=M(r);return e===n[t]});if(s)return M(s)};var X=({phone:t,countries:e=_,currentCountryIso2:a})=>{let s={country:void 0,fullDialCodeMatch:false};if(!t)return s;let r=z(t);if(!r)return s;let n=s,c=({country:i,fullDialCodeMatch:o})=>{let l=i.dialCode===n.country?.dialCode,d=(i.priority??0)<(n.country?.priority??0);(!l||d)&&(n={country:i,fullDialCodeMatch:o});};for(let i of e){let o=M(i),{dialCode:l,areaCodes:d}=o;if(r.startsWith(l)){let m=n.country?Number(l)>=Number(n.country.dialCode):true;if(d){let f=r.substring(l.length);for(let g of d)if(f.startsWith(g))return {country:o,fullDialCodeMatch:true}}(m||l===r||!n.fullDialCodeMatch)&&c({country:o,fullDialCodeMatch:true});}n.fullDialCodeMatch||r.length<l.length&&l.startsWith(r)&&(!n.country||Number(l)<=Number(n.country.dialCode))&&c({country:o,fullDialCodeMatch:false});}if(a){let i=$$5({value:a,field:"iso2",countries:e});if(!i)return n;let l=i?(m=>{if(!m?.areaCodes)return  false;let f=r.substring(m.dialCode.length);return m.areaCodes.some(g=>g.startsWith(f))})(i):false;!!n&&n.country?.dialCode===i.dialCode&&n.country!==i&&n.fullDialCodeMatch&&(!i.areaCodes||l)&&(n={country:i,fullDialCodeMatch:true});}return n};var Te=(t,e)=>{let a=parseInt(t,16);return Number(a+e).toString(16)},Ee="abcdefghijklmnopqrstuvwxyz",Le="1f1e6",Pe=Ee.split("").reduce((t,e,a)=>({...t,[e]:Te(Le,a)}),{}),$e=t=>[Pe[t[0]],Pe[t[1]]].join("-"),q=({iso2:t,size:e,src:a,protocol:s="https",disableLazyLoading:r,className:n,style:c,...i})=>{if(!t)return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),width:e,height:e,...i});let o=()=>{if(a)return a;let l=$e(t);return `${s}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${l}.svg`};return H.createElement("img",{className:P({addPrefix:["flag-emoji"],rawClassNames:[n]}),src:o(),width:e,height:e,draggable:false,"data-country":t,loading:r?void 0:"lazy",style:{width:e,height:e,...c},alt:"",...i})};var He=1e3,ne=({show:t,dialCodePrefix:e="+",selectedCountry:a,countries:s=_,preferredCountries:r=[],flags:n,onSelect:c,onClose:i,...o})=>{let l=useRef(null),d=useRef(),m=useMemo(()=>{if(!r||!r.length)return s;let u=[],h=[...s];for(let y of r){let b=h.findIndex(v=>M(v).iso2===y);if(b!==-1){let v=h.splice(b,1)[0];u.push(v);}}return u.concat(h)},[s,r]),f=useRef({updatedAt:void 0,value:""}),g=u=>{let h=f.current.updatedAt&&new Date().getTime()-f.current.updatedAt.getTime()>He;f.current={value:h?u:`${f.current.value}${u}`,updatedAt:new Date};let y=m.findIndex(b=>M(b).name.toLowerCase().startsWith(f.current.value));y!==-1&&C(y);},S=useCallback(u=>m.findIndex(h=>M(h).iso2===u),[m]),[p,C]=useState(S(a)),k=()=>{d.current!==a&&C(S(a));},D=useCallback(u=>{C(S(u.iso2)),c?.(u);},[c,S]),I=u=>{let h=m.length-1,y=b=>u==="prev"?b-1:u==="next"?b+1:u==="last"?h:0;C(b=>{let v=y(b);return v<0?0:v>h?h:v});},A=u=>{if(u.stopPropagation(),u.key==="Enter"){u.preventDefault();let h=M(m[p]);D(h);return}if(u.key==="Escape"){i?.();return}if(u.key==="ArrowUp"){u.preventDefault(),I("prev");return}if(u.key==="ArrowDown"){u.preventDefault(),I("next");return}if(u.key==="PageUp"){u.preventDefault(),I("first");return}if(u.key==="PageDown"){u.preventDefault(),I("last");return}u.key===" "&&u.preventDefault(),u.key.length===1&&!u.altKey&&!u.ctrlKey&&!u.metaKey&&g(u.key.toLocaleLowerCase());},N=useCallback(()=>{if(!l.current||p===void 0)return;let u=M(m[p]).iso2;if(u===d.current)return;let h=l.current.querySelector(`[data-country="${u}"]`);h&&(ue(l.current,h),d.current=u);},[p,m]);return useEffect(()=>{N();},[p,N]),useEffect(()=>{l.current&&(t?l.current.focus():k());},[t]),useEffect(()=>{k();},[a]),H.createElement("ul",{ref:l,role:"listbox",className:P({addPrefix:["country-selector-dropdown"],rawClassNames:[o.className]}),style:{display:t?"block":"none",...o.style},onKeyDown:A,onBlur:i,tabIndex:-1,"aria-activedescendant":`react-international-phone__${M(m[p]).iso2}-option`},m.map((u,h)=>{let y=M(u),b=y.iso2===a,v=h===p,R=r.includes(y.iso2),V=h===r.length-1,K=n?.find(G=>G.iso2===y.iso2);return H.createElement(H.Fragment,{key:y.iso2},H.createElement("li",{"data-country":y.iso2,role:"option","aria-selected":b,"aria-label":`${y.name} ${e}${y.dialCode}`,id:`react-international-phone__${y.iso2}-option`,className:P({addPrefix:["country-selector-dropdown__list-item",R&&"country-selector-dropdown__list-item--preferred",b&&"country-selector-dropdown__list-item--selected",v&&"country-selector-dropdown__list-item--focused"],rawClassNames:[o.listItemClassName,R&&o.listItemPreferredClassName,b&&o.listItemSelectedClassName,v&&o.listItemFocusedClassName]}),onClick:()=>D(y),style:o.listItemStyle,title:y.name},H.createElement(q,{iso2:y.iso2,src:K?.src,className:P({addPrefix:["country-selector-dropdown__list-item-flag-emoji"],rawClassNames:[o.listItemFlagClassName]}),style:o.listItemFlagStyle}),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-country-name"],rawClassNames:[o.listItemCountryNameClassName]}),style:o.listItemCountryNameStyle},y.name),H.createElement("span",{className:P({addPrefix:["country-selector-dropdown__list-item-dial-code"],rawClassNames:[o.listItemDialCodeClassName]}),style:o.listItemDialCodeStyle},e,y.dialCode)),V?H.createElement("hr",{className:P({addPrefix:["country-selector-dropdown__preferred-list-divider"],rawClassNames:[o.preferredListDividerClassName]}),style:o.preferredListDividerStyle}):null)}))};var ae=({selectedCountry:t,onSelect:e,disabled:a,hideDropdown:s,countries:r=_,preferredCountries:n=[],flags:c,renderButtonWrapper:i,...o})=>{let[l,d]=useState(false),m=useMemo(()=>{if(t)return $$5({value:t,field:"iso2",countries:r})},[r,t]),f=useRef(null),g=p=>{p.key&&["ArrowUp","ArrowDown"].includes(p.key)&&(p.preventDefault(),d(true));},S=()=>{let p={title:m?.name,onClick:()=>d(k=>!k),onMouseDown:k=>k.preventDefault(),onKeyDown:g,disabled:s||a,role:"combobox","aria-label":"Country selector","aria-haspopup":"listbox","aria-expanded":l},C=H.createElement("div",{className:P({addPrefix:["country-selector-button__button-content"],rawClassNames:[o.buttonContentWrapperClassName]}),style:o.buttonContentWrapperStyle},H.createElement(q,{iso2:t,src:c?.find(k=>k.iso2===t)?.src,className:P({addPrefix:["country-selector-button__flag-emoji",a&&"country-selector-button__flag-emoji--disabled"],rawClassNames:[o.flagClassName]}),style:{visibility:t?"visible":"hidden",...o.flagStyle}}),!s&&H.createElement("div",{className:P({addPrefix:["country-selector-button__dropdown-arrow",a&&"country-selector-button__dropdown-arrow--disabled",l&&"country-selector-button__dropdown-arrow--active"],rawClassNames:[o.dropdownArrowClassName]}),style:o.dropdownArrowStyle}));return i?i({children:C,rootProps:p}):H.createElement("button",{...p,type:"button",className:P({addPrefix:["country-selector-button",l&&"country-selector-button--active",a&&"country-selector-button--disabled",s&&"country-selector-button--hide-dropdown"],rawClassNames:[o.buttonClassName]}),"data-country":t,style:o.buttonStyle},C)};return H.createElement("div",{className:P({addPrefix:["country-selector"],rawClassNames:[o.className]}),style:o.style,ref:f},S(),H.createElement(ne,{show:l,countries:r,preferredCountries:n,flags:c,onSelect:p=>{d(false),e?.(p);},selectedCountry:t,onClose:()=>{d(false);},...o.dropdownStyleProps}))};var ie=({dialCode:t,prefix:e,disabled:a,style:s,className:r})=>H.createElement("div",{className:P({addPrefix:["dial-code-preview",a&&"dial-code-preview--disabled"],rawClassNames:[r]}),style:s},`${e}${t}`);var Ue=forwardRef(({value:t,onChange:e,countries:a=_,preferredCountries:s=[],hideDropdown:r,showDisabledDialCodeAndPrefix:n,disableFocusAfterCountrySelect:c,flags:i,style:o,className:l,inputStyle:d,inputClassName:m,countrySelectorStyleProps:f,dialCodePreviewStyleProps:g,inputProps:S,placeholder:p,disabled:C,name:k,onFocus:D,onBlur:I,required:A,autoFocus:N,...u},h)=>{let{phone:y,inputValue:b,inputRef:v,country:R,setCountry:V,handlePhoneValueChange:K}=ee({value:t,countries:a,...u,onChange:j=>{e?.(j.phone,{country:j.country,inputValue:j.inputValue});}}),G=u.disableDialCodeAndPrefix&&n&&R?.dialCode;return useImperativeHandle(h,()=>v.current?Object.assign(v.current,{setCountry:V,state:{phone:y,inputValue:b,country:R}}):null,[v,V,y,b,R]),H.createElement("div",{ref:h,className:P({addPrefix:["input-container"],rawClassNames:[l]}),style:o},H.createElement(ae,{onSelect:j=>V(j.iso2,{focusOnInput:!c}),flags:i,selectedCountry:R.iso2,countries:a,preferredCountries:s,disabled:C,hideDropdown:r,...f}),G&&H.createElement(ie,{dialCode:R.dialCode,prefix:u.prefix??"+",disabled:C,...g}),H.createElement("input",{onChange:K,value:b,type:"tel",ref:v,className:P({addPrefix:["input",C&&"input--disabled"],rawClassNames:[m]}),placeholder:p,disabled:C,style:d,name:k,onFocus:D,onBlur:I,autoFocus:N,required:A,...S}))});
 
 var {
   Title: Title$3,
@@ -5812,8 +5839,8 @@ var whitespaces$2 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u200
   '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
 var uncurryThis$4 = functionUncurryThis;
-var requireObjectCoercible$1 = requireObjectCoercible$a;
-var toString$3 = toString$a;
+var requireObjectCoercible$1 = requireObjectCoercible$b;
+var toString$3 = toString$b;
 var whitespaces$1 = whitespaces$2;
 
 var replace$1 = uncurryThis$4(''.replace);
@@ -5837,7 +5864,7 @@ var stringTrim = {
 };
 
 var PROPER_FUNCTION_NAME = functionName.PROPER;
-var fails$4 = fails$p;
+var fails$5 = fails$p;
 var whitespaces = whitespaces$2;
 
 var non = '\u200B\u0085\u180E';
@@ -5845,20 +5872,20 @@ var non = '\u200B\u0085\u180E';
 // check that a method works with the correct list
 // of whitespaces and has a correct name
 var stringTrimForced = function (METHOD_NAME) {
-  return fails$4(function () {
+  return fails$5(function () {
     return !!whitespaces[METHOD_NAME]()
       || non[METHOD_NAME]() !== non
       || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
   });
 };
 
-var $$3 = _export;
+var $$4 = _export;
 var $trim = stringTrim.trim;
 var forcedStringTrimMethod = stringTrimForced;
 
 // `String.prototype.trim` method
 // https://tc39.es/ecma262/#sec-string.prototype.trim
-$$3({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
+$$4({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
   trim: function trim() {
     return $trim(this);
   }
@@ -6403,11 +6430,11 @@ var sort = function (array, comparefn) {
 
 var arraySort = sort;
 
-var fails$3 = fails$p;
+var fails$4 = fails$p;
 
 var arrayMethodIsStrict$1 = function (METHOD_NAME, argument) {
   var method = [][METHOD_NAME];
-  return !!method && fails$3(function () {
+  return !!method && fails$4(function () {
     // eslint-disable-next-line no-useless-call -- required for testing
     method.call(null, argument || function () { return 1; }, 1);
   });
@@ -6429,14 +6456,14 @@ var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
 
 var environmentWebkitVersion = !!webkit && +webkit[1];
 
-var $$2 = _export;
+var $$3 = _export;
 var uncurryThis$3 = functionUncurryThis;
 var aCallable = aCallable$9;
 var toObject$1 = toObject$5;
 var lengthOfArrayLike = lengthOfArrayLike$3;
 var deletePropertyOrThrow = deletePropertyOrThrow$1;
-var toString$2 = toString$a;
-var fails$2 = fails$p;
+var toString$2 = toString$b;
+var fails$3 = fails$p;
 var internalSort = arraySort;
 var arrayMethodIsStrict = arrayMethodIsStrict$1;
 var FF = environmentFfVersion;
@@ -6449,17 +6476,17 @@ var nativeSort = uncurryThis$3(test.sort);
 var push = uncurryThis$3(test.push);
 
 // IE8-
-var FAILS_ON_UNDEFINED = fails$2(function () {
+var FAILS_ON_UNDEFINED = fails$3(function () {
   test.sort(undefined);
 });
 // V8 bug
-var FAILS_ON_NULL = fails$2(function () {
+var FAILS_ON_NULL = fails$3(function () {
   test.sort(null);
 });
 // Old WebKit
 var STRICT_METHOD = arrayMethodIsStrict('sort');
 
-var STABLE_SORT = !fails$2(function () {
+var STABLE_SORT = !fails$3(function () {
   // feature detection can be too slow, so check engines versions
   if (V8) return V8 < 70;
   if (FF && FF > 3) return;
@@ -6507,7 +6534,7 @@ var getSortCompare = function (comparefn) {
 
 // `Array.prototype.sort` method
 // https://tc39.es/ecma262/#sec-array.prototype.sort
-$$2({ target: 'Array', proto: true, forced: FORCED }, {
+$$3({ target: 'Array', proto: true, forced: FORCED }, {
   sort: function sort(comparefn) {
     if (comparefn !== undefined) aCallable(comparefn);
 
@@ -6574,12 +6601,12 @@ var create = objectCreate;
 var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 var isPrototypeOf = objectIsPrototypeOf;
 var isRegExp = isRegexp;
-var toString$1 = toString$a;
+var toString$1 = toString$b;
 var getRegExpFlags = regexpGetFlags;
 var stickyHelpers = regexpStickyHelpers;
 var proxyAccessor = proxyAccessor$1;
 var defineBuiltIn = defineBuiltIn$8;
-var fails$1 = fails$p;
+var fails$2 = fails$p;
 var hasOwn = hasOwnProperty_1;
 var enforceInternalState = internalState.enforce;
 var setSpecies = setSpecies$2;
@@ -6608,7 +6635,7 @@ var MISSED_STICKY = stickyHelpers.MISSED_STICKY;
 var UNSUPPORTED_Y = stickyHelpers.UNSUPPORTED_Y;
 
 var BASE_FORCED = DESCRIPTORS$1 &&
-  (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG || fails$1(function () {
+  (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG || fails$2(function () {
     re2[MATCH] = false;
     // RegExp constructor can alter flags and IsRegExp works correct with @@match
     // eslint-disable-next-line sonarjs/inconsistent-function-call -- required for testing
@@ -7100,11 +7127,33 @@ function createTransitions(minProcessingMs, setProcessing, setView) {
   };
 }
 
+var $$2 = _export;
+var $includes = arrayIncludes.includes;
+var fails$1 = fails$p;
+var addToUnscopables = addToUnscopables$2;
+
+// FF99+ bug
+var BROKEN_ON_SPARSE = fails$1(function () {
+  // eslint-disable-next-line es/no-array-prototype-includes -- detection
+  return !Array(1).includes();
+});
+
+// `Array.prototype.includes` method
+// https://tc39.es/ecma262/#sec-array.prototype.includes
+$$2({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
+  includes: function includes(el /* , fromIndex = 0 */) {
+    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+addToUnscopables('includes');
+
 var $$1 = _export;
 var uncurryThis$1 = functionUncurryThis;
 var notARegExp = notARegexp;
-var requireObjectCoercible = requireObjectCoercible$a;
-var toString = toString$a;
+var requireObjectCoercible = requireObjectCoercible$b;
+var toString = toString$b;
 var correctIsRegExpLogic = correctIsRegexpLogic;
 
 var stringIndexOf = uncurryThis$1(''.indexOf);
@@ -7949,48 +7998,20 @@ function WalletPaymentForm(props) {
     processingSrc,
     supportEmail,
     supportPhone,
-    onSuccess: hostOnSuccess,
-    // host callback (deferred until success modal closes)
+    onSuccess,
+    // parent callback
     minProcessingMs = 1500,
+    // passthrough for wallet flow UI (not used by MoMo SDK client)
     publishableKey,
-    // if your hook uses it
     enterpriseWalletNo,
-    // passed back in payload
-    transactionType // friendly label
+    // human-friendly label
+    transactionType
   } = props;
 
-  // ── Local success/failed override so modals always show ────────────────────
-  var [forcedView, setForcedView] = useState(null); // 'success' | 'failed' | null
-  var [forcedReason, setForcedReason] = useState('');
-  var [forcedAmount, setForcedAmount] = useState(null);
-  var [forcedCurrency, setForcedCurrency] = useState(null);
-  var pendingSuccessPayloadRef = useRef(null); // call host after user closes success modal
-
-  var resetForced = () => {
-    setForcedView(null);
-    setForcedReason('');
-    setForcedAmount(null);
-    setForcedCurrency(null);
-    pendingSuccessPayloadRef.current = null;
-  };
-
-  // Intercept the hook's success: show modal first, then let host know on "Done"
-  var handleHookSuccess = payload => {
-    var _payload$amount;
-    pendingSuccessPayloadRef.current = payload;
-    setForcedAmount(Number((_payload$amount = payload === null || payload === void 0 ? void 0 : payload.amount) !== null && _payload$amount !== void 0 ? _payload$amount : 0));
-    setForcedCurrency((payload === null || payload === void 0 ? void 0 : payload.currency) || 'UGX');
-    setForcedView('success');
-  };
-
-  // Map transactionType to what the hook expects + inject our onSuccess wrapper
+  // Map transactionType to hook’s expected fields (no other flow changes)
   var hookProps = _objectSpread2(_objectSpread2({}, props), {}, {
-    onSuccess: handleHookSuccess,
-    // << we intercept here
     type: transactionType || props.type,
-    particulars: transactionType || props.particulars,
-    publishableKey,
-    enterpriseWalletNo
+    particulars: transactionType || props.particulars
   });
   var {
     view,
@@ -8008,11 +8029,53 @@ function WalletPaymentForm(props) {
   } = useWalletPaymentFlow(hookProps);
   var [passcode, setPasscode] = useState('');
 
-  // Alternate methods
+  // Alt methods
   var [showMM, setShowMM] = useState(false);
   var [showCard, setShowCard] = useState(false);
   var [showBank, setShowBank] = useState(false);
   var [altProcessing, setAltProcessing] = useState(false);
+  var [altError, setAltError] = useState(null);
+
+  // ✅ Local, guaranteed Success modal (works for BOTH wallet and MoMo)
+  var [showSuccess, setShowSuccess] = useState(false);
+  var successAmountRef = useRef(null);
+  var successCurrencyRef = useRef('UGX');
+  var pendingSuccessPayloadRef = useRef(null); // delivered to parent after user clicks Done
+
+  // Wrap success: show success modal first, then call parent onSuccess on close
+  var presentSuccess = (amount, currency, payload) => {
+    // stop any processing overlays
+    setAltProcessing(false);
+    successAmountRef.current = Number(amount || 0);
+    successCurrencyRef.current = currency || 'UGX';
+    pendingSuccessPayloadRef.current = payload || null;
+    setShowSuccess(true);
+  };
+  var handleSuccessClose = () => {
+    var payload = pendingSuccessPayloadRef.current;
+    // Call parent's onSuccess AFTER the user acknowledges Success
+    try {
+      if (payload) onSuccess === null || onSuccess === void 0 ? void 0 : onSuccess(payload);
+    } finally {
+      // clean up & close the whole flow
+      setShowSuccess(false);
+      pendingSuccessPayloadRef.current = null;
+      closeAndReset();
+    }
+  };
+
+  // ★★ Wallet-to-wallet path:
+  // If your internal hook already triggers a 'success' view AND calls props.onSuccess,
+  // we still ensure our Success modal shows by checking for that view below.
+  // If you prefer to intercept earlier, pass a wrapped onSuccess down to the hook:
+  // const walletFlowOnSuccess = (payload) => {
+  //   const billedAmount   = quote?.total ?? details.billedAmount;
+  //   const billedCurrency = quote?.currency || details.billedCurrency || 'UGX';
+  //   presentSuccess(billedAmount, billedCurrency, payload);
+  // };
+  // and then pass: useWalletPaymentFlow({ ...hookProps, onSuccess: walletFlowOnSuccess });
+
+  // ---------- Priority overlays ----------
   var renderLoading = () => /*#__PURE__*/jsxRuntimeExports.jsx(LoadingOverlay, {
     open: true,
     zIndex: zIndex,
@@ -8069,19 +8132,15 @@ function WalletPaymentForm(props) {
     passcode: passcode,
     setPasscode: setPasscode,
     transactionDetails: details,
-    onSubmit: /*#__PURE__*/_asyncToGenerator(function* () {
-      // Hook will call handleHookSuccess on success (we don't close here)
-      yield handleSubmit(passcode);
-    }),
+    onSubmit: () => handleSubmit(passcode),
     onBack: goToSummary,
     submitting: submitting,
     quote: quote
   });
 
-  // ── Never let processing mask success/failed ───────────────────────────────
+  // IMPORTANT: don’t let the "Processing…" overlay cover a success modal
   if (view === 'loading') return renderLoading();
-  var showProcessing = (processing || altProcessing) && !['success', 'failed'].includes(view) && !forcedView;
-  if (showProcessing) {
+  if ((processing || altProcessing) && !showSuccess && !altError) {
     var procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
     return /*#__PURE__*/jsxRuntimeExports.jsx(ProcessingModal, {
       open: true,
@@ -8092,7 +8151,7 @@ function WalletPaymentForm(props) {
     });
   }
 
-  // ── Alternate method transitions ───────────────────────────────────────────
+  // ---------- Alternate method transitions ----------
   var delay = Math.max(0, Number(minProcessingMs) || 1500);
   var startMobileMoneyFlow = () => {
     setAltProcessing(true);
@@ -8122,35 +8181,37 @@ function WalletPaymentForm(props) {
     }, delay);
   };
 
-  // ── Alternate: Mobile Money — show success/failed here too ─────────────────
+  // ---------- Alt method submit handlers ----------
+  // Uses ONLY amount + user-entered number (SDK fills defaults correctly).
   var handleAltMobileSubmit = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator(function* (_ref2) {
+    var _ref2 = _asyncToGenerator(function* (_ref) {
       var _quote$total;
       var {
         msisdn,
         e164,
         country,
         provider
-      } = _ref2;
+      } = _ref;
       var billedAmount = (_quote$total = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total !== void 0 ? _quote$total : details.billedAmount;
       var billedCurrency = (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency || 'UGX';
       try {
-        var _resp$data, _resp$data2;
+        var _resp$transaction_res, _resp$data, _resp$data2;
         setAltProcessing(true);
         setShowMM(false);
         var resp = yield createMobileMoneyDeposit({
           msisdn: e164 || msisdn,
+          // payer
           providerValue: provider,
           country: country || 'UG',
           amount: Number(billedAmount || 0),
           currency: billedCurrency,
           accountHolder: 'EVzone Customer',
-          emailAssociated: ''
+          emailAssociated: '' // SDK auto-falls back
         });
 
-        // Buffer host callback until user confirms success modal
-        pendingSuccessPayloadRef.current = {
-          transactionId: (resp === null || resp === void 0 ? void 0 : resp.provider_txn_id) || (resp === null || resp === void 0 ? void 0 : resp.transaction_id) || (resp === null || resp === void 0 ? void 0 : resp.reference_id) || (resp === null || resp === void 0 ? void 0 : (_resp$data = resp.data) === null || _resp$data === void 0 ? void 0 : _resp$data.provider_txn_id) || (resp === null || resp === void 0 ? void 0 : (_resp$data2 = resp.data) === null || _resp$data2 === void 0 ? void 0 : _resp$data2.reference_id) || 'ALT-MM-' + Math.floor(Math.random() * 1e9),
+        // Build a uniform payload for parent (but don't call parent yet)
+        var payload = {
+          transactionId: (resp === null || resp === void 0 ? void 0 : (_resp$transaction_res = resp.transaction_result) === null || _resp$transaction_res === void 0 ? void 0 : _resp$transaction_res.transaction_id) || (resp === null || resp === void 0 ? void 0 : resp.provider_txn_id) || (resp === null || resp === void 0 ? void 0 : resp.transaction_id) || (resp === null || resp === void 0 ? void 0 : resp.reference_id) || (resp === null || resp === void 0 ? void 0 : (_resp$data = resp.data) === null || _resp$data === void 0 ? void 0 : _resp$data.provider_txn_id) || (resp === null || resp === void 0 ? void 0 : (_resp$data2 = resp.data) === null || _resp$data2 === void 0 ? void 0 : _resp$data2.reference_id) || "ALT-MM-".concat(Math.floor(Math.random() * 1e9)),
           sessionId: null,
           enterprise: {
             walletNo: enterpriseWalletNo || null
@@ -8168,99 +8229,91 @@ function WalletPaymentForm(props) {
             upstream: resp
           }
         };
-        setForcedAmount(billedAmount);
-        setForcedCurrency(billedCurrency);
-        setForcedView('success');
+
+        // Show success first, then on Done -> parent onSuccess, then close
+        presentSuccess(billedAmount, billedCurrency, payload);
       } catch (err) {
         var _err$body, _err$body$error;
         var msg = (err === null || err === void 0 ? void 0 : (_err$body = err.body) === null || _err$body === void 0 ? void 0 : (_err$body$error = _err$body.error) === null || _err$body$error === void 0 ? void 0 : _err$body$error.message) || (err === null || err === void 0 ? void 0 : err.message) || 'Could not start Mobile Money payment.';
-        setForcedReason(msg);
-        setForcedView('failed');
+        setAltError(msg);
       } finally {
         setAltProcessing(false);
       }
     });
     return function handleAltMobileSubmit(_x) {
-      return _ref3.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
-
-  // ── Other alts keep their original behavior ────────────────────────────────
   var handleCardSubmit = card => {
+    var _quote$total2;
     try {
-      var _quote$total2;
-      hostOnSuccess === null || hostOnSuccess === void 0 ? void 0 : hostOnSuccess({
-        transactionId: 'CARD-' + Math.floor(Math.random() * 1e9),
-        sessionId: null,
-        enterprise: {
-          walletNo: enterpriseWalletNo || null
-        },
-        user: null,
-        amount: (_quote$total2 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total2 !== void 0 ? _quote$total2 : details.billedAmount,
-        currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
-        type: transactionType || details.type,
-        particulars: transactionType || details.particulars,
-        paymentMethod: 'CARD',
-        paymentMeta: {
-          brand: card.brand || null,
-          last4: String(card.cardNumber || '').slice(-4),
-          save: !!card.save,
-          phone: card.phone || null,
-          discountCode: card.discountCode || null
-        }
-      });
+      console.log('[EVZ SDK] card payload (masked):', _objectSpread2(_objectSpread2({}, card), {}, {
+        cardNumber: String(card.cardNumber || '').slice(-4).padStart(12, '*'),
+        cvv: '***'
+      }));
     } catch (_unused) {}
-    setShowCard(false);
-    closeAndReset();
+    var payload = {
+      transactionId: 'CARD-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: {
+        walletNo: enterpriseWalletNo || null
+      },
+      user: null,
+      amount: (_quote$total2 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total2 !== void 0 ? _quote$total2 : details.billedAmount,
+      currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
+      type: transactionType || details.type,
+      particulars: transactionType || details.particulars,
+      paymentMethod: 'CARD',
+      paymentMeta: {
+        brand: card.brand || null,
+        last4: String(card.cardNumber || '').slice(-4),
+        save: !!card.save,
+        phone: card.phone || null,
+        discountCode: card.discountCode || null
+      }
+    };
+    presentSuccess(payload.amount, payload.currency, payload);
   };
   var handleBankSubmit = bankPayload => {
-    try {
-      var _quote$total3;
-      hostOnSuccess === null || hostOnSuccess === void 0 ? void 0 : hostOnSuccess({
-        transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
-        sessionId: null,
-        enterprise: {
-          walletNo: enterpriseWalletNo || null
-        },
-        user: null,
-        amount: (_quote$total3 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total3 !== void 0 ? _quote$total3 : details.billedAmount,
-        currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || (details === null || details === void 0 ? void 0 : details.billedCurrency),
-        type: transactionType || details.type,
-        particulars: transactionType || details.particulars,
-        paymentMethod: 'BANK',
-        paymentMeta: bankPayload
-      });
-    } catch (_unused2) {}
-    setShowBank(false);
-    closeAndReset();
+    var _quote$total3;
+    var payload = {
+      transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
+      sessionId: null,
+      enterprise: {
+        walletNo: enterpriseWalletNo || null
+      },
+      user: null,
+      amount: (_quote$total3 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total3 !== void 0 ? _quote$total3 : details.billedAmount,
+      currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
+      type: transactionType || details.type,
+      particulars: transactionType || details.particulars,
+      paymentMethod: 'BANK',
+      paymentMeta: bankPayload
+    };
+    presentSuccess(payload.amount, payload.currency, payload);
   };
 
-  // ── Single active modal / view (success/failed take priority) ─────────────
+  // ---------- Single active modal / view ----------
   var content = null;
-  if (forcedView === 'success') {
-    var _quote$total4;
+
+  // ✅ Our guaranteed Success modal takes absolute priority
+  if (showSuccess) {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
       open: true,
-      amount: forcedAmount !== null && forcedAmount !== void 0 ? forcedAmount : (_quote$total4 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total4 !== void 0 ? _quote$total4 : details === null || details === void 0 ? void 0 : details.billedAmount,
-      currency: forcedCurrency !== null && forcedCurrency !== void 0 ? forcedCurrency : (quote === null || quote === void 0 ? void 0 : quote.currency) || (details === null || details === void 0 ? void 0 : details.billedCurrency),
+      amount: successAmountRef.current,
+      currency: successCurrencyRef.current,
       zIndex: zIndex,
-      onClose: () => {
-        // now it is safe to notify host (they might close the parent)
-        try {
-          hostOnSuccess === null || hostOnSuccess === void 0 ? void 0 : hostOnSuccess(pendingSuccessPayloadRef.current);
-        } catch (_unused3) {}
-        resetForced();
-        closeAndReset();
-      }
+      onClose: handleSuccessClose,
+      showAmount: true
     });
-  } else if (forcedView === 'failed') {
+  } else if (altError) {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentFailedModal, {
       open: true,
       zIndex: zIndex,
-      reason: forcedReason || 'Payment failed',
+      reason: altError,
       onClose: () => {
-        resetForced();
-        // keep the form open after failure so user can retry
+        setAltError(null);
+        closeAndReset();
       }
     });
   } else if (showMM) {
@@ -8312,28 +8365,22 @@ function WalletPaymentForm(props) {
   } else if (view === 'passcode') {
     content = renderPasscode();
   } else if (view === 'success') {
-    var _quote$total5;
-    // In case the hook sets success (we still show it)
+    var _quote$total4;
+    // Fallback: if your hook explicitly sends 'success', still show it
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentSuccessModal, {
       open: true,
-      amount: (_quote$total5 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total5 !== void 0 ? _quote$total5 : details.billedAmount,
+      amount: (_quote$total4 = quote === null || quote === void 0 ? void 0 : quote.total) !== null && _quote$total4 !== void 0 ? _quote$total4 : details.billedAmount,
       currency: (quote === null || quote === void 0 ? void 0 : quote.currency) || details.billedCurrency,
       zIndex: zIndex,
-      onClose: () => {
-        try {
-          hostOnSuccess === null || hostOnSuccess === void 0 ? void 0 : hostOnSuccess(pendingSuccessPayloadRef.current);
-        } catch (_unused4) {}
-        closeAndReset();
-      }
+      onClose: handleSuccessClose,
+      showAmount: true
     });
   } else if (view === 'failed') {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(PaymentFailedModal, {
       open: true,
       zIndex: zIndex,
       reason: errorMsg,
-      onClose: () => {
-        // keep open; user can go back / retry
-      }
+      onClose: closeAndReset
     });
   } else if (view === 'insufficient') {
     content = /*#__PURE__*/jsxRuntimeExports.jsx(InsufficientFundsModal, {
