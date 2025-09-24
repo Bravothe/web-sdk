@@ -1,5 +1,5 @@
 // src/WalletPaymentForm.js
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Modal, Button, Typography, Space } from 'antd';
 
 import TransactionSummary from './TransactionSummary.js';
@@ -13,9 +13,10 @@ import HasAccountSummary from './HasAccountSummary.js';
 import AccountPickerModal from './AccountPickerModal.js';
 import MobileMoneyFallbackModal from './MobileMoneyFallbackModal.js';
 import CardPaymentModal from './CardPaymentModal.js';
-import BankPaymentModal from './BankPaymentModal.js';            // ← NEW
+import BankPaymentModal from './BankPaymentModal.js';
 
 import useWalletPaymentFlow from './hooks/useWalletPaymentFlow.js';
+import { createMobileMoneyDeposit } from './sdk/createMobileMoneyDeposit.js';
 
 const { Title, Text } = Typography;
 
@@ -28,16 +29,53 @@ function WalletPaymentForm(props) {
     processingSrc,
     supportEmail,
     supportPhone,
-    onSuccess,
-    minProcessingMs = 1500, // used for alternate-method transition overlay
+    onSuccess: hostOnSuccess,   // host callback (deferred until success modal closes)
+    minProcessingMs = 1500,
+
+    publishableKey,             // if your hook uses it
+    enterpriseWalletNo,         // passed back in payload
+    transactionType,            // friendly label
   } = props;
+
+  // ── Local success/failed override so modals always show ────────────────────
+  const [forcedView, setForcedView] = useState(null); // 'success' | 'failed' | null
+  const [forcedReason, setForcedReason] = useState('');
+  const [forcedAmount, setForcedAmount] = useState(null);
+  const [forcedCurrency, setForcedCurrency] = useState(null);
+  const pendingSuccessPayloadRef = useRef(null); // call host after user closes success modal
+
+  const resetForced = () => {
+    setForcedView(null);
+    setForcedReason('');
+    setForcedAmount(null);
+    setForcedCurrency(null);
+    pendingSuccessPayloadRef.current = null;
+  };
+
+  // Intercept the hook's success: show modal first, then let host know on "Done"
+  const handleHookSuccess = (payload) => {
+    pendingSuccessPayloadRef.current = payload;
+    setForcedAmount(Number(payload?.amount ?? 0));
+    setForcedCurrency(payload?.currency || 'UGX');
+    setForcedView('success');
+  };
+
+  // Map transactionType to what the hook expects + inject our onSuccess wrapper
+  const hookProps = {
+    ...props,
+    onSuccess: handleHookSuccess,                // << we intercept here
+    type: transactionType || props.type,
+    particulars: transactionType || props.particulars,
+    publishableKey,
+    enterpriseWalletNo,
+  };
 
   const {
     view,
     errorMsg,
     quote,
     submitting,
-    processing,        // processing from the hook (quote/charge)
+    processing,
     details,
     accounts,
     selectAccount,
@@ -46,14 +84,14 @@ function WalletPaymentForm(props) {
     closeAndReset,
     restart,
     goToSummary,
-  } = useWalletPaymentFlow(props);
+  } = useWalletPaymentFlow(hookProps);
 
   const [passcode, setPasscode] = useState('');
 
-  // Alternate-payment modals (independent of wallet flow)
+  // Alternate methods
   const [showMM, setShowMM] = useState(false);
   const [showCard, setShowCard] = useState(false);
-  const [showBank, setShowBank] = useState(false);              // ← NEW
+  const [showBank, setShowBank] = useState(false);
   const [altProcessing, setAltProcessing] = useState(false);
 
   const renderLoading = () => (
@@ -95,24 +133,30 @@ function WalletPaymentForm(props) {
       passcode={passcode}
       setPasscode={setPasscode}
       transactionDetails={details}
-      onSubmit={() => handleSubmit(passcode)}
+      onSubmit={async () => {
+        // Hook will call handleHookSuccess on success (we don't close here)
+        await handleSubmit(passcode);
+      }}
       onBack={goToSummary}
       submitting={submitting}
       quote={quote}
     />
   );
 
-  // Priority overlays
+  // ── Never let processing mask success/failed ───────────────────────────────
   if (view === 'loading') return renderLoading();
+  const showProcessing =
+    (processing || altProcessing) &&
+    !['success', 'failed'].includes(view) &&
+    !forcedView;
 
-  if (processing || altProcessing) {
+  if (showProcessing) {
     const procSrc = processingSrc || DEFAULT_PROCESSING_GIF;
     return <ProcessingModal open src={procSrc} message="Processing…" subText="Please wait" zIndex={zIndex} />;
   }
 
-  // ---------- Alternate method transitions ----------
+  // ── Alternate method transitions ───────────────────────────────────────────
   const delay = Math.max(0, Number(minProcessingMs) || 1500);
-
   const startMobileMoneyFlow = () => {
     setAltProcessing(true);
     setTimeout(() => {
@@ -122,7 +166,6 @@ function WalletPaymentForm(props) {
       setShowBank(false);
     }, delay);
   };
-
   const startCardFlow = () => {
     setAltProcessing(true);
     setTimeout(() => {
@@ -132,7 +175,6 @@ function WalletPaymentForm(props) {
       setShowBank(false);
     }, delay);
   };
-
   const startBankFlow = () => {
     setAltProcessing(true);
     setTimeout(() => {
@@ -143,77 +185,141 @@ function WalletPaymentForm(props) {
     }, delay);
   };
 
-  // ---------- Alt method submit handlers ----------
-  const handleAltMobileSubmit = ({ msisdn, e164, country }) => {
-    try { console.log('[EVZ SDK] alt mobile money:', { msisdn, e164, country }); } catch {}
-    onSuccess?.({
-      transactionId: 'ALT-MM-' + Math.floor(Math.random() * 1e9),
-      sessionId: null,
-      enterprise: null,
-      user: null,
-      amount: quote?.total ?? details.billedAmount,
-      currency: quote?.currency || details.billedCurrency,
-      type: details.type,
-      particulars: details.particulars,
-      paymentMethod: 'MOBILE_MONEY',
-      paymentMeta: { msisdn, e164, country },
-    });
-    setShowMM(false);
-    closeAndReset();
+  // ── Alternate: Mobile Money — show success/failed here too ─────────────────
+  const handleAltMobileSubmit = async ({ msisdn, e164, country, provider }) => {
+    const billedAmount = quote?.total ?? details.billedAmount;
+    const billedCurrency = quote?.currency || details.billedCurrency || 'UGX';
+
+    try {
+      setAltProcessing(true);
+      setShowMM(false);
+
+      const resp = await createMobileMoneyDeposit({
+        msisdn: e164 || msisdn,
+        providerValue: provider,
+        country: country || 'UG',
+        amount: Number(billedAmount || 0),
+        currency: billedCurrency,
+        accountHolder: 'EVzone Customer',
+        emailAssociated: '',
+      });
+
+      // Buffer host callback until user confirms success modal
+      pendingSuccessPayloadRef.current = {
+        transactionId:
+          resp?.provider_txn_id ||
+          resp?.transaction_id ||
+          resp?.reference_id ||
+          resp?.data?.provider_txn_id ||
+          resp?.data?.reference_id ||
+          'ALT-MM-' + Math.floor(Math.random() * 1e9),
+        sessionId: null,
+        enterprise: { walletNo: enterpriseWalletNo || null },
+        user: null,
+        amount: billedAmount,
+        currency: billedCurrency,
+        type: transactionType || details.type,
+        particulars: transactionType || details.particulars,
+        paymentMethod: 'MOBILE_MONEY',
+        paymentMeta: {
+          msisdn: e164 || msisdn,
+          country,
+          provider,
+          upstream: resp,
+        },
+      };
+
+      setForcedAmount(billedAmount);
+      setForcedCurrency(billedCurrency);
+      setForcedView('success');
+    } catch (err) {
+      const msg =
+        err?.body?.error?.message ||
+        err?.message ||
+        'Could not start Mobile Money payment.';
+      setForcedReason(msg);
+      setForcedView('failed');
+    } finally {
+      setAltProcessing(false);
+    }
   };
 
+  // ── Other alts keep their original behavior ────────────────────────────────
   const handleCardSubmit = (card) => {
     try {
-      console.log('[EVZ SDK] card payload (masked):', {
-        ...card,
-        cardNumber: String(card.cardNumber || '').slice(-4).padStart(12, '*'),
-        cvv: '***',
+      hostOnSuccess?.({
+        transactionId: 'CARD-' + Math.floor(Math.random() * 1e9),
+        sessionId: null,
+        enterprise: { walletNo: enterpriseWalletNo || null },
+        user: null,
+        amount: quote?.total ?? details.billedAmount,
+        currency: quote?.currency || details.billedCurrency,
+        type: transactionType || details.type,
+        particulars: transactionType || details.particulars,
+        paymentMethod: 'CARD',
+        paymentMeta: {
+          brand: card.brand || null,
+          last4: String(card.cardNumber || '').slice(-4),
+          save: !!card.save,
+          phone: card.phone || null,
+          discountCode: card.discountCode || null,
+        },
       });
     } catch {}
-    onSuccess?.({
-      transactionId: 'CARD-' + Math.floor(Math.random() * 1e9),
-      sessionId: null,
-      enterprise: null,
-      user: null,
-      amount: quote?.total ?? details.billedAmount,
-      currency: quote?.currency || details.billedCurrency,
-      type: details.type,
-      particulars: details.particulars,
-      paymentMethod: 'CARD',
-      paymentMeta: {
-        brand: card.brand || null,
-        last4: String(card.cardNumber || '').slice(-4),
-        save: !!card.save,
-        phone: card.phone || null,
-        discountCode: card.discountCode || null,
-      },
-    });
     setShowCard(false);
     closeAndReset();
   };
 
   const handleBankSubmit = (bankPayload) => {
-    try { console.log('[EVZ SDK] bank payload:', bankPayload); } catch {}
-    onSuccess?.({
-      transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
-      sessionId: null,
-      enterprise: null,
-      user: null,
-      amount: quote?.total ?? details.billedAmount,
-      currency: quote?.currency || details.billedCurrency,
-      type: details.type,
-      particulars: details.particulars,
-      paymentMethod: 'BANK',
-      paymentMeta: bankPayload, // { country, bank, accountNumber, accountName, branch?, reference? }
-    });
+    try {
+      hostOnSuccess?.({
+        transactionId: 'BANK-' + Math.floor(Math.random() * 1e9),
+        sessionId: null,
+        enterprise: { walletNo: enterpriseWalletNo || null },
+        user: null,
+        amount: quote?.total ?? details.billedAmount,
+        currency: quote?.currency || details?.billedCurrency,
+        type: transactionType || details.type,
+        particulars: transactionType || details.particulars,
+        paymentMethod: 'BANK',
+        paymentMeta: bankPayload,
+      });
+    } catch {}
     setShowBank(false);
     closeAndReset();
   };
 
-  // ---------- Single active modal ----------
+  // ── Single active modal / view (success/failed take priority) ─────────────
   let content = null;
 
-  if (showMM) {
+  if (forcedView === 'success') {
+    content = (
+      <PaymentSuccessModal
+        open
+        amount={forcedAmount ?? (quote?.total ?? details?.billedAmount)}
+        currency={forcedCurrency ?? (quote?.currency || details?.billedCurrency)}
+        zIndex={zIndex}
+        onClose={() => {
+          // now it is safe to notify host (they might close the parent)
+          try { hostOnSuccess?.(pendingSuccessPayloadRef.current); } catch {}
+          resetForced();
+          closeAndReset();
+        }}
+      />
+    );
+  } else if (forcedView === 'failed') {
+    content = (
+      <PaymentFailedModal
+        open
+        zIndex={zIndex}
+        reason={forcedReason || 'Payment failed'}
+        onClose={() => {
+          resetForced();
+          // keep the form open after failure so user can retry
+        }}
+      />
+    );
+  } else if (showMM) {
     content = (
       <MobileMoneyFallbackModal
         open
@@ -266,13 +372,17 @@ function WalletPaymentForm(props) {
   } else if (view === 'passcode') {
     content = renderPasscode();
   } else if (view === 'success') {
+    // In case the hook sets success (we still show it)
     content = (
       <PaymentSuccessModal
         open
         amount={quote?.total ?? details.billedAmount}
         currency={quote?.currency || details.billedCurrency}
         zIndex={zIndex}
-        onClose={closeAndReset}
+        onClose={() => {
+          try { hostOnSuccess?.(pendingSuccessPayloadRef.current); } catch {}
+          closeAndReset();
+        }}
       />
     );
   } else if (view === 'failed') {
@@ -281,7 +391,9 @@ function WalletPaymentForm(props) {
         open
         zIndex={zIndex}
         reason={errorMsg}
-        onClose={closeAndReset}
+        onClose={() => {
+          // keep open; user can go back / retry
+        }}
       />
     );
   } else if (view === 'insufficient') {
