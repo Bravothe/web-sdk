@@ -1,17 +1,14 @@
-// src/MobileMoneyFallbackModal.js
 import React, { useMemo, useState } from 'react';
 import { Modal, Typography, Space, Button, Select } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { BrandHeader } from './brand.js';
 
-// Phone input
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
 const { Title, Text } = Typography;
 const BRAND_RED = '#ff4d4f';
 
-/** Dummy country options (extend as needed) */
 const COUNTRY_OPTIONS = [
   { label: 'Uganda', value: 'UG' },
   { label: 'Kenya', value: 'KE' },
@@ -22,7 +19,6 @@ const COUNTRY_OPTIONS = [
   { label: 'South Africa', value: 'ZA' },
 ];
 
-/** Demo provider catalog per country (extend as needed) */
 const PROVIDERS_BY_COUNTRY = {
   UG: [
     { label: 'MTN Uganda', value: 'mtn_ug' },
@@ -64,28 +60,22 @@ export default function MobileMoneyFallbackModal({
   onSubmit,              // (payload) => void ; payload = { msisdn, e164, country, provider }
   zIndex = 2100,
   width = 520,
-  defaultCountry = 'ug', // two-letter ISO (lowercase) e.g. 'ug', 'ke', 'ng'
+  defaultCountry = 'ug', // two-letter ISO, lower-case per library docs
 }) {
   const [phone, setPhone] = useState(''); // E.164 string (e.g. "+256700000000")
-  const [countryIso, setCountryIso] = useState(
-    String(defaultCountry || 'ug').toUpperCase()
-  ); // 'UG', 'KE', 'NG', ...
+  const [countryIso, setCountryIso] = useState(String(defaultCountry || 'ug').toUpperCase()); // 'UG', 'KE', ...
   const [provider, setProvider] = useState(null);
 
-  // Limit countries to those we have providers for (optional)
   const supportedSet = useMemo(() => new Set(Object.keys(PROVIDERS_BY_COUNTRY)), []);
   const countrySelectOptions = useMemo(
     () => COUNTRY_OPTIONS.filter(c => supportedSet.has(c.value)),
     [supportedSet]
   );
-
-  // Providers for the selected country
   const providerOptions = useMemo(
     () => PROVIDERS_BY_COUNTRY[countryIso] || [],
     [countryIso]
   );
 
-  // very light validation: must start with '+' and have at least 8 digits total
   const isValidE164 = useMemo(() => {
     if (!phone || typeof phone !== 'string') return false;
     if (!phone.startsWith('+')) return false;
@@ -97,7 +87,7 @@ export default function MobileMoneyFallbackModal({
 
   const handleCountryChange = (iso) => {
     setCountryIso(iso);
-    setProvider(null); // reset provider when country changes
+    setProvider(null);
   };
 
   const handleSubmit = () => {
@@ -105,8 +95,8 @@ export default function MobileMoneyFallbackModal({
     onSubmit?.({
       msisdn: phone,
       e164: phone,
-      country: countryIso, // 'UG', 'KE', 'NG'
-      provider,            // e.g. 'mtn_ug'
+      country: countryIso, // 'UG', 'KE', ...
+      provider,            // 'mtn_ug', etc.
     });
   };
 
@@ -139,10 +129,8 @@ export default function MobileMoneyFallbackModal({
         </span>
       }
     >
-      {/* Brand header */}
       <BrandHeader size="sm" />
 
-      {/* dashed separator */}
       <div
         style={{
           borderTop: '1px dashed #e5e7eb',
@@ -185,20 +173,15 @@ export default function MobileMoneyFallbackModal({
           />
         </div>
 
-        {/* Phone */}
+        {/* Phone — minimal, per docs.  We control the country so the dial code matches the Select. */}
         <div style={{ marginTop: 12 }}>
           <Text>Mobile Number</Text>
           <div style={{ marginTop: 6 }}>
             <PhoneInput
-              // Keep the dial code/country dropdown in sync:
-              country={countryIso.toLowerCase()}
-              defaultCountry={countryIso.toLowerCase()}
+              country={countryIso.toLowerCase()}      // controlled country (lowercase)
               value={phone}
               onChange={setPhone}
               onCountryChange={(iso) => setCountryIso(String(iso || '').toUpperCase())}
-              forceDialCode
-              hideDropdown={false}
-              inputStyle={{ width: '100%' }}
             />
           </div>
         </div>

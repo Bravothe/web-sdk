@@ -1,10 +1,8 @@
-// src/CardPaymentModal.js
 import React, { useMemo, useState } from 'react';
 import { Modal, Typography, Space, Button, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { BrandHeader } from './brand.js';
 
-// Reuse the same phone input component used in Mobile Money
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
@@ -14,26 +12,23 @@ const BRAND_RED = '#ff4d4f';
 export default function CardPaymentModal({
   open = false,
   onCancel,
-  onSubmit,           // (payload) => void
+  onSubmit,
   zIndex = 2100,
   width = 520,
   defaultCountry = 'ug',
 }) {
   const [cardHolder, setCardHolder] = useState('');
   const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');  // MM/YY or MM/YYYY
+  const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
 
-  const sanitizedCard = useMemo(
-    () => cardNumber.replace(/[^\d]/g, ''),
-    [cardNumber]
-  );
+  const sanitizedCard = useMemo(() => cardNumber.replace(/[^\d]/g, ''), [cardNumber]);
 
   const canSubmit = useMemo(() => {
     const hasName = cardHolder.trim().length >= 2;
-    const hasNum = sanitizedCard.length >= 12; // light check only
+    const hasNum = sanitizedCard.length >= 12;
     const hasExpiry = /^\d{2}\/\d{2,4}$/.test(expiry.trim());
     const hasCvv = /^\d{3,4}$/.test(cvv.trim());
     return hasName && hasNum && hasExpiry && hasCvv;
@@ -43,12 +38,12 @@ export default function CardPaymentModal({
     if (!canSubmit) return;
     const payload = {
       cardHolder: cardHolder.trim(),
-      cardNumber: sanitizedCard, // parent can mask before logging
+      cardNumber: sanitizedCard,
       expiry: expiry.trim(),
-      cvv: cvv.trim(),           // parent MUST NOT log this
+      cvv: cvv.trim(),
       address: address.trim() || null,
       phone: phone || null,
-      brand: guessBrand(sanitizedCard), // simple brand guess
+      brand: guessBrand(sanitizedCard),
     };
     onSubmit?.(payload);
   };
@@ -83,13 +78,7 @@ export default function CardPaymentModal({
       }
     >
       <BrandHeader size="sm" />
-
-      <div
-        style={{
-          borderTop: '1px dashed #e5e7eb',
-          margin: '12px -20px 16px',
-        }}
-      />
+      <div style={{ borderTop: '1px dashed #e5e7eb', margin: '12px -20px 16px' }} />
 
       <Space direction="vertical" style={{ width: '100%' }}>
         <Title level={4} style={{ margin: 0 }}>Pay with Card</Title>
@@ -151,19 +140,16 @@ export default function CardPaymentModal({
 
         <div style={{ marginTop: 12 }}>
           <Text>Phone number (optional)</Text>
+          {/* minimal usage exactly like the library docs */}
           <PhoneInput
-            defaultCountry={defaultCountry}
+            defaultCountry={String(defaultCountry || 'ug').toLowerCase()}
             value={phone}
             onChange={setPhone}
-            forceDialCode
-            inputStyle={{ width: '100%' }}
           />
         </div>
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 16 }}>
-          <Button onClick={onCancel} shape="round">
-            Cancel
-          </Button>
+          <Button onClick={onCancel} shape="round">Cancel</Button>
           <Button type="primary" shape="round" onClick={handleSubmit} disabled={!canSubmit}>
             Pay
           </Button>
@@ -180,13 +166,11 @@ function formatCard(v) {
     .replace(/(\d{4})(?=\d)/g, '$1 ')
     .trim();
 }
-
 function formatExpiry(v) {
   const digits = v.replace(/[^\d]/g, '').slice(0, 4);
   if (digits.length <= 2) return digits;
   return digits.slice(0, 2) + '/' + digits.slice(2);
 }
-
 function guessBrand(num) {
   const n = num || '';
   if (/^4/.test(n)) return 'visa';

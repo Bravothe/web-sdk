@@ -3321,38 +3321,26 @@
     Text: Text$9
   } = antd.Typography;
 
-  // Smooth blue palette (sampled from your reference)
-  var BLUE_BASE = '#179CFC'; // main
-  var BLUE_LIGHT = '#5CB9FC'; // top of badge gradient
-  var BLUE_DARK = '#127CC9'; // hover/active accent
-
+  // Smooth blue palette
+  var BLUE_BASE = '#179CFC';
+  var BLUE_LIGHT = '#5CB9FC';
+  var BLUE_DARK = '#127CC9';
   function PaymentSuccessModal(_ref) {
     var {
       open = true,
       onClose,
+      // keep these props for backwards-compat, but we won't render them:
       amount,
-      // optional
+      // unused (intentionally hidden)
       currency = 'UGX',
-      // optional
+      // unused (intentionally hidden)
+      showAmount = false,
+      // unused (intentionally hidden)
       zIndex = 2000,
       width = 440,
-      // slightly smaller like the reference
-      showAmount = false,
       title = 'Payment Successful',
-      subtitle // optional: small line under amount (e.g., “Thanks for using EVzone Pay”)
+      subtitle // optional small line under the title
     } = _ref;
-    var fmtAmount = (v, cur) => {
-      var n = Number(v !== null && v !== void 0 ? v : 0);
-      try {
-        return new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency: cur,
-          maximumFractionDigits: 0
-        }).format(n);
-      } catch (_unused) {
-        return "".concat(cur, " ").concat(n.toLocaleString());
-      }
-    };
     return /*#__PURE__*/jsxRuntimeExports.jsxs(antd.Modal, {
       open: open,
       centered: true,
@@ -3393,14 +3381,6 @@
           fontWeight: 700
         },
         children: title
-      }), showAmount && typeof amount === 'number' && /*#__PURE__*/jsxRuntimeExports.jsx("div", {
-        style: {
-          marginTop: -2,
-          marginBottom: 12,
-          color: '#4B5563',
-          fontWeight: 600
-        },
-        children: fmtAmount(amount, currency)
       }), subtitle ? /*#__PURE__*/jsxRuntimeExports.jsx(Text$9, {
         type: "secondary",
         style: {
@@ -3417,7 +3397,7 @@
         onClick: onClose,
         children: "Done"
       }), /*#__PURE__*/jsxRuntimeExports.jsx("style", {
-        children: "\n        .evz-success-modal .ant-modal-content {\n          border-radius: 14px;\n        }\n\n        /* Blue circular badge */\n        .evz-badge {\n          margin: 0 auto 8px;\n          width: 72px;               /* \u2193 slightly reduced from 84px */\n          height: 72px;\n          border-radius: 50%;\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          background: radial-gradient(100% 100% at 50% 0%, ".concat(BLUE_LIGHT, " 0%, ").concat(BLUE_BASE, " 100%);\n          box-shadow: 0 10px 28px rgba(23, 156, 252, 0.32);\n          animation: evzPop .26s ease-out;\n        }\n\n        /* Primary button in the smooth blue tone */\n        .evz-success-modal .evz-primary.ant-btn-primary {\n          background: ").concat(BLUE_BASE, ";\n          border-color: ").concat(BLUE_BASE, ";\n          font-weight: 600;\n          height: 40px;\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:hover,\n        .evz-success-modal .evz-primary.ant-btn-primary:focus {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:active {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n          filter: saturate(1.05);\n        }\n\n        @keyframes evzPop {\n          0%   { transform: scale(.92); opacity: .65; }\n          100% { transform: scale(1);   opacity: 1; }\n        }\n\n        /* Respect reduced motion */\n        @media (prefers-reduced-motion: reduce) {\n          .evz-badge { animation: none !important; }\n        }\n      ")
+        children: "\n        .evz-success-modal .ant-modal-content {\n          border-radius: 14px;\n        }\n        .evz-badge {\n          margin: 0 auto 8px;\n          width: 72px;\n          height: 72px;\n          border-radius: 50%;\n          display: flex;\n          align-items: center;\n          justifyContent: center;\n          background: radial-gradient(100% 100% at 50% 0%, ".concat(BLUE_LIGHT, " 0%, ").concat(BLUE_BASE, " 100%);\n          box-shadow: 0 10px 28px rgba(23, 156, 252, 0.32);\n          animation: evzPop .26s ease-out;\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary {\n          background: ").concat(BLUE_BASE, ";\n          border-color: ").concat(BLUE_BASE, ";\n          font-weight: 600;\n          height: 40px;\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:hover,\n        .evz-success-modal .evz-primary.ant-btn-primary:focus {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n        }\n        .evz-success-modal .evz-primary.ant-btn-primary:active {\n          background: ").concat(BLUE_DARK, ";\n          border-color: ").concat(BLUE_DARK, ";\n          filter: saturate(1.05);\n        }\n        @keyframes evzPop {\n          0%   { transform: scale(.92); opacity: .65; }\n          100% { transform: scale(1);   opacity: 1; }\n        }\n        @media (prefers-reduced-motion: reduce) {\n          .evz-badge { animation: none !important; }\n        }\n      ")
       })]
     });
   }
@@ -5572,8 +5552,6 @@
     Text: Text$3
   } = antd.Typography;
   var BRAND_RED$2 = '#ff4d4f';
-
-  /** Dummy country options (extend as needed) */
   var COUNTRY_OPTIONS = [{
     label: 'Uganda',
     value: 'UG'
@@ -5596,8 +5574,6 @@
     label: 'South Africa',
     value: 'ZA'
   }];
-
-  /** Demo provider catalog per country (extend as needed) */
   var PROVIDERS_BY_COUNTRY = {
     UG: [{
       label: 'MTN Uganda',
@@ -5669,20 +5645,14 @@
       // (payload) => void ; payload = { msisdn, e164, country, provider }
       zIndex = 2100,
       width = 520,
-      defaultCountry = 'ug' // two-letter ISO (lowercase) e.g. 'ug', 'ke', 'ng'
+      defaultCountry = 'ug' // two-letter ISO, lower-case per library docs
     } = _ref;
     var [phone, setPhone] = H.useState(''); // E.164 string (e.g. "+256700000000")
-    var [countryIso, setCountryIso] = H.useState(String(defaultCountry || 'ug').toUpperCase()); // 'UG', 'KE', 'NG', ...
+    var [countryIso, setCountryIso] = H.useState(String(defaultCountry || 'ug').toUpperCase()); // 'UG', 'KE', ...
     var [provider, setProvider] = H.useState(null);
-
-    // Limit countries to those we have providers for (optional)
     var supportedSet = H.useMemo(() => new Set(Object.keys(PROVIDERS_BY_COUNTRY)), []);
     var countrySelectOptions = H.useMemo(() => COUNTRY_OPTIONS.filter(c => supportedSet.has(c.value)), [supportedSet]);
-
-    // Providers for the selected country
     var providerOptions = H.useMemo(() => PROVIDERS_BY_COUNTRY[countryIso] || [], [countryIso]);
-
-    // very light validation: must start with '+' and have at least 8 digits total
     var isValidE164 = H.useMemo(() => {
       if (!phone || typeof phone !== 'string') return false;
       if (!phone.startsWith('+')) return false;
@@ -5692,7 +5662,7 @@
     var canSubmit = isValidE164 && !!provider;
     var handleCountryChange = iso => {
       setCountryIso(iso);
-      setProvider(null); // reset provider when country changes
+      setProvider(null);
     };
     var handleSubmit = () => {
       if (!canSubmit) return;
@@ -5700,8 +5670,8 @@
         msisdn: phone,
         e164: phone,
         country: countryIso,
-        // 'UG', 'KE', 'NG'
-        provider // e.g. 'mtn_ug'
+        // 'UG', 'KE', ...
+        provider // 'mtn_ug', etc.
       });
     };
     return /*#__PURE__*/jsxRuntimeExports.jsxs(antd.Modal, {
@@ -5798,19 +5768,12 @@
             style: {
               marginTop: 6
             },
-            children: /*#__PURE__*/jsxRuntimeExports.jsx(Ue
-            // Keep the dial code/country dropdown in sync:
-            , {
-              country: countryIso.toLowerCase(),
-              defaultCountry: countryIso.toLowerCase(),
+            children: /*#__PURE__*/jsxRuntimeExports.jsx(Ue, {
+              country: countryIso.toLowerCase() // controlled country (lowercase)
+              ,
               value: phone,
               onChange: setPhone,
-              onCountryChange: iso => setCountryIso(String(iso || '').toUpperCase()),
-              forceDialCode: true,
-              hideDropdown: false,
-              inputStyle: {
-                width: '100%'
-              }
+              onCountryChange: iso => setCountryIso(String(iso || '').toUpperCase())
             })
           })]
         }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
@@ -5903,21 +5866,20 @@
       open = false,
       onCancel,
       onSubmit,
-      // (payload) => void
       zIndex = 2100,
       width = 520,
       defaultCountry = 'ug'
     } = _ref;
     var [cardHolder, setCardHolder] = H.useState('');
     var [cardNumber, setCardNumber] = H.useState('');
-    var [expiry, setExpiry] = H.useState(''); // MM/YY or MM/YYYY
+    var [expiry, setExpiry] = H.useState('');
     var [cvv, setCvv] = H.useState('');
     var [address, setAddress] = H.useState('');
     var [phone, setPhone] = H.useState('');
     var sanitizedCard = H.useMemo(() => cardNumber.replace(/[^\d]/g, ''), [cardNumber]);
     var canSubmit = H.useMemo(() => {
       var hasName = cardHolder.trim().length >= 2;
-      var hasNum = sanitizedCard.length >= 12; // light check only
+      var hasNum = sanitizedCard.length >= 12;
       var hasExpiry = /^\d{2}\/\d{2,4}$/.test(expiry.trim());
       var hasCvv = /^\d{3,4}$/.test(cvv.trim());
       return hasName && hasNum && hasExpiry && hasCvv;
@@ -5927,13 +5889,11 @@
       var payload = {
         cardHolder: cardHolder.trim(),
         cardNumber: sanitizedCard,
-        // parent can mask before logging
         expiry: expiry.trim(),
         cvv: cvv.trim(),
-        // parent MUST NOT log this
         address: address.trim() || null,
         phone: phone || null,
-        brand: guessBrand(sanitizedCard) // simple brand guess
+        brand: guessBrand(sanitizedCard)
       };
       onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(payload);
     };
@@ -6056,13 +6016,9 @@
           children: [/*#__PURE__*/jsxRuntimeExports.jsx(Text$2, {
             children: "Phone number (optional)"
           }), /*#__PURE__*/jsxRuntimeExports.jsx(Ue, {
-            defaultCountry: defaultCountry,
+            defaultCountry: String(defaultCountry || 'ug').toLowerCase(),
             value: phone,
-            onChange: setPhone,
-            forceDialCode: true,
-            inputStyle: {
-              width: '100%'
-            }
+            onChange: setPhone
           })]
         }), /*#__PURE__*/jsxRuntimeExports.jsxs("div", {
           style: {
@@ -7183,13 +7139,13 @@
   // Local demo user state (balance, currency, passcode)
   var DUMMY_USER_STATE = {
     'U-000789': {
-      balance: 50000,
+      balance: 200,
       currency: 'UGX',
       passcode: '123456'
     },
     // Jane
     'U-000123': {
-      balance: 1200,
+      balance: 300,
       currency: 'USD',
       passcode: '123456'
     } // John

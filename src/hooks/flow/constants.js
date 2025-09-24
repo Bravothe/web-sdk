@@ -5,8 +5,8 @@ export const CHARGES = { taxPct: 0.025, walletFeePct: 0.015 };
 
 // Local demo user state (balance, currency, passcode)
 export const DUMMY_USER_STATE = {
-  'U-000789': { balance: 50000, currency: 'UGX', passcode: '123456' }, // Jane
-  'U-000123': { balance: 1200,  currency: 'USD', passcode: '123456' }, // John
+  'U-000789': { balance: 200, currency: 'UGX', passcode: '123456' }, // Jane
+  'U-000123': { balance: 300,  currency: 'USD', passcode: '123456' }, // John
 };
 
 // Fallback defaults for unknown users

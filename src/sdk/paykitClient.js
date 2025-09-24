@@ -8,7 +8,7 @@ export default function createPaykitClient({
   publishableKey,
   timeoutMs = DEFAULT_TIMEOUT_MS,
   fetchImpl,
-  mode = 'live',               // ← NEW: 'mock' | 'live'
+  mode = 'live',               // 'mock' | 'live'
 } = {}) {
   const key = publicKey || publishableKey;
   if (!key) throw new Error('paykitClient: publicKey (or publishableKey) is required');
@@ -23,6 +23,8 @@ export default function createPaykitClient({
       'USD->USD': 1,
     };
 
+    const DEMO_DEFAULTS = { primary: 200, secondary: 300 };
+
     const mockUserDirectory = (userNos = []) =>
       (userNos || []).filter(Boolean).map((no, i) => ({
         userNo: String(no),
@@ -36,8 +38,9 @@ export default function createPaykitClient({
       }));
 
     const mockState = {
-      // balances by userNo (just for demo math)
+      // balances by userNo
       balances: new Map(),
+      seeded: false,
     };
 
     const delay = (ms = 350) => new Promise(r => setTimeout(r, ms));
@@ -61,6 +64,34 @@ export default function createPaykitClient({
       return null;
     }
 
+    function seedBalancesFromCookiesOnce() {
+      if (mockState.seeded) return;
+      mockState.seeded = true;
+
+      let list = [];
+      try {
+        list =
+          cookieUtil.getUserNosFromCookie?.() ??
+          cookieUtil.getUserNosFromCookies?.() ??
+          [];
+      } catch {}
+      const arr = Array.isArray(list) ? list.filter(Boolean) : [];
+
+      // Primary (index 0) → 200
+      if (arr[0] && !mockState.balances.has(arr[0])) {
+        mockState.balances.set(arr[0], DEMO_DEFAULTS.primary);
+      }
+      // Secondary (index 1) → 300
+      if (arr[1] && !mockState.balances.has(arr[1])) {
+        mockState.balances.set(arr[1], DEMO_DEFAULTS.secondary);
+      }
+
+      // Ensure fallback user exists with 200 for flows that don't set cookies
+      if (!mockState.balances.has('U-000123')) {
+        mockState.balances.set('U-000123', DEMO_DEFAULTS.primary);
+      }
+    }
+
     function conv(amount, from, to) {
       const k = `${from}->${to}`;
       const rate = FX[k];
@@ -70,11 +101,12 @@ export default function createPaykitClient({
 
     // --------- MOCK API surface ---------
     async function initSession(p = {}) {
+      seedBalancesFromCookiesOnce();
+
       const ent = p?.enterpriseNo || p?.enterpriseWalletNo;
       if (!ent) throw Object.assign(new Error('enterpriseNo required'), { code: 'MISSING_ENTERPRISE_NO' });
 
       const userNo = p.userNo ?? detectUserNo();
-      // (what you asked for) — log it so your teammate can wire auth later
       console.log('[Paykit MOCK] userNo detected:', userNo);
 
       if (!userNo && !p.userWalletId) {
@@ -90,8 +122,14 @@ export default function createPaykitClient({
         currency: p.billingCurrency || 'UGX',
       };
 
-      // seed demo balance (if new)
-      if (!mockState.balances.has(user.userNo)) mockState.balances.set(user.userNo, 500_000);
+      // Seed this user if not present: first gets 200, second 300
+      if (!mockState.balances.has(user.userNo)) {
+        const assigned =
+          mockState.balances.size === 0 ? DEMO_DEFAULTS.primary :
+          mockState.balances.size === 1 ? DEMO_DEFAULTS.secondary :
+          DEMO_DEFAULTS.primary;
+        mockState.balances.set(user.userNo, assigned);
+      }
 
       await delay();
 
@@ -122,7 +160,7 @@ export default function createPaykitClient({
 
       await delay();
 
-      // keep math simple (fees are informational)
+      // keep math simple (fees informational only)
       const subtotal = amount;
       const tax = Math.round(subtotal * charges.taxPct);
       const walletFee = Math.round(subtotal * charges.walletFeePct);
@@ -157,20 +195,32 @@ export default function createPaykitClient({
         throw Object.assign(new Error('Incorrect passcode'), { code: 'INVALID_PASSCODE', status: 403 });
       }
 
-      // For demo we take amount from last quote-like step if provided by caller,
-      // otherwise assume 10,000 UGX
       const billAmt = Math.round(Number(amount || 10_000));
 
-      // pick an arbitrary active userNo for balance math
-      const userNo = cookieUtil.getUserNoFromCookie?.() || 'U-000123';
-      const bal = mockState.balances.get(userNo) ?? 500_000;
+      // Use active user (picker writes cookie); fallback to primary demo user
+      let userNo = null;
+      try { userNo = cookieUtil.getUserNoFromCookie?.(); } catch {}
+      userNo = userNo || 'U-000123';
+
+      // Ensure defaults are seeded before debit
+      seedBalancesFromCookiesOnce();
+
+      const current = mockState.balances.get(userNo);
+      const startingBal =
+        current != null ? current :
+        (mockState.balances.size === 0 ? DEMO_DEFAULTS.primary :
+         mockState.balances.size === 1 ? DEMO_DEFAULTS.secondary :
+         DEMO_DEFAULTS.primary);
+
+      if (current == null) mockState.balances.set(userNo, startingBal);
+
       const userDebit = conv(billAmt, 'UGX', 'UGX');
 
-      if (bal < userDebit) {
+      if (mockState.balances.get(userNo) < userDebit) {
         throw Object.assign(new Error('Not enough balance'), { code: 'INSUFFICIENT_FUNDS', status: 402 });
       }
 
-      mockState.balances.set(userNo, Math.round(bal - userDebit));
+      mockState.balances.set(userNo, Math.round(mockState.balances.get(userNo) - userDebit));
 
       return {
         ok: true,
